@@ -54,4 +54,10 @@ public final class Radar extends JPanel {
                 }
 				
 	}
+        
+        public List<Plane> getPlaneList(){
+          return planeList;
+        }
+        
+        
 }
