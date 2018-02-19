@@ -11,7 +11,7 @@ public final class Test extends JFrame {
 
     public Test() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(680, 600);
+        this.setSize(700, 400);
         this.setResizable(false);
         this.setLayout(null);
         this.setTitle("Plane Centered View");
@@ -21,6 +21,7 @@ public final class Test extends JFrame {
         //---
         Plane p0 = new Plane("DAL71",332,332,0.f,0.f);
         radar.addPlaneToRadar(p0);
+
         //---
         Plane p1 = new Plane("SAB5458",190, 75, .1f, 0.0f);        
         radar.addPlaneToRadar(p1);

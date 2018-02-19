@@ -47,6 +47,14 @@ public final class Plane {
         return yPos;
     }
 
+    public void setXPos(float xPos) {
+        this.xPos = xPos;
+    }
+
+    public void setYPos(float yPos) {
+        this.yPos = yPos;
+    }
+
     public void movePlane() {
         xPos += xSpeed;
         yPos += ySpeed;
@@ -57,22 +65,6 @@ public final class Plane {
 
     public void setPlaneColor(Color planeColor) {
         this.planeColor = planeColor;
-    }
-
-    public float getxPos() {
-        return xPos;
-    }
-
-    public void setxPos(float xPos) {
-        this.xPos = xPos;
-    }
-
-    public float getyPos() {
-        return yPos;
-    }
-
-    public void setyPos(float yPos) {
-        this.yPos = yPos;
     }
 
     public String getPlaneId() {
