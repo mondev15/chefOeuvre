@@ -13,11 +13,8 @@ public final class Plane {
     private float xPos;
     private float yPos;
     private String planeId;
-
     private Rectangle shape;
-
     private float opacity = 0.f;
-
     private float xSpeed;
     private float ySpeed;
 
@@ -37,7 +34,9 @@ public final class Plane {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(planeColor);
         g2d.fillOval(shape.x, shape.y, 15, 15);
-        g2d.drawString(planeId,xPos,yPos);
+        g2d.drawString("   "+planeId,xPos,yPos);
+        g2d.drawString("   "+xPos,xPos-10,yPos+10);
+        g2d.drawString("   "+yPos,xPos,yPos-10);
     }
 
     public float getXPos() {
@@ -91,4 +90,5 @@ public final class Plane {
     public void setOpacity(float opacity) {
         this.opacity = opacity;
     }
+
 }

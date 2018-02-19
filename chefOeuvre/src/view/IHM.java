@@ -16,6 +16,7 @@ public class IHM extends javax.swing.JFrame {
      */
     public IHM() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
