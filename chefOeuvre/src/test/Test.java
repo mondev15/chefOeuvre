@@ -11,7 +11,7 @@ public final class Test extends JFrame {
 
     public Test() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(430, 450);
+        this.setSize(680, 600);
         this.setResizable(false);
         this.setLayout(null);
         this.setTitle("Plane Centered View");
@@ -19,21 +19,21 @@ public final class Test extends JFrame {
         radar = new Radar();
         
         //---
-        Plane p0 = new Plane("DAL71",213, 213,0.f,0.f);
+        Plane p0 = new Plane("DAL71",332,332,0.f,0.f);
         radar.addPlaneToRadar(p0);
         //---
-        Plane p1 = new Plane("SAB5458",75, 75, .1f, 0.0f);        
+        Plane p1 = new Plane("SAB5458",190, 75, .1f, 0.0f);        
         radar.addPlaneToRadar(p1);
 
         //---
-        Plane p2 = new Plane("AF360UD",200, 300, 0.1f, -0.1f);
+        Plane p2 = new Plane("AF360UD",407, 262, 0.1f, -0.1f);
 
         radar.addPlaneToRadar(p2);
         //---
-        Plane p3 = new Plane("RAM5712",250, 150, 0.1f, 0.2f);
+        Plane p3 = new Plane("RAM5712",250, 150, 0.1f, 0.1f);
         radar.addPlaneToRadar(p3);
         //---
-        Plane p4 = new Plane("AF118AB",90, 105, -0.1f, 0.2f);
+        Plane p4 = new Plane("AF118AB",90, 160, 0.0f, 0.2f);
         radar.addPlaneToRadar(p4);
 
         this.getContentPane().add(radar);
@@ -49,7 +49,7 @@ public final class Test extends JFrame {
                 while (true) {
                     try {
                         radar.radarScan();
-                        sleep(30);
+                        sleep(100);
                     } 
                     catch (Exception e) {
                         e.printStackTrace();
