@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Button;
 import model.Plane;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,13 +16,13 @@ import javax.swing.JPanel;
 public final class Radar extends JPanel {
 
     private final List<Plane> planeList;
-    private final int RADAR_SIZE = 400;
+    private final int RADAR_SIZE = 600;
     private final Point POINT = new Point(10,10);
 
     public Radar() {
         planeList = new ArrayList<>();
         this.setSize(new Dimension(RADAR_SIZE,RADAR_SIZE));
-        this.setBounds(0, 0, 430, 430);
+        this.setBounds(0, 0, 600, 400);
     }
 
     public void addPlaneToRadar(Plane p) {
@@ -40,6 +41,7 @@ public final class Radar extends JPanel {
 
         Graphics2D g2d = (Graphics2D) g;
         //---
+        Button bt = new Button("play");
         g2d.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -49,13 +51,11 @@ public final class Radar extends JPanel {
 
         g2d.setColor(Color.DARK_GRAY);
         //---
-        //g2d.drawArc(20, 20, 360,360,0, 180);
-        g2d.drawOval(POINT.x+40, POINT.y+40,RADAR_SIZE-60, RADAR_SIZE-60);
-        g2d.drawOval(POINT.x+70, POINT.y+70, RADAR_SIZE-120, RADAR_SIZE-120);
-        g2d.drawOval(POINT.x+100, POINT.y+100, RADAR_SIZE-180, RADAR_SIZE-180);
+        g2d.drawArc(POINT.x+30, POINT.y+30, RADAR_SIZE,RADAR_SIZE,0, 180);
+        g2d.drawArc(190, 190,RADAR_SIZE-300,RADAR_SIZE-300,0,180);
         //---
-        g2d.drawLine(220, 40, 220,400);
-        g2d.drawLine(40, 220, 400,220);
+       g2d.drawLine(340, 30, 340,350);
+       g2d.drawLine(30,340,650,340);
 
         for (Plane p : planeList) {
             p.drawPlane(g2d);

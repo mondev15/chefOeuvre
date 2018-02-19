@@ -34,9 +34,9 @@ public final class Plane {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(planeColor);
         g2d.fillOval(shape.x, shape.y, 15, 15);
-        g2d.drawString("   "+planeId,xPos,yPos);
-        g2d.drawString("   "+xPos,xPos-10,yPos+10);
-        g2d.drawString("   "+yPos,xPos,yPos-10);
+        g2d.drawString("   |"+planeId,xPos+5,yPos);
+        g2d.drawString("   |"+xPos,xPos+5,yPos+10);
+        g2d.drawString("   |"+yPos,xPos+5,yPos+20);
     }
 
     public float getXPos() {
