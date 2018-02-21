@@ -8,7 +8,6 @@ import view.Radar;
 public final class Test extends JFrame {
 
     private final Radar radar;
-
     public Test() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(700, 400);
@@ -16,7 +15,7 @@ public final class Test extends JFrame {
         this.setLayout(null);
         this.setTitle("Plane Centered View");
 
-        radar = new Radar();
+       radar = new Radar();
         
         //---
         Plane p0 = new Plane("DAL71",332,332,0.f,0.f);
