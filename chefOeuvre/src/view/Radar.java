@@ -2,7 +2,6 @@ package view;
 
 import model.Plane;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,13 +14,14 @@ import javax.swing.JPanel;
 public final class Radar extends JPanel {
 
     private final List<Plane> planeList;
+    //utiliser pluto une mappour modifier les coordonées
     private final int RADAR_SIZE = 600;
+    //private final int RADAR_SIZE_Y = 480;
     private final Point POINT = new Point(10,10);
 
     public Radar() {
         planeList = new ArrayList<>();
-        this.setSize(new Dimension(RADAR_SIZE,RADAR_SIZE));
-        this.setBounds(0, 0, 680, 400);
+        this.setBounds(0, 0, RADAR_SIZE+100, RADAR_SIZE+100);
     }
 
     public void addPlaneToRadar(Plane p) {

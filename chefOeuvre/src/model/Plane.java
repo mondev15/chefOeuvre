@@ -6,73 +6,86 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public final class Plane {
-
+    //--- affichage de l'avion
     private final float GREEN = 1.0f;
     private Color planeColor = new Color(0, GREEN, 0, 0.0f);
-
-    private float xPos;
-    private float yPos;
-    private String planeId;
-    private Rectangle shape;
     private float opacity = 0.f;
-    private float xSpeed;
-    private float ySpeed;
+    //--- info de l'avion   
+    private String flight;
+    private String callSign;
+    private float x;
+    private float y;
+    private float vx;
+    private float vy;
+    private int speed;
+    private String dep;
+    private String arr;
+    //---forme de l'avion
+    private Rectangle shape;
 
-    public Plane(String id,float x, float y, float xSpeed, float ySpeed) {
-        this.xPos = x;
-        this.yPos = y;
-        this.xSpeed = xSpeed;
-        this.ySpeed = ySpeed;
-        planeId = id;
+    //---
+    
+    public Plane (){
+        opacity =1.f;
+        planeColor = new Color(0.0f, GREEN, 0, opacity);
+        shape = new Rectangle(10, 10);
+    }
+    
+    public Plane(String cs,float x, float y, float xSpeed, float ySpeed) {
+        this.x = x;
+        this.y = y;
+        this.vx = xSpeed;
+        this.vy = ySpeed;
+        callSign = cs;
         opacity =1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
     }
 
     public void drawPlane(Graphics g) {
-        shape.setLocation((int) xPos, (int) yPos);
+        shape.setLocation((int) x, (int) y);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(planeColor);
         g2d.fillOval(shape.x, shape.y, 15, 15);
-        g2d.drawString("   |"+planeId,xPos+5,yPos);
-        g2d.drawString("   |"+xPos,xPos+5,yPos+10);
-        g2d.drawString("   |"+yPos,xPos+5,yPos+20);
+        g2d.drawString("   |"+callSign,x+5,y);
+        g2d.drawString("   |"+x,x+5,y+10);
+        g2d.drawString("   |"+y,x+5,y+20);
     }
 
-    public float getXPos() {
-        return xPos;
+    public float getX() {
+        return x;
     }
 
-    public float getYPos() {
-        return yPos;
+    public float getY() {
+        return y;
     }
 
-    public void setXPos(float xPos) {
-        this.xPos = xPos;
+    public void setX(float xPos) {
+        this.x = xPos;
     }
 
-    public void setYPos(float yPos) {
-        this.yPos = yPos;
+    public void setY(float yPos) {
+        this.y = yPos;
     }
 
     public void movePlane() {
-        xPos += xSpeed;
-        yPos += ySpeed;
+        x += vx;
+        y += vy;
     }
         public Color getPlaneColor() {
         return planeColor;
     }
 
-    public void setPlaneColor(Color planeColor) {
-        this.planeColor = planeColor;
+    public void setPlaneColor(Color pc) {
+        this.planeColor = pc;
     }
 
-    public String getPlaneId() {
-        return planeId;
+    public String getCallSign() {
+        return callSign;
     }
 
-    public void setPlaneId(String planeId) {
-        this.planeId = planeId;
+    public void setCallSign(String cs) {
+        this.callSign = cs;
     }
 
     public float getOpacity() {
@@ -82,5 +95,59 @@ public final class Plane {
     public void setOpacity(float opacity) {
         this.opacity = opacity;
     }
+
+    public String getFlight() {
+        return flight;
+    }
+
+    public void setFlight(String flight) {
+        this.flight = flight;
+    }
+
+    public float getVx() {
+        return vx;
+    }
+
+    public void setVx(float vx) {
+        this.vx = vx;
+    }
+
+    public float getVy() {
+        return vy;
+    }
+
+    public void setVy(float vy) {
+        this.vy = vy;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int groundSpeed) {
+        this.speed = groundSpeed;
+    }
+
+    public String getDep() {
+        return dep;
+    }
+
+    public void setDep(String dep) {
+        this.dep = dep;
+    }
+
+    public String getArr() {
+        return arr;
+    }
+
+    public void setArr(String arr) {
+        this.arr = arr;
+    }
+
+    @Override
+    public String toString() {
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", x=" + x + ", y=" + y + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", dep=" + dep + ", arr=" + arr + '}';
+    }
+
 
 }
