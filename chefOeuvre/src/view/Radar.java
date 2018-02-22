@@ -1,3 +1,4 @@
+// Java swing view
 package view;
 
 import model.Plane;
@@ -14,7 +15,7 @@ import javax.swing.JPanel;
 public final class Radar extends JPanel {
 
     private final List<Plane> planeList;
-    //utiliser pluto une mappour modifier les coordonées
+    //utiliser pluto une map pour modifier les coordonées
     private final int RADAR_SIZE = 600;
     //private final int RADAR_SIZE_Y = 480;
     private final Point POINT = new Point(10,10);

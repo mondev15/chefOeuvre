@@ -25,14 +25,8 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="radar1" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="0" pref="303" max="32767" attributes="0"/>
+              <Component id="radar1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="310" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -40,81 +34,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="radar1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace pref="133" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanel1">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="jButtonMessageVocal" min="-2" pref="148" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButtonNiveau" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jButtonCap" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jButtonVitesse" alignment="0" pref="147" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButtonSecteur" min="-2" pref="153" max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Component id="jButtonNiveau" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButtonCap" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="jButtonVitesse" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Component id="jButtonSecteur" max="32767" attributes="0"/>
-              <Component id="jButtonMessageVocal" alignment="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JButton" name="jButtonMessageVocal">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Message Vocal"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonVitesse">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Vitesse"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonNiveau">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Niveau"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonCap">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Cap"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonSecteur">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Secteur"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
     <Container class="view.Radar" name="radar1">
 
       <Layout>
