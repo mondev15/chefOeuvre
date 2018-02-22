@@ -1,11 +1,13 @@
-package test;
+package ivy;
 
+import test.*;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
 import fr.dgac.ivy.IvyMessageListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Plane;
 import model.Plane;
 import view.Radar;
 
@@ -15,25 +17,26 @@ import view.Radar;
  * SectorEvent 
  * ont le même numéro de flight avant de faire des mises  à jour des position et vitesse
 */
-public class IvyTest {
+public class IvyManager {
 
     private Ivy bus;
     private Radar radar;
 
-    public IvyTest() {
+    public IvyManager() {
 
-        radar = new Radar();
-        bus = new Ivy("IvyTest", "IvyTest CONNECTED", null);
+    radar = new Radar();
+    bus = new Ivy("IvyManager", "IvyManager CONNECTED", null);
 
         //---connexion au bus
         try {
             bus.start("127.255.255.255:2010");
         } catch (IvyException ex) {
-            Logger.getLogger(IvyTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //---PlnEvent
         try {
+            //Plane{Flight=352, CallSign=DIWAL, X=0.0, Y=0.0, Vx=0.0, Vy=0.0, GroundSpeed=258, Dep=LEBB, Arr=EDLN}
             bus.bindMsg("PlnEvent Flight=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
@@ -48,6 +51,7 @@ public class IvyTest {
                     p.setDep(splitted[7].split("=")[1]);
                     p.setArr(splitted[8].split("=")[1]);
                     radar.addPlaneToRadar(p);
+                    System.out.println(p.toString());
                     //---affichage de la de liste de plane dans radar
                     System.out.println("\nradar : " + radar.getPlaneList().toString());
                 }
@@ -87,14 +91,14 @@ public class IvyTest {
                 }
             });
         } catch (IvyException ex) {
-            Logger.getLogger(IvyTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     public static void main(String args[]) {
 
-        IvyTest ivyTest = new IvyTest();
+        IvyManager ivyTest = new IvyManager();
     }
 
 }
