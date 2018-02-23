@@ -16,24 +16,24 @@ public final class Test extends JFrame {
         this.setTitle("Plane Centered View");
 
        radar = new Radar();
-        
+       
         //---
-        Plane p0 = new Plane("DAL71",332,332,0.f,0.f);
+        Plane p0 = new Plane("0","DAL71",332,332,0.f,0.f);
         radar.addPlaneToRadar(p0);
 
         //---
-        Plane p1 = new Plane("SAB5458",190, 75, .1f, 0.0f);        
+        Plane p1 = new Plane("1","SAB5458",190, 75, .1f, 0.0f);        
         radar.addPlaneToRadar(p1);
 
         //---
-        Plane p2 = new Plane("AF360UD",407, 262, 0.1f, -0.1f);
+        Plane p2 = new Plane("2","AF360UD",407, 262, 0.1f, -0.1f);
 
         radar.addPlaneToRadar(p2);
         //---
-        Plane p3 = new Plane("RAM5712",250, 150, 0.1f, 0.1f);
+        Plane p3 = new Plane("3","RAM5712",250, 150, 0.1f, 0.1f);
         radar.addPlaneToRadar(p3);
         //---
-        Plane p4 = new Plane("AF118AB",90, 160, 0.0f, 0.2f);
+        Plane p4 = new Plane("4","AF118AB",90, 160, 0.0f, 0.2f);
         radar.addPlaneToRadar(p4);
 
         this.getContentPane().add(radar);

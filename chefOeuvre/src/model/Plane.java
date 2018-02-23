@@ -5,14 +5,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-public final class Plane {
+public class Plane {
+    
     //--- affichage de l'avion
     private final float GREEN = 1.0f;
     private Color planeColor = new Color(0, GREEN, 0, 0.0f);
     private float opacity = 0.f;
+    
     //--- info de l'avion   
     private String flight;
     private String callSign;
+    private String time;
+    private String sector;
     private float x;
     private float y;
     private float vx;
@@ -20,6 +24,8 @@ public final class Plane {
     private int speed;
     private String dep;
     private String arr;
+    private String list;
+    
     //---forme de l'avion
     private Rectangle shape;
 
@@ -31,11 +37,13 @@ public final class Plane {
         shape = new Rectangle(10, 10);
     }
     
-    public Plane(String cs,float x, float y, float xSpeed, float ySpeed) {
+    public Plane(String flt,String cs,float x, float y, float xSpeed, float ySpeed) {
         this.x = x;
         this.y = y;
         this.vx = xSpeed;
         this.vy = ySpeed;
+        this.sector="";
+        this.flight =flight;
         callSign = cs;
         opacity =1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
@@ -104,6 +112,14 @@ public final class Plane {
         this.flight = flight;
     }
 
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+    
     public float getVx() {
         return vx;
     }
@@ -144,10 +160,27 @@ public final class Plane {
         this.arr = arr;
     }
 
-    @Override
-    public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", x=" + x + ", y=" + y + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", dep=" + dep + ", arr=" + arr + '}';
+
+    public String getTime() {
+        return time;
     }
 
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getList() {
+        return list;
+    }
+
+    public void setList(String list) {
+        this.list = list;
+    }
+
+    @Override
+    public String toString() {
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", x=" + x + ", y=" + y + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", dep=" + dep + ", arr=" + arr + ", list=" + list + '}';
+    }
+    
 
 }
