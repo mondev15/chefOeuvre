@@ -6,48 +6,58 @@
 package model;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Stroke;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javafx.scene.paint.Color;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 
 /**
  *
  * @author Charlelie
  */
-public class Block extends JPanel{
+public class Block extends VBox{
     
     private int time;
-    private JLabel titleLabel;
-    private JLabel hdgLabel;
-    private JLabel flLabel;
-    private JLabel speedLabel;
-    private JLabel infoLabel;
-    private JPanel content;
+    private Label titleLabel;
+    private Label hdgLabel;
+    private Label flLabel;
+    private Label speedLabel;
+    private Label infoLabel;
+    private VBox content;
     
     private final int SIZE = 180;
     
     public Block(int t, String title, String hdg, String fl, String speed, String info){
-        this.setBounds(0, 0, SIZE, SIZE);
-        this.setBackground(Color.cyan);
-        this.setBorder(BorderFactory.createLineBorder(Color.blue));
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.prefWidth(SIZE);
+        this.prefHeight(SIZE);
+        this.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
         
         time = t;
-        titleLabel = new JLabel(title);
-        content = new JPanel();
-        content.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        hdgLabel = new JLabel(hdg);
-        flLabel = new JLabel(fl);
-        speedLabel = new JLabel(speed);
-        infoLabel = new JLabel(info);
+        titleLabel = new Label(title);
+        content = new VBox();
+        hdgLabel = new Label(hdg);
+        flLabel = new Label(fl);
+        speedLabel = new Label(speed);
+        infoLabel = new Label(info);
+        
+        this.getChildren().add(titleLabel);
+        content.getChildren().add(hdgLabel);
+        content.getChildren().add(flLabel);
+        content.getChildren().add(speedLabel);
+        content.getChildren().add(infoLabel);
+        
+        this.getChildren().add(content);
     }
     
     public Block(){
@@ -76,62 +86,57 @@ public class Block extends JPanel{
 
 
     
-    @Override
-    public void paint(Graphics g){
-        
-        Graphics2D g2 = (Graphics2D) g;
-        
-        this.add(titleLabel);
-        
-        Stroke oldStroke = g2.getStroke();
-        g2.setStroke(new BasicStroke(10));
-        g2.drawLine(0, 30, SIZE, 30);
-        g2.setStroke(oldStroke);
-        
-        
-        if (hdgLabel.getText() != ""){
-            content.add(hdgLabel);
-        }
-        
-        if (flLabel.getText() != ""){
-            content.add(flLabel);
-        }
-        
-        if (speedLabel.getText() != ""){
-            content.add(speedLabel);
-        }
-
-        if (infoLabel.getText() != ""){
-            content.add(infoLabel);
-        }
-        
-        this.add(content);
-
-    }
+//    @Override
+//    public void paint(Graphics g){
+//        
+//        Graphics2D g2 = (Graphics2D) g;
+//        
+//        this.add(titleLabel);
+//        
+//        Stroke oldStroke = g2.getStroke();
+//        g2.setStroke(new BasicStroke(10));
+//        g2.drawLine(0, 30, SIZE, 30);
+//        g2.setStroke(oldStroke);
+//        
+//        
+//        if (hdgLabel.getText() != ""){
+//            content.add(hdgLabel);
+//        }
+//        
+//        if (flLabel.getText() != ""){
+//            content.add(flLabel);
+//        }
+//        
+//        if (speedLabel.getText() != ""){
+//            content.add(speedLabel);
+//        }
+//
+//        if (infoLabel.getText() != ""){
+//            content.add(infoLabel);
+//        }
+//        
+//        this.add(content);
+//
+//    }
     
     public void setTitle(String s){
         titleLabel.setText(s);
-        invalidate();
     }
     
     public void setHDG(String s){
         hdgLabel.setText(s);
-        invalidate();
     }
     
     public void setFL(String s){
         flLabel.setText(s);
-        invalidate();
     }
     
     public void setSpeed(String s){
         speedLabel.setText(s);
-        invalidate();
     }
     
     public void setInfo(String s){
         infoLabel.setText(s);
-        invalidate();
     }
     
     public int getTime(){
