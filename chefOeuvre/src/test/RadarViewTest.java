@@ -9,8 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import view.RadarView;
-
 
 
 public class RadarViewTest extends Application {
@@ -26,7 +24,6 @@ public class RadarViewTest extends Application {
         primaryStage.setResizable(false);
         Group root = new Group();
         IvyManager ivyManager = new IvyManager(); 
-        //RadarView radar = ivyManager.getRadarView();
         
         root.getChildren().add(ivyManager.getRadarView());
         //try {

@@ -16,6 +16,8 @@ public class Plane {
     private String time;
     private String sector;
     private Position position;
+    private int heading; //cap
+    private int afl; // niveau
     private float vx; 
     private float vy;    
     private int speed;
@@ -33,6 +35,8 @@ public class Plane {
         flight ="default";
         sector="";
         route = new Route("default","default","default");
+        heading=0;
+        afl =0;
     }
 
     public Plane(String flt, String cs, Position p, float xSpeed, float ySpeed){
@@ -141,8 +145,35 @@ public class Plane {
         this.route = route;
     }
 
+    public int getHeading() {
+        return heading;
+    }
+
+    public void setHeading(int heading) {
+        this.heading = heading;
+    }
+
+    public Rectangle getShape() {
+        return shape;
+    }
+
+    public void setShape(Rectangle shape) {
+        this.shape = shape;
+    }
+
+    public int getAfl() {
+        return afl;
+    }
+
+    public void setAfl(int afl) {
+        this.afl = afl;
+    }
+
     @Override
     public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", position=" + position + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", route=" + route + '}';
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", position=" + position + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", route=" + route + '}';
     }
+
+    
+    
 }

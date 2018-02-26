@@ -35,6 +35,8 @@ public class IvyManager {
                         p.setFlight(args[0]);
                         Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
                         p.setRoute(copy.getRoute());
+                        p.setAfl(copy.getAfl());
+                        p.setHeading(copy.getHeading());
                         p.setSpeed(copy.getSpeed());
                         //on supprime l'avion de la map
                         radar.getPlanes().remove(Integer.parseInt(args[0]));
@@ -75,7 +77,7 @@ public class IvyManager {
             });
 
             //---TrackMovedEvent
-            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl.*GroundSpeed=(.*) Tendency.*Time=(.*)", new IvyMessageListener() {
+            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate.*Heading=(.*) GroundSpeed=(.*) Tendency.*Time=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
 
@@ -91,8 +93,10 @@ public class IvyManager {
                     float y = Float.parseFloat(args[4]);
                     float vx = Float.parseFloat(args[5]);
                     float vy = Float.parseFloat(args[6]);
-                    int speed = Integer.parseInt(args[7]);
-                    String time = args[8];
+                    int afl =Integer.parseInt(args[7]);
+                    int heading =Integer.parseInt(args[8]);
+                    int speed = Integer.parseInt(args[9]);
+                    String time = args[10];
 
                     //--- avion sur lequel la vue est centrée
                     if (args[0].equals(radar.getPlane().getFlight())) 
@@ -104,6 +108,8 @@ public class IvyManager {
                         p.setSector(sector);
                         p.setVx(vx);
                         p.setVy(vy);
+                        p.setAfl(afl);
+                        p.setHeading(heading);
                         p.setSpeed(speed);
                     } 
                     else 
@@ -112,6 +118,8 @@ public class IvyManager {
                         if (!radar.getPlanes().containsKey(key)) {
                             Plane p = new Plane(flight, callSign, new Position(x, y), vx, vy);
                             p.setSector(sector);
+                            p.setAfl(afl);
+                            p.setHeading(heading);
                             p.setSpeed(speed);
                             p.setTime(time);
                             map.put(key, p);
@@ -122,6 +130,8 @@ public class IvyManager {
                             p.setPosition(new Position(x, y));
                             p.setVx(vx);
                             p.setVy(vy);
+                            p.setAfl(afl);
+                            p.setHeading(heading);
                             p.setSpeed(speed);
                             p.setTime(time);
                         }
