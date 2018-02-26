@@ -13,10 +13,10 @@ import view.RadarView;
 
 
 
-public class Main extends Application {
+public class RadarViewTest extends Application {
 
     public static void main(String[] args) {
-        Application.launch(Main.class, args);
+        Application.launch(RadarViewTest.class, args);
     }
     
 
@@ -35,7 +35,7 @@ public class Main extends Application {
             //rt.exec("rejeu /usr/lib/rejeu/1_heure_Bordeaux.txt");
             //rt.exec("twinkle2013");
         //} catch (IOException ex) {
-        //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        //    Logger.getLogger(RadarViewTest.class.getName()).log(Level.SEVERE, null, ex);
         //}
        
         Scene scene = new Scene(root, 650, 450, Color.BLACK);
