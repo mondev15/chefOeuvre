@@ -1,11 +1,16 @@
 package test;
 
+import ivy.IvyManager;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import view.RadarView;
+
 
 
 public class Main extends Application {
@@ -18,9 +23,21 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Centered Plane View");
+        primaryStage.setResizable(false);
         Group root = new Group();
-        RadarView radar = new RadarView();
-        root.getChildren().add(radar);
+        IvyManager ivyManager = new IvyManager(); 
+        //RadarView radar = ivyManager.getRadarView();
+        
+        root.getChildren().add(ivyManager.getRadarView());
+        //try {
+            //Runtime rt = Runtime.getRuntime();
+            //rt.exec("ivymon");
+            //rt.exec("rejeu /usr/lib/rejeu/1_heure_Bordeaux.txt");
+            //rt.exec("twinkle2013");
+        //} catch (IOException ex) {
+        //    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        //}
+       
         Scene scene = new Scene(root, 650, 450, Color.BLACK);
         primaryStage.setScene(scene);
         primaryStage.show();
