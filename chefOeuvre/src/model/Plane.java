@@ -34,6 +34,7 @@ public class Plane {
         shape = new Rectangle(10, 10);
         flight ="default";
         sector="";
+        callSign="default";
         route = new Route("default","default","default");
         heading=0;
         afl =0;
@@ -168,6 +169,14 @@ public class Plane {
     public void setAfl(int afl) {
         this.afl = afl;
     }
+    
+    public Position newPosition(Position p){
+        //----vitesse
+        //----position
+        // X= X*sin(cap) // orientation (+)
+        // Y= Y*cos(cap) // orientation (-)
+        return new Position(0.0f,0.0f);
+    };
 
     @Override
     public String toString() {

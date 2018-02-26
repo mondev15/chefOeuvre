@@ -4,8 +4,8 @@ package model;
 
 public class Position {
     
-    private float x;
-    private float y;
+    private float x=0.0f;
+    private float y=0.0f;
 
     public Position(float x, float y) {
         this.x = x;

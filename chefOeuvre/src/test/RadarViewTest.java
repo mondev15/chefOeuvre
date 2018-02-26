@@ -35,7 +35,7 @@ public class RadarViewTest extends Application {
         //    Logger.getLogger(RadarViewTest.class.getName()).log(Level.SEVERE, null, ex);
         //}
        
-        Scene scene = new Scene(root, 650, 450, Color.BLACK);
+        Scene scene = new Scene(root, 650, 470, Color.BLACK);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -1,8 +1,13 @@
 package view;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -18,17 +23,23 @@ public class RadarView extends Parent{
     private static final int X_START = 50;
     private final int X_SCENE = 650;
     private final int Y_SCENE = 450;
+    private float x_middle;
+    private float y_middle;
 
     private Plane plane; //l'avion sur lequel la vue est centrée
     private Map<Integer,Plane> planes;  // la collection (trafic) des avions dans la vue radar
     
+    private Label planeLabel;
+    private Label text10,text20,text30;
+
     public RadarView() {
         //---
         plane = new Plane();
         planes = new HashMap<Integer,Plane>();
+        planeLabel = new Label("planeLabel");
         //---
-        float x_middle = (X_START + (X_SCENE - X_START)) / 2.f;
-        float y_middle = (Y_SCENE - X_START + Y_SCENE - X_START) / 2.f;
+        x_middle = (X_START + (X_SCENE - X_START)) / 2.f;
+        y_middle = (Y_SCENE - X_START + Y_SCENE - X_START) / 2.f;
 
         //--- la ligne verticale
         Line line = createLine(x_middle, X_START, x_middle, y_middle);
@@ -38,33 +49,30 @@ public class RadarView extends Parent{
         Arc arc3 = createArc(x_middle, y_middle, 300, 300);
 
         // les textes 10, 20  et 30
-        Text text1 = createText("10", x_middle - 110, y_middle - 50);
-        Text text2 = createText("20", x_middle - 210, y_middle - 70);
-        Text text3 = createText("30", x_middle - 310, y_middle - 90);
+
+        text10 = createLabel("10", x_middle - 110, y_middle - 50);
+        text20 = createLabel("20", x_middle - 210, y_middle - 70);
+        text30 = createLabel("30", x_middle - 310, y_middle - 90);
 
         //---ajout des lignes et arc au groupe
         //Arc arc4 = new Arc();
         //animateArc(arc4);
         //this.getChildren().add(arc4);
-        Circle circle = createPlane(x_middle, y_middle,Color.YELLOW);
-        Text text4 = createText(plane.getCallSign(), x_middle-10,y_middle+20);
-     
-        this.getChildren().addAll(line, arc1, arc2, arc3, text1, text2, text3, circle,text4);
-        /*for (Map.Entry<Integer,Plane> e : planesList.getPlanes().entrySet()){
-            Plane p = e.getValue();
-            Circle c = createPlane(Math.abs((p.getPosition().getX())/2), Math.abs((p.getPosition().getX())/2),Color.GREEN);
-            //Text text = createText(e.getValue().getCallSign(), x_middle-10,y_middle+20);
-            //System.out.println(e.getKey() + " : " + e.getValue());
-            this.getChildren().add(c);
-        }*/
-        updateView();
+        //Circle circle = createPlane(x_middle, y_middle,Color.YELLOW);
+        //Text text4 = createText(plane.getCallSign(), x_middle-10,y_middle+20);
+        this.getChildren().addAll(line, arc1, arc2, arc3, text10, text20, text30);
+
     }
     
-    //méthode pour la mise à jour de la vue
-    //à appeller dans track moved, mettre à jour la position du plane s'il existe pas sinon le créer
-    public void updateView(){
-        Circle circle = createPlane(200, 200,Color.YELLOW);
-        this.getChildren().add(circle);
+    public void addCentralPlane(){
+        Circle circle = createPlane(x_middle,y_middle,Color.YELLOW);
+        String str = plane.getCallSign()+"\t"+plane.getPosition().getX()+" , "+plane.getPosition().getY();
+        str += "\ncap :"+plane.getHeading()+" , niveau :"+plane.getAfl();
+        planeLabel.setText(str);
+        planeLabel.setTextFill(Color.WHITE);
+        planeLabel.relocate(x_middle-20,y_middle+20);
+        this.getChildren().remove(planeLabel);
+        this.getChildren().addAll(circle, planeLabel);
     }
 
     public Circle createPlane(float centerX, float centerY,Color color) {
@@ -76,6 +84,15 @@ public class RadarView extends Parent{
         //circle.setStroke(javafx.scene.paint.Color.GREEN);
         return circle;
     }
+        
+    public Label createLabel(String txt,float x,float y){
+        
+        Label label = new Label(txt);
+        label.setText(txt);
+        label.setTextFill(Color.WHITE);
+        label.relocate(x,y);
+        return label;
+    };
 
     public Arc createArc(float centerX, float centerY, int radiusX, int radiusY) {
 
@@ -132,7 +149,6 @@ public class RadarView extends Parent{
         this.planes = planes;
     }
 
-
     public float distance(Plane p){
      
        Position p1 = plane.getPosition();
@@ -143,6 +159,12 @@ public class RadarView extends Parent{
        );
     }
     
+    public Position newPosition(Position p){
+    
+        // X= X*sin(CAP)
+        // Y= Y*cos(CAP)
+        return new Position(0.0f,0.0f);
+    };
     
     //---TO DO
     //Text avec une position et le rendre  cliquable
