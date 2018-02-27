@@ -1,36 +1,33 @@
 
 package model;
 
+import com.sun.javafx.geom.Point2D;
+
 
 public class Position {
     
-    private float x=0.0f;
-    private float y=0.0f;
+    private  Point2D pos;
 
-    public Position(float x, float y) {
-        this.x = x;
-        this.y = y;
+    public Position(){
+      pos = new Point2D();
+
+    }
+    
+    public Position(Point2D position) {
+        this.pos = position;
     }
 
-    public float getX() {
-        return x;
+    public Point2D getPos() {
+        return pos;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setPos(Point2D pos) {
+        this.pos = pos;
     }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
+    
     @Override
     public String toString() {
-        return "{" + "x=" + x + ", y=" + y + '}';
+        return "\nPosition{" + "position=" + pos + '}';
     }
     
 }

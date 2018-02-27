@@ -1,5 +1,6 @@
 package ivy;
 
+import com.sun.javafx.geom.Point2D;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
@@ -87,7 +88,7 @@ public class IvyManager {
             });
 
             //---TrackMovedEvent
-            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate.*Heading=(.*) GroundSpeed=(.*) Tendency.*Time=(.*)", new IvyMessageListener() {
+            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate.*Heading=(.*) GroundSpeed=(.*) Tendency=(.*) Time=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
 
@@ -106,49 +107,70 @@ public class IvyManager {
                     int afl = Integer.parseInt(args[7]);
                     int heading = Integer.parseInt(args[8]);
                     int speed = Integer.parseInt(args[9]);
-                    String time = args[10];
+                    int tendency = Integer.parseInt(args[10]);
+                    String time = args[11];
 
                     //--- avion sur lequel la vue est centrée
                     if (args[0].equals(radar.getPlane().getFlight())) {
                         Plane p = radar.getPlane();
                         p.setCallSign(callSign);
                         p.setTime(time);
-                        p.setPosition(new Position(x, y));
+                        p.setPosition(new Position(new Point2D(x,y)));
                         p.setSector(sector);
                         p.setVx(vx);
                         p.setVy(vy);
                         p.setAfl(afl);
                         p.setHeading(heading);
                         p.setSpeed(speed);
+                        p.setTendency(tendency);
                         //---updating  radarview
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
                                radar.addCentralPlane();
+                               radar.addPlane(p);
                             }
                         });
                     } else {
                         //---l'avion n'existe pas , on le crée et on l'ajoute au map
                         if (!radar.getPlanes().containsKey(key)) {
-                            Plane p = new Plane(flight, callSign, new Position(x, y), vx, vy);
+                            Plane p = new Plane(flight, callSign, new Position(new Point2D(x,y)), vx, vy);
+                            p.calculateNewPosition();
                             p.setSector(sector);
                             p.setAfl(afl);
                             p.setHeading(heading);
                             p.setSpeed(speed);
+                            p.setTendency(tendency);
                             p.setTime(time);
                             map.put(key, p);
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                               radar.addPlane(p);
+                            }
+                        });
                         } else {
                             //---si le plane existe, on le met à jour
                             Plane p = radar.getPlanes().get(key);
                             p.setSector(args[2]);
-                            p.setPosition(new Position(x, y));
+                            p.setPosition(new Position(new Point2D(x,y)));
+                            p.calculateNewPosition();
                             p.setCallSign(callSign);
                             p.setVx(vx);
                             p.setVy(vy);
                             p.setAfl(afl);
                             p.setHeading(heading);
                             p.setSpeed(speed);
+                            p.setTendency(tendency);
                             p.setTime(time);
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                               radar.addPlane(p);
+                            }
+                        });
                         }
                     }
                     System.out.println("---------trackmoved-------------");

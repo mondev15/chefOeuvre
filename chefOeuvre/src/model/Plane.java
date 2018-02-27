@@ -1,5 +1,6 @@
 package model;
 
+import com.sun.javafx.geom.Point2D;
 import java.awt.Color;
 import java.awt.Rectangle;
 
@@ -16,12 +17,14 @@ public class Plane {
     private String time;
     private String sector;
     private Position position;
+    private Position newPosition; // position dans la vue navigation display
     private int heading; //cap
     private int afl; // niveau
-    private float vx; 
-    private float vy;    
+    private float vx;
+    private float vy;
     private int speed;
-     //---route
+    private int tendency;
+    //---route
     private Route route;
 
     //---forme de l'avion
@@ -32,15 +35,16 @@ public class Plane {
         opacity = 1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
-        flight ="default";
-        sector="";
-        callSign="default";
-        route = new Route("default","default","default");
-        heading=0;
-        afl =0;
+        flight = "default";
+        sector = "";
+        callSign = "default";
+        route = new Route("default", "default", "default");
+        heading = 0;
+        afl = 0;
+        newPosition= new Position(new Point2D(Float.MIN_VALUE, Float.MAX_VALUE));
     }
 
-    public Plane(String flt, String cs, Position p, float xSpeed, float ySpeed){
+    public Plane(String flt, String cs, Position p, float xSpeed, float ySpeed) {
         position = p;
         vx = xSpeed;
         vy = ySpeed;
@@ -50,7 +54,7 @@ public class Plane {
         opacity = 1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
-        route = new Route("default","default","default");
+        route = new Route("default", "default", "default");
     }
 
     public Position getPosition() {
@@ -61,11 +65,10 @@ public class Plane {
         this.position = position;
     }
 
-    public void movePlane() {
+    /*public void movePlane() {
         position.setX(position.getX()+vx);
         position.setY(position.getY()+vy);
-    }
-
+    }*/
     public Color getPlaneColor() {
         return planeColor;
     }
@@ -169,20 +172,36 @@ public class Plane {
     public void setAfl(int afl) {
         this.afl = afl;
     }
-    
-    public Position newPosition(Position p){
-        //----vitesse
-        //----position
-        // X= X*sin(cap) // orientation (+)
-        // Y= Y*cos(cap) // orientation (-)
-        return new Position(0.0f,0.0f);
-    };
 
-    @Override
-    public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", position=" + position + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", route=" + route + '}';
+    public Position getNewPosition() {
+        return newPosition;
     }
 
+    public void setNewPosition(Position newPosition) {
+        this.newPosition = newPosition;
+    }  
+
+    public int getTendency() {
+        return tendency;
+    }
+
+    public void setTendency(int tendency) {
+        this.tendency = tendency;
+    }
+
+    //--- calcule la nouvelle position du point dans la vue navigation display
+    public void calculateNewPosition() {
+        //---le temps ne change pas, c'est le même dans les deux vues (repères)
+        //---la position change en fonction de la vitesse et du cap
+        float x = Math.abs( (float) ((float) position.getPos().x - speed * Math.cos(heading)));
+        float y = Math.abs( (float) ((float) position.getPos().y + speed * Math.sin(heading)));
+        newPosition = new Position(new Point2D(x,y));
+    }
     
+    @Override
+    public String toString() {
+        return "Plane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", position=" + position + ", newPosition=" + newPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", route=" + route + '}';
+    }
+
     
 }
