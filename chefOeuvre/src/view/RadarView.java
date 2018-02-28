@@ -12,6 +12,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import com.sun.javafx.geom.Point2D;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import model.Plane;
 import model.Position;
 
@@ -29,11 +32,17 @@ public class RadarView extends Parent {
     private Label planeLabel;
     private Label text10, text20, text30;
 
+    private HBox hb = new HBox();
+    private VBox vb = new VBox();
+    private VBox vb1 = new VBox();
+   
+
     public RadarView() {
         //---
         plane = new Plane();
         planes = new HashMap<Integer, Plane>();
         planeLabel = new Label("planeLabel");
+
         //---
         x_middle = (X_START + (X_SCENE - X_START)) / 2.f;
         y_middle = (Y_SCENE - X_START + Y_SCENE - X_START) / 2.f;
@@ -50,20 +59,29 @@ public class RadarView extends Parent {
         text20 = createLabel("20", x_middle - 210, y_middle - 70);
         text30 = createLabel("30", x_middle - 310, y_middle - 90);
 
+        // label pour afficher cap , niveau et vitesse
+        vb = createLabels();
+        vb1 = createTextFields();
+        hb.getChildren().add(vb);
+        hb.getChildren().add(vb1);        
+        
         //---ajout des lignes et arc au groupe
         //Arc arc4 = new Arc();
         //animateArc(arc4);
         //this.getChildren().add(arc4);
         //Circle circle = createPlane(x_middle, y_middle,Color.YELLOW);
         //Text text4 = createText(plane.getCallSign(), x_middle-10,y_middle+20);
-        this.getChildren().addAll(line, arc1, arc2, arc3, text10, text20, text30);
+        this.getChildren().addAll(line, arc1, arc2, arc3, text10, text20, text30, hb);
 
     }
 
     public void addCentralPlane() {
         Circle circle = createPlane(x_middle, y_middle, Color.YELLOW);
         String str = plane.getCallSign() + "\t" + plane.getPosition().getPos().x + " , " + plane.getPosition().getPos().y;
-        str += "\ncap :" + plane.getHeading() + " , niveau :" + plane.getAfl();
+      
+        VBox vb2 = createTextFields();       
+        hb.getChildren().remove(1);
+        hb.getChildren().add(vb2);
         planeLabel.setText(str);
         planeLabel.setTextFill(Color.WHITE);
         planeLabel.relocate(x_middle - 70, y_middle + 20);
@@ -73,16 +91,21 @@ public class RadarView extends Parent {
     }
 
     public void addPlane(Plane p) {
-        Label label = new Label();
-        p.calculateNewPosition();
-        Point2D pos = p.getNewPosition().getPos();
-        Circle circle = createPlane(pos.x-20, pos.y+20, Color.GREEN);
-        String str = p.getCallSign();
-        label.setText(str);
-        label.setTextFill(Color.WHITE);
-        label.relocate(pos.x - 20, pos.y + 20);
-        if (getDistance(p) < 200) {
-            this.getChildren().addAll(circle, label);
+        if (plane.getPosition() != null) {
+            Label label = new Label();
+            p.calculateNewPosition();
+            Point2D pos = p.getNewPosition().getPos();
+
+            Circle circle = createPlane(pos.x - 20, pos.y + 20, Color.GREEN);
+            String str = p.getCallSign();
+            label.setText(str);
+            label.setTextFill(Color.WHITE);
+            label.relocate(pos.x - 20, pos.y + 20);
+            
+            if (getDistance(p) <= plane.getMAX_DISTANCE()) {
+                if(!this.getChildren().contains(label))
+                this.getChildren().addAll(circle, label);
+            }
         }
     }
 
@@ -142,7 +165,46 @@ public class RadarView extends Parent {
         line.setSmooth(true);
         return line;
     }
+    
+    public VBox createTextFields(){
+        //---
+        TextField tfcap = new TextField();
+        tfcap.setText(""+plane.getHeading());
+        tfcap.setPrefWidth(45);
+        tfcap.setPrefHeight(10);
+        //---
+        TextField tfni = new TextField();
+        tfni.setText(""+plane.getAfl());
+        tfni.setPrefWidth(45);
+        tfni.setPrefHeight(10);
+        //---
+        TextField tfvi = new TextField();
+        tfvi.setText(""+plane.getSpeed());
+        tfvi.setPrefWidth(45);
+        tfvi.setPrefHeight(10);
+        //---
+        VBox vb = new VBox();
+        vb.getChildren().addAll(tfcap,tfni,tfvi);
+        vb.setSpacing(15);
+        return vb;
+    }
 
+    public VBox createLabels(){
+        Label hd = new Label();
+        hd.setText("Heading : ");
+        hd.setTextFill(Color.WHITE);
+        Label afl = new Label();
+        afl.setText("afl     : ");
+        afl.setTextFill(Color.WHITE);
+        Label speed = new Label();
+        speed.setText("speed    : ");
+        speed.setTextFill(Color.WHITE);
+        VBox vb1 =new VBox();
+        vb1.getChildren().addAll(hd,afl,speed);
+        vb1.setSpacing(3);
+        return vb1;
+    }
+    
     public Plane getPlane() {
         return plane;
     }
@@ -159,13 +221,14 @@ public class RadarView extends Parent {
         this.planes = planes;
     }
 
-    //--- calcule la distance d'un avion par rapport à l'avion central
+    //----calcule la distance d'un avion par rapport à l'avion central
+    //----la distance est en NM (1NM ~1800m)
     public float getDistance(Plane p) {
 
         Position p1 = plane.getPosition();
         Position p2 = p.getPosition();
 
-            return (float) Math.sqrt(Math.pow(p1.getPos().x - p2.getPos().x, 2.0)
+        return (float) Math.sqrt(Math.pow(p1.getPos().x - p2.getPos().x, 2.0)
                 + Math.pow(p1.getPos().y - p2.getPos().y, 2.0)
         );
     }

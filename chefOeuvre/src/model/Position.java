@@ -6,6 +6,7 @@ import com.sun.javafx.geom.Point2D;
 
 public class Position {
     
+    //X et Y sont des coordonnées cautra exprimés en NM
     private  Point2D pos;
 
     public Position(){

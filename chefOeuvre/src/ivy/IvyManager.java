@@ -28,7 +28,7 @@ public class IvyManager {
             //---Connexion au bus ivy
             bus.start("127.255.255.255:2010");
 
-            //---Selection de l'avion surlequel la vue est centrée
+            //---Selection depuis twinkle de l'avion surlequel la vue est centrée 
             bus.bindMsg("SelectionEvent acc.*Flight=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {

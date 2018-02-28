@@ -16,7 +16,7 @@ public class Plane {
     private String callSign;
     private String time;
     private String sector;
-    private Position position;
+    private Position position; // position dans la vue twinkle
     private Position newPosition; // position dans la vue navigation display
     private int heading; //cap
     private int afl; // niveau
@@ -30,6 +30,7 @@ public class Plane {
     //---forme de l'avion
     private Rectangle shape;
 
+    private final int MAX_DISTANCE = 30; // NM 
     //---
     public Plane() {
         opacity = 1.f;
@@ -41,7 +42,6 @@ public class Plane {
         route = new Route("default", "default", "default");
         heading = 0;
         afl = 0;
-        newPosition= new Position(new Point2D(Float.MIN_VALUE, Float.MAX_VALUE));
     }
 
     public Plane(String flt, String cs, Position p, float xSpeed, float ySpeed) {
@@ -65,10 +65,6 @@ public class Plane {
         this.position = position;
     }
 
-    /*public void movePlane() {
-        position.setX(position.getX()+vx);
-        position.setY(position.getY()+vy);
-    }*/
     public Color getPlaneColor() {
         return planeColor;
     }
@@ -188,15 +184,20 @@ public class Plane {
     public void setTendency(int tendency) {
         this.tendency = tendency;
     }
-
+    //--- ATTENTION LES COORDONNEES SONT EN CAUTRA (Coordonnées AUtomatisées du TRafic Aerien)
     //--- calcule la nouvelle position du point dans la vue navigation display
     public void calculateNewPosition() {
         //---le temps ne change pas, c'est le même dans les deux vues (repères)
         //---la position change en fonction de la vitesse et du cap
-        float x = Math.abs( (float) ((float) position.getPos().x - speed * Math.cos(heading)));
-        float y = Math.abs( (float) ((float) position.getPos().y + speed * Math.sin(heading)));
+        float x = Math.abs((float) ((float) position.getPos().x - speed * Math.cos(heading)));
+        float y = Math.abs((float) ((float) position.getPos().y + speed * Math.sin(heading)));
         newPosition = new Position(new Point2D(x,y));
     }
+
+    public int getMAX_DISTANCE() {
+        return MAX_DISTANCE;
+    }
+    
     
     @Override
     public String toString() {
