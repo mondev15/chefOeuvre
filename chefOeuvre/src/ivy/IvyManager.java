@@ -1,6 +1,5 @@
 package ivy;
 
-import com.sun.javafx.geom.Point2D;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
@@ -10,9 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import model.Plane;
-import model.Position;
 import model.Route;
 import view.RadarView;
+import java.awt.geom.Point2D;
 
 public class IvyManager {
 
@@ -35,12 +34,12 @@ public class IvyManager {
                     Plane p = radar.getPlane();
                     //---TO DO
                     //--- DONNER LA POSSIBILITE DE CHANGER D'AVION
-                    if (p.getFlight().equals("default")) 
+                    if (p.getFlight().equals("default_Flight")) 
                     {
                         p.setFlight(args[0]);
                         Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
                         p.setCallSign(copy.getCallSign());
-                        p.setPosition(copy.getPosition());
+                        p.setTwinklePosition(copy.getTwinklePosition());
                         p.setRoute(copy.getRoute());
                         p.setAfl(copy.getAfl());
                         p.setHeading(copy.getHeading());
@@ -100,10 +99,10 @@ public class IvyManager {
                     String flight = args[0];
                     String callSign = args[1];
                     String sector = args[2];
-                    float x = Float.parseFloat(args[3]);
-                    float y = Float.parseFloat(args[4]);
-                    float vx = Float.parseFloat(args[5]);
-                    float vy = Float.parseFloat(args[6]);
+                    double x = Double.parseDouble(args[3]);
+                    double y = Double.parseDouble(args[4]);
+                    double vx = Double.parseDouble(args[5]);
+                    double vy = Double.parseDouble(args[6]);
                     int afl = Integer.parseInt(args[7]);
                     int heading = Integer.parseInt(args[8]);
                     int speed = Integer.parseInt(args[9]);
@@ -115,7 +114,8 @@ public class IvyManager {
                         Plane p = radar.getPlane();
                         p.setCallSign(callSign);
                         p.setTime(time);
-                        p.setPosition(new Position(new Point2D(x,y)));
+                        p.setTwinklePosition(new Point2D.Double(x,y));
+                        radar.calculateNdPosition(p);
                         p.setSector(sector);
                         p.setVx(vx);
                         p.setVy(vy);
@@ -134,8 +134,8 @@ public class IvyManager {
                     } else {
                         //---l'avion n'existe pas , on le crée et on l'ajoute au map
                         if (!radar.getPlanes().containsKey(key)) {
-                            Plane p = new Plane(flight, callSign, new Position(new Point2D(x,y)), vx, vy);
-                            p.calculateNewPosition();
+                            Plane p = new Plane(flight, callSign, (new Point2D.Double(x,y)), vx, vy);
+                            radar.calculateNdPosition(p);
                             p.setSector(sector);
                             p.setAfl(afl);
                             p.setHeading(heading);
@@ -154,8 +154,8 @@ public class IvyManager {
                             //---si le plane existe, on le met à jour
                             Plane p = radar.getPlanes().get(key);
                             p.setSector(args[2]);
-                            p.setPosition(new Position(new Point2D(x,y)));
-                            p.calculateNewPosition();
+                            p.setTwinklePosition(new Point2D.Double(x,y));
+                            radar.calculateNdPosition(p);
                             p.setCallSign(callSign);
                             p.setVx(vx);
                             p.setVy(vy);

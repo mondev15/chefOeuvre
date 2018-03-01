@@ -1,8 +1,8 @@
 package model;
 
-import com.sun.javafx.geom.Point2D;
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 
 public class Plane {
 
@@ -16,12 +16,12 @@ public class Plane {
     private String callSign;
     private String time;
     private String sector;
-    private Position position; // position dans la vue twinkle
-    private Position newPosition; // position dans la vue navigation display
+    private Point2D.Double twinklePosition; // twinklePosition dans la vue twinkle
+    private Point2D.Double ndPosition; // twinklePosition dans la vue navigation display
     private int heading; //cap
     private int afl; // niveau
-    private float vx;
-    private float vy;
+    private double vx;
+    private double vy;
     private int speed;
     private int tendency;
     //---route
@@ -36,16 +36,17 @@ public class Plane {
         opacity = 1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
-        flight = "default";
-        sector = "";
-        callSign = "default";
-        route = new Route("default", "default", "default");
+        flight = "default_Flight";
+        sector = "default_Sector";
+        callSign = "default_CallSign";
+        route = new Route("default_Dep", "default_Arr", "default_List");
         heading = 0;
         afl = 0;
     }
 
-    public Plane(String flt, String cs, Position p, float xSpeed, float ySpeed) {
-        position = p;
+    public Plane(String flt, String cs, Point2D.Double p, double xSpeed, double ySpeed) {
+        twinklePosition = p;
+        ndPosition = new Point2D.Double();
         vx = xSpeed;
         vy = ySpeed;
         sector = "";
@@ -55,14 +56,6 @@ public class Plane {
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
         route = new Route("default", "default", "default");
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
     }
 
     public Color getPlaneColor() {
@@ -105,19 +98,19 @@ public class Plane {
         this.sector = sector;
     }
 
-    public float getVx() {
+    public double getVx() {
         return vx;
     }
 
-    public void setVx(float vx) {
+    public void setVx(double vx) {
         this.vx = vx;
     }
 
-    public float getVy() {
+    public double getVy() {
         return vy;
     }
 
-    public void setVy(float vy) {
+    public void setVy(double vy) {
         this.vy = vy;
     }
 
@@ -169,13 +162,27 @@ public class Plane {
         this.afl = afl;
     }
 
-    public Position getNewPosition() {
-        return newPosition;
+    public Point2D.Double getTwinklePosition() {
+        return twinklePosition;
     }
 
-    public void setNewPosition(Position newPosition) {
-        this.newPosition = newPosition;
-    }  
+    public void setTwinklePosition(Point2D.Double twinklePosition) {
+        this.twinklePosition = new Point2D.Double(
+                (double)((int)(twinklePosition.x*100))/100,
+                (double)((int)(twinklePosition.y*100))/100
+        );
+    }
+
+    public Point2D.Double getNdPosition() {
+        return ndPosition;
+    }
+
+    public void setNdPosition(Point2D.Double ndPosition) {
+        this.ndPosition = new Point2D.Double(
+                (double)((int)(ndPosition.x*100))/100,
+                (double)((int)(ndPosition.x*100))/100
+        );
+    }
 
     public int getTendency() {
         return tendency;
@@ -185,24 +192,23 @@ public class Plane {
         this.tendency = tendency;
     }
     //--- ATTENTION LES COORDONNEES SONT EN CAUTRA (Coordonnées AUtomatisées du TRafic Aerien)
-    //--- calcule la nouvelle position du point dans la vue navigation display
+    //--- calcule la nouvelle twinklePosition du point dans la vue navigation display
+    /*
     public void calculateNewPosition() {
         //---le temps ne change pas, c'est le même dans les deux vues (repères)
-        //---la position change en fonction de la vitesse et du cap
-        float x = Math.abs((float) ((float) position.getPos().x - speed * Math.cos(heading)));
-        float y = Math.abs((float) ((float) position.getPos().y + speed * Math.sin(heading)));
-        newPosition = new Position(new Point2D(x,y));
+        //---la twinklePosition change en fonction de la vitesse et du cap
+        double x = Math.abs( twinklePosition.x - speed * Math.cos(heading));
+        double y = Math.abs(twinklePosition.y + speed * Math.sin(heading));
+        ndPosition = new Point2D.Double((double)((int)(x*100))/100,(double)((int)(y*100))/100);
     }
-
+     */       
     public int getMAX_DISTANCE() {
         return MAX_DISTANCE;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "Plane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", position=" + position + ", newPosition=" + newPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", route=" + route + '}';
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", route=" + route + '}';
     }
-
     
 }
