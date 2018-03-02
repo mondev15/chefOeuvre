@@ -31,15 +31,17 @@ public class IvyManager {
             bus.bindMsg("SelectionEvent acc.*Flight=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    Plane p = radar.getPlane();
-                    //---TO DO
-                    //--- DONNER LA POSSIBILITE DE CHANGER D'AVION
+                    Plane p = radar.getCentralPlane();
+
                     if (p.getFlight().equals("default_Flight")) 
                     {
                         p.setFlight(args[0]);
                         Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
                         p.setCallSign(copy.getCallSign());
                         p.setTwinklePosition(copy.getTwinklePosition());
+                        radar.calculateNdPosition(p);
+                        System.out.println("---------------------------nd position--------------------");
+                        System.out.println(p.getNdPosition());
                         p.setRoute(copy.getRoute());
                         p.setAfl(copy.getAfl());
                         p.setHeading(copy.getHeading());
@@ -64,8 +66,8 @@ public class IvyManager {
                     Map<Integer, Plane> map = radar.getPlanes();
                     int key = Integer.parseInt(args[0]);
                     //---on crée un plane s'il n'existe pas dans la map
-                    if (args[0].equals(radar.getPlane().getFlight())) {
-                        Plane p = radar.getPlane();
+                    if (args[0].equals(radar.getCentralPlane().getFlight())) {
+                        Plane p = radar.getCentralPlane();
                         p.setTime(args[1]);
                         p.setCallSign(args[2]);
                         p.setSpeed(Integer.parseInt(args[3]));
@@ -80,7 +82,7 @@ public class IvyManager {
                         map.put(key, p);
                     }
                     System.out.println("---------pln event-------------");
-                    System.out.println(radar.getPlane());
+                    System.out.println(radar.getCentralPlane());
                     System.out.println(radar.getPlanes().toString());
                 }
 
@@ -110,8 +112,8 @@ public class IvyManager {
                     String time = args[11];
 
                     //--- avion sur lequel la vue est centrée
-                    if (args[0].equals(radar.getPlane().getFlight())) {
-                        Plane p = radar.getPlane();
+                    if (args[0].equals(radar.getCentralPlane().getFlight())) {
+                        Plane p = radar.getCentralPlane();
                         p.setCallSign(callSign);
                         p.setTime(time);
                         p.setTwinklePosition(new Point2D.Double(x,y));
@@ -174,7 +176,7 @@ public class IvyManager {
                         }
                     }
                     System.out.println("---------trackmoved-------------");
-                    System.out.println(radar.getPlane());
+                    System.out.println(radar.getCentralPlane());
                     System.out.println(radar.getPlanes().toString());
                 }
 
