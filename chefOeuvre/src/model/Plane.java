@@ -1,78 +1,64 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 
-public final class Plane {
+public class Plane {
+
     //--- affichage de l'avion
     private final float GREEN = 1.0f;
     private Color planeColor = new Color(0, GREEN, 0, 0.0f);
     private float opacity = 0.f;
+
     //--- info de l'avion   
     private String flight;
     private String callSign;
-    private float x;
-    private float y;
-    private float vx;
-    private float vy;
+    private String time;
+    private String sector;
+    private Point2D.Double twinklePosition; // twinklePosition dans la vue twinkle
+    private Point2D.Double ndPosition; // twinklePosition dans la vue navigation display
+    private int heading; //cap
+    private int afl; // niveau
+    private double vx;
+    private double vy;
     private int speed;
-    private String dep;
-    private String arr;
+    private int tendency;
+    //---route
+    private Route route;
+
     //---forme de l'avion
     private Rectangle shape;
 
+    private final int MAX_DISTANCE = 30; // NM 
     //---
-    
-    public Plane (){
-        opacity =1.f;
+    public Plane() {
+        opacity = 1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
+        flight = "default_Flight";
+        sector = "default_Sector";
+        callSign = "default_CallSign";
+        route = new Route("default_Dep", "default_Arr", "default_List");
+        heading = 0;
+        afl = 0;
     }
-    
-    public Plane(String cs,float x, float y, float xSpeed, float ySpeed) {
-        this.x = x;
-        this.y = y;
-        this.vx = xSpeed;
-        this.vy = ySpeed;
+
+    public Plane(String flt, String cs, Point2D.Double p, double xSpeed, double ySpeed) {
+        twinklePosition = p;
+        ndPosition = new Point2D.Double();
+        vx = xSpeed;
+        vy = ySpeed;
+        sector = "";
+        flight = flt;
         callSign = cs;
-        opacity =1.f;
+        opacity = 1.f;
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
+        route = new Route("default", "default", "default");
     }
 
-    public void drawPlane(Graphics g) {
-        shape.setLocation((int) x, (int) y);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(planeColor);
-        g2d.fillOval(shape.x, shape.y, 15, 15);
-        g2d.drawString("   |"+callSign,x+5,y);
-        g2d.drawString("   |"+x,x+5,y+10);
-        g2d.drawString("   |"+y,x+5,y+20);
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setX(float xPos) {
-        this.x = xPos;
-    }
-
-    public void setY(float yPos) {
-        this.y = yPos;
-    }
-
-    public void movePlane() {
-        x += vx;
-        y += vy;
-    }
-        public Color getPlaneColor() {
+    public Color getPlaneColor() {
         return planeColor;
     }
 
@@ -104,19 +90,27 @@ public final class Plane {
         this.flight = flight;
     }
 
-    public float getVx() {
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
+    public double getVx() {
         return vx;
     }
 
-    public void setVx(float vx) {
+    public void setVx(double vx) {
         this.vx = vx;
     }
 
-    public float getVy() {
+    public double getVy() {
         return vy;
     }
 
-    public void setVy(float vy) {
+    public void setVy(double vy) {
         this.vy = vy;
     }
 
@@ -128,26 +122,93 @@ public final class Plane {
         this.speed = groundSpeed;
     }
 
-    public String getDep() {
-        return dep;
+    public String getTime() {
+        return time;
     }
 
-    public void setDep(String dep) {
-        this.dep = dep;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public String getArr() {
-        return arr;
+    public Route getRoute() {
+        return route;
     }
 
-    public void setArr(String arr) {
-        this.arr = arr;
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
+    public int getHeading() {
+        return heading;
+    }
+
+    public void setHeading(int heading) {
+        this.heading = heading;
+    }
+
+    public Rectangle getShape() {
+        return shape;
+    }
+
+    public void setShape(Rectangle shape) {
+        this.shape = shape;
+    }
+
+    public int getAfl() {
+        return afl;
+    }
+
+    public void setAfl(int afl) {
+        this.afl = afl;
+    }
+
+    public Point2D.Double getTwinklePosition() {
+        return twinklePosition;
+    }
+
+    public void setTwinklePosition(Point2D.Double twinklePosition) {
+        this.twinklePosition = new Point2D.Double(
+                (double)((int)(twinklePosition.x*100))/100,
+                (double)((int)(twinklePosition.y*100))/100
+        );
+    }
+
+    public Point2D.Double getNdPosition() {
+        return ndPosition;
+    }
+
+    public void setNdPosition(Point2D.Double ndPosition) {
+        this.ndPosition = new Point2D.Double(
+                (double)((int)(ndPosition.x*100))/100,
+                (double)((int)(ndPosition.x*100))/100
+        );
+    }
+
+    public int getTendency() {
+        return tendency;
+    }
+
+    public void setTendency(int tendency) {
+        this.tendency = tendency;
+    }
+    //--- ATTENTION LES COORDONNEES SONT EN CAUTRA (Coordonnées AUtomatisées du TRafic Aerien)
+    //--- calcule la nouvelle twinklePosition du point dans la vue navigation display
+    /*
+    public void calculateNewPosition() {
+        //---le temps ne change pas, c'est le même dans les deux vues (repères)
+        //---la twinklePosition change en fonction de la vitesse et du cap
+        double x = Math.abs( twinklePosition.x - speed * Math.cos(heading));
+        double y = Math.abs(twinklePosition.y + speed * Math.sin(heading));
+        ndPosition = new Point2D.Double((double)((int)(x*100))/100,(double)((int)(y*100))/100);
+    }
+     */       
+    public int getMAX_DISTANCE() {
+        return MAX_DISTANCE;
     }
 
     @Override
     public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", x=" + x + ", y=" + y + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", dep=" + dep + ", arr=" + arr + '}';
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", route=" + route + '}';
     }
-
-
+    
 }

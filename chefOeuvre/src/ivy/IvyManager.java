@@ -1,104 +1,213 @@
 package ivy;
 
-import test.*;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
 import fr.dgac.ivy.IvyMessageListener;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import model.Plane;
-import model.Plane;
-import view.Radar;
+import model.Route;
+import view.RadarView;
+import java.awt.geom.Point2D;
 
-/**Vérifier si 
- * PlnFlightEvent,
- * TrackMovedEvent
- * SectorEvent 
- * ont le même numéro de flight avant de faire des mises  à jour des position et vitesse
-*/
 public class IvyManager {
 
-    private Ivy bus;
-    private Radar radar;
+    private static Ivy bus;
+    private RadarView radar;
 
     public IvyManager() {
 
-    radar = new Radar();
-    bus = new Ivy("IvyManager", "IvyManager CONNECTED", null);
+        radar = new RadarView();
+        bus = new Ivy("IvyManager", "IvyManager CONNECTED", null);
 
-        //---connexion au bus
         try {
+            //---Connexion au bus ivy
             bus.start("127.255.255.255:2010");
-        } catch (IvyException ex) {
-            Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        //---PlnEvent
-        try {
-            //Plane{Flight=352, CallSign=DIWAL, X=0.0, Y=0.0, Vx=0.0, Vy=0.0, GroundSpeed=258, Dep=LEBB, Arr=EDLN}
-            bus.bindMsg("PlnEvent Flight=(.*)", new IvyMessageListener() {
+            //---Selection depuis twinkle de l'avion surlequel la vue est centrée 
+            bus.bindMsg("SelectionEvent acc.*Flight=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    //CREATE PLANE
-                    //--- plane
-                    Plane p = new Plane();
-                    String splitted[] = args[0].split(" ");
-                    //---    
-                    p.setFlight(splitted[0]);
-                    p.setCallSign(splitted[2].split("=")[1]);
-                    p.setSpeed(Integer.parseInt(splitted[5].split("=")[1]));
-                    p.setDep(splitted[7].split("=")[1]);
-                    p.setArr(splitted[8].split("=")[1]);
-                    radar.addPlaneToRadar(p);
-                    System.out.println(p.toString());
-                    //---affichage de la de liste de plane dans radar
-                    System.out.println("\nradar : " + radar.getPlaneList().toString());
+                    Plane p = radar.getCentralPlane();
+
+                    if (p.getFlight().equals("default_Flight")) 
+                    {
+                        p.setFlight(args[0]);
+                        Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
+                        p.setCallSign(copy.getCallSign());
+                        p.setTwinklePosition(copy.getTwinklePosition());
+                        radar.calculateNdPosition(p);
+                        System.out.println("---------------------------nd position--------------------");
+                        System.out.println(p.getNdPosition());
+                        p.setRoute(copy.getRoute());
+                        p.setAfl(copy.getAfl());
+                        p.setHeading(copy.getHeading());
+                        p.setSpeed(copy.getSpeed());
+                        //on supprime l'avion de la map
+                        radar.getPlanes().remove(Integer.parseInt(args[0]));
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                radar.addCentralPlane();
+                            }
+                        });
+                    }
                 }
+            });
+
+            //---PlnEvent
+            bus.bindMsg("PlnEvent Flight=(.*) Time=(.*) CallSign=(.*) AircraftType.*Speed=(.*) Rfl.*Dep=(.*) Arr=(.*) Rvsm.*List=(.*)", new IvyMessageListener() {
+                @Override
+                public void receive(IvyClient client, String[] args) {
+                    Map<Integer, Plane> map = radar.getPlanes();
+                    int key = Integer.parseInt(args[0]);
+                    //---on crée un plane s'il n'existe pas dans la map
+                    if (args[0].equals(radar.getCentralPlane().getFlight())) {
+                        Plane p = radar.getCentralPlane();
+                        p.setTime(args[1]);
+                        p.setCallSign(args[2]);
+                        p.setSpeed(Integer.parseInt(args[3]));
+                        p.setRoute(new Route(args[4], args[5], args[6])); //args[4] : dep, args[5]arr, args[6]: list 
+                    } else {
+                        Plane p = new Plane();
+                        p.setFlight(args[0]);
+                        p.setTime(args[1]);
+                        p.setCallSign(args[2]);
+                        p.setSpeed(Integer.parseInt(args[3]));
+                        p.setRoute(new Route(args[4], args[5], args[6])); //args[4] : dep, args[5]arr, args[6]: list
+                        map.put(key, p);
+                    }
+                    System.out.println("---------pln event-------------");
+                    System.out.println(radar.getCentralPlane());
+                    System.out.println(radar.getPlanes().toString());
+                }
+
             });
 
             //---TrackMovedEvent
-            bus.bindMsg("TrackMovedEvent Flight=(.*)", new IvyMessageListener() {
+            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate.*Heading=(.*) GroundSpeed=(.*) Tendency=(.*) Time=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    //---
-                    String splitted[] = args[0].split(" ");
-                    //UPDATE PLANE (x, y, vx, vy, groundSpeed)
-                    /*System.out.println("\n------------------TrackMovedEvent------------------");
-                    System.out.print("\nFlight = " + splitted[0]);
-                    System.out.print("\t" + splitted[1]);
-                    System.out.print("\t" + splitted[2]);
-                    System.out.print("\t" + splitted[3]);
-                    System.out.print("\t" + splitted[4]);
-                    System.out.print("\t" + splitted[5]);
-                    System.out.print("\t" + splitted[6]);
-                    System.out.print("\t" + splitted[7]);
-                    System.out.print("\t" + splitted[8]);
-                    System.out.print("\t" + splitted[12]);*/
+
+                    //---CREER PLANE
+                    //---VERIFIER  SI LE PLANE N'EXISTE PAS DEJA AVANT DE LE CREER
+                    Map<Integer, Plane> map = radar.getPlanes();
+                    int key = Integer.parseInt(args[0]);
+                    //---on crée un plane s'il existe pas dans la map
+                    String flight = args[0];
+                    String callSign = args[1];
+                    String sector = args[2];
+                    double x = Double.parseDouble(args[3]);
+                    double y = Double.parseDouble(args[4]);
+                    double vx = Double.parseDouble(args[5]);
+                    double vy = Double.parseDouble(args[6]);
+                    int afl = Integer.parseInt(args[7]);
+                    int heading = Integer.parseInt(args[8]);
+                    int speed = Integer.parseInt(args[9]);
+                    int tendency = Integer.parseInt(args[10]);
+                    String time = args[11];
+
+                    //--- avion sur lequel la vue est centrée
+                    if (args[0].equals(radar.getCentralPlane().getFlight())) {
+                        Plane p = radar.getCentralPlane();
+                        p.setCallSign(callSign);
+                        p.setTime(time);
+                        p.setTwinklePosition(new Point2D.Double(x,y));
+                        radar.calculateNdPosition(p);
+                        p.setSector(sector);
+                        p.setVx(vx);
+                        p.setVy(vy);
+                        p.setAfl(afl);
+                        p.setHeading(heading);
+                        p.setSpeed(speed);
+                        p.setTendency(tendency);
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                               radar.addCentralPlane();
+                               radar.addPlane(p);
+                            }
+                        });
+                    } else {
+                        //---l'avion n'existe pas , on le crée et on l'ajoute au map
+                        if (!radar.getPlanes().containsKey(key)) {
+                            Plane p = new Plane(flight, callSign, (new Point2D.Double(x,y)), vx, vy);
+                            radar.calculateNdPosition(p);
+                            p.setSector(sector);
+                            p.setAfl(afl);
+                            p.setHeading(heading);
+                            p.setSpeed(speed);
+                            p.setTendency(tendency);
+                            p.setTime(time);
+                            map.put(key, p);
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                               radar.addPlane(p);
+                            }
+                        });
+                        } else {
+                            //---si le plane existe, on le met à jour
+                            Plane p = radar.getPlanes().get(key);
+                            p.setSector(args[2]);
+                            p.setTwinklePosition(new Point2D.Double(x,y));
+                            radar.calculateNdPosition(p);
+                            p.setCallSign(callSign);
+                            p.setVx(vx);
+                            p.setVy(vy);
+                            p.setAfl(afl);
+                            p.setHeading(heading);
+                            p.setSpeed(speed);
+                            p.setTendency(tendency);
+                            p.setTime(time);
+                        //---updating  radarview
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                               radar.addPlane(p);
+                            }
+                        });
+                        }
+                    }
+                    System.out.println("---------trackmoved-------------");
+                    System.out.println(radar.getCentralPlane());
+                    System.out.println(radar.getPlanes().toString());
                 }
+
             });
 
             //---SectorEvent
-            bus.bindMsg("SectorEvent Flight=(.*)", new IvyMessageListener() {
+            /*bus.bindMsg("SectorEvent Flight=(.*) Sector_Out=(.*) Sector_In=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     //---
-                    //UPDATE PLANE (sector in, sector out)
+                    //UPDATE PLANE Sector
+                    Map<Integer, Plane> map = radarView.getPlanesMap();
+                    int key = Integer.parseInt(args[0]);
+                    Plane p = map.get(key);
                     String splitted[] = args[0].split(" ");
-                    /*System.out.print("\nFlight = " + splitted[0]);
+                    System.out.print("\nFlight = " + splitted[0]);
                     System.out.print("\t" + splitted[1]);
-                    System.out.print("\t" + splitted[2]);*/
+                    System.out.print("\t" + splitted[2]);
                 }
-            });
+            });*/
         } catch (IvyException ex) {
             Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public static void main(String args[]) {
-
-        IvyManager ivyTest = new IvyManager();
+    public Ivy getBus() {
+        return bus;
     }
 
+    public RadarView getRadarView() {
+        return radar;
+    }
 }
