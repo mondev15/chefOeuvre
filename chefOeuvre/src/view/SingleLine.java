@@ -5,14 +5,21 @@
  */
 package view;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.Group;
-import javafx.scene.layout.HBox;
+import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import model.Block;
 
 /**
@@ -21,40 +28,113 @@ import model.Block;
  */
 public class SingleLine extends Pane{
     
-    private final int LINE_LENGTH = 1012;
-    private final int LINE_HEIGHT = 200;
-    private int startTime = 0;
-    private int endTime = 10000;
-    private int startView = 3000;
-    private int endView = 5000;
-
-    
-
+    private int LINE_LENGTH = 1012;
+    private int LINE_HEIGHT = 150;
+    private int totalStartTime = 0;
+    private int totalEndTime = 10000;
+    private IntegerProperty viewStartTime;
+    private IntegerProperty viewEndTime;
+    private IntegerProperty currentTime;
+    private SimpleStringProperty state = new SimpleStringProperty();
     
     public SingleLine(){
-        this.setPrefSize(LINE_LENGTH, LINE_HEIGHT);
+        this(1012, 150);
     }
     
-//    @Override
-//    public void paint(Graphics g) {
-//        Graphics2D g2d = (Graphics2D) g;
+    public SingleLine(int w, int h){
+        LINE_LENGTH = w;
+        LINE_HEIGHT = h;
+        this.setPrefSize(LINE_LENGTH, LINE_HEIGHT);
+        this.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        currentTime = new SimpleIntegerProperty();
+        viewStartTime = new SimpleIntegerProperty();
+        viewEndTime = new SimpleIntegerProperty();
+        viewStartTime.addListener((observable) -> {updateBlocks();});
+        viewEndTime.addListener((observable) -> {updateBlocks();});
+        currentTime.addListener((observable) -> {updateBlocks();});
+
+        state.addListener((Observable observable) -> {
+            if("IDLE".equals(state.get())){
+                this.setBackground(new Background(new BackgroundFill(Color.rgb(60, 60, 60), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+            else if("DRAG".equals(state.get())){
+                this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+            }
+        });
+        
+        state.set("IDLE");
 //        
-//        for (Block block : blockList) {
-//            if (block.getTime() > startView && block.getTime() < endView){
-//                block.setLocation(getXPos(block), 0);
-//                this.add(block);
+//        this.setOnDragOver(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//                if (event.getGestureSource() != this && event.getDragboard().hasString()) {
+//                    /* allow for both copying and moving, whatever user chooses */
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                }
+//                event.consume();
 //            }
-//        }
-//    }
+//        });
+//        
+//        this.setOnDragEntered(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//            /* the drag-and-drop gesture entered the target */
+//            /* show to the user that it is an actual gesture target */
+//                if (event.getGestureSource() != this && event.getDragboard().hasString()) {
+//                    state.set("DRAG");
+//                }
+//                event.consume();
+//            }
+//        });
+//        
+//        this.setOnDragExited(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//                /* mouse moved away, remove the graphical cues */
+//                state.set("IDLE");
+//                event.consume();
+//            }
+//        });
+        
+    }
+    
+    public void updateBlocks(){
+        for(Node node : this.getChildren()){
+            if(node instanceof Block){
+                Block b = (Block)node;
+                int pos = getXPos(b.timeProperty().get());
+                b.setTranslateX(pos);
+            }
+        }
+    }
     
     public void addBlock(Block b){
-        int pos = getXPos(b);
+        int pos = getXPos(b.timeProperty().get());
         this.getChildren().add(b);
+        b.stateProperty().bindBidirectional(state);
         b.setTranslateX(pos);
     }
     
-    private int getXPos(Block block){
-        return (int) (((block.getTime()-startView)/(float)(endView - startView))*LINE_LENGTH);
+//    public List<Block> getBlocks(){
+//        return this.getChildren();
+//    }
+    
+    public IntegerProperty currentTimeProperty(){
+        return currentTime;
+    }
+    
+    public IntegerProperty viewStartProperty(){
+        return viewStartTime;
+    }
+    
+    public IntegerProperty viewEndProperty(){
+        return viewEndTime;
+    }
+    
+    public int getXPos(int t){
+        float range = (float)(viewEndTime.get() - viewStartTime.get());
+        return (int) (((t-viewStartTime.get())/range)*LINE_LENGTH);
+    }
+    
+    public int getTime(int xPos){
+        int range = viewEndTime.get() - viewStartTime.get();
+        return (int) ((xPos/(float)LINE_LENGTH)*range + viewStartTime.get());
     }
 }
-

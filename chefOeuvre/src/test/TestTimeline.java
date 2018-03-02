@@ -10,10 +10,12 @@ import view.SingleLine;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.Timeline;
 
@@ -25,11 +27,15 @@ public class TestTimeline extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        int w = (int)primaryScreenBounds.getWidth();
+
         primaryStage.setTitle("Test Timeline");
         Group root = new Group();
-        Scene scene = new Scene(root, 1024, 300, Color.LIGHTGREEN);
+        Scene scene = new Scene(root, w, 320, Color.LIGHTGREEN);
         Timeline timeline = new Timeline();
-        SingleLine mainLine = new SingleLine();
+        timeline.setCurrentTime(4000);
         Block blockTest1 = new Block(4950,
                            "APPROCHE -> PILOTE",
                            "180 kts",
@@ -37,10 +43,8 @@ public class TestTimeline extends Application {
                            "ILS 14D",
                            "CALL BACK");
         
-        mainLine.addBlock(blockTest1);
-        timeline.setMainLine(mainLine);
-        //timeline.getChildren().add(new RangeSlider());
-        root.getChildren().add(timeline);        
+        timeline.getMainLine().addBlock(blockTest1);
+        root.getChildren().add(timeline);
         primaryStage.setScene(scene);
         primaryStage.show();
         Block blockTest2 = new Block(3500,
@@ -49,8 +53,8 @@ public class TestTimeline extends Application {
                    "Left 260°",
                    "ILS 14D",
                    "CALL BACK");
-        mainLine.addBlock(blockTest2);
-        blockTest2.setHDG("Right Tamère");
+        timeline.getMainLine().addBlock(blockTest2);
+        blockTest2.setHDG("Right changed");
     }
 }
 
