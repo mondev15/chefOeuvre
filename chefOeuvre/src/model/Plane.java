@@ -26,6 +26,8 @@ public class Plane {
     private int tendency;
     //---route
     private Route route;
+    //---
+    private int angle; // l'angle que l'avion fait avec l'avion central
 
     //---forme de l'avion
     private Rectangle shape;
@@ -42,6 +44,7 @@ public class Plane {
         route = new Route("default_Dep", "default_Arr", "default_List");
         heading = 0;
         afl = 0;
+        //angle = 0;
     }
 
     public Plane(String flt, String cs, Point2D.Double p, double xSpeed, double ySpeed) {
@@ -56,6 +59,7 @@ public class Plane {
         planeColor = new Color(0.0f, GREEN, 0, opacity);
         shape = new Rectangle(10, 10);
         route = new Route("default", "default", "default");
+        //angle = 0;
     }
 
     public Color getPlaneColor() {
@@ -180,7 +184,7 @@ public class Plane {
     public void setNdPosition(Point2D.Double ndPosition) {
         this.ndPosition = new Point2D.Double(
                 (double)((int)(ndPosition.x*100))/100,
-                (double)((int)(ndPosition.x*100))/100
+                (double)((int)(ndPosition.y*100))/100
         );
     }
 
@@ -188,6 +192,15 @@ public class Plane {
         return tendency;
     }
 
+    public int getAngle() {
+        return angle;
+    }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
+
+    
     public void setTendency(int tendency) {
         this.tendency = tendency;
     }
@@ -208,7 +221,11 @@ public class Plane {
 
     @Override
     public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", route=" + route + '}';
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", angle=" + angle +"°, route=" + route +'}';
+    }
+
+    public boolean isInRange() {
+         return this.angle>=0 && angle<=180;
     }
     
 }

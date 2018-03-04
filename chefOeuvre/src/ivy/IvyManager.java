@@ -38,10 +38,7 @@ public class IvyManager {
                         p.setFlight(args[0]);
                         Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
                         p.setCallSign(copy.getCallSign());
-                        p.setTwinklePosition(copy.getTwinklePosition());
-                        radar.calculateNdPosition(p);
-                        System.out.println("---------------------------nd position--------------------");
-                        System.out.println(p.getNdPosition());
+                        p.setTwinklePosition(copy.getTwinklePosition());;
                         p.setRoute(copy.getRoute());
                         p.setAfl(copy.getAfl());
                         p.setHeading(copy.getHeading());
@@ -117,7 +114,11 @@ public class IvyManager {
                         p.setCallSign(callSign);
                         p.setTime(time);
                         p.setTwinklePosition(new Point2D.Double(x,y));
-                        radar.calculateNdPosition(p);
+                        //p.setNdPosition(radar.calculateNdPosition(p));
+                        radar.setTempPosition(radar.calculateNdPosition(p));
+                        System.err.println("----------------------------");
+                        System.err.println(radar.getTempPosition());
+                        //p.setAngle(radar.getAngle(p));
                         p.setSector(sector);
                         p.setVx(vx);
                         p.setVy(vy);
@@ -130,14 +131,15 @@ public class IvyManager {
                             @Override
                             public void run() {
                                radar.addCentralPlane();
-                               radar.addPlane(p);
+                               //radar.addPlane(p);
                             }
                         });
                     } else {
                         //---l'avion n'existe pas , on le crée et on l'ajoute au map
                         if (!radar.getPlanes().containsKey(key)) {
                             Plane p = new Plane(flight, callSign, (new Point2D.Double(x,y)), vx, vy);
-                            radar.calculateNdPosition(p);
+                            p.setNdPosition(radar.calculateNdPosition(p));
+                            p.setAngle(radar.getAngle(p));
                             p.setSector(sector);
                             p.setAfl(afl);
                             p.setHeading(heading);
@@ -157,7 +159,8 @@ public class IvyManager {
                             Plane p = radar.getPlanes().get(key);
                             p.setSector(args[2]);
                             p.setTwinklePosition(new Point2D.Double(x,y));
-                            radar.calculateNdPosition(p);
+                            p.setNdPosition(radar.calculateNdPosition(p));
+                            p.setAngle(radar.getAngle(p));
                             p.setCallSign(callSign);
                             p.setVx(vx);
                             p.setVy(vy);

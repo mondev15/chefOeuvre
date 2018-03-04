@@ -17,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Plane;
+import model.Vector;
 
 public class RadarView extends Parent {
 
@@ -24,8 +25,9 @@ public class RadarView extends Parent {
     private final int W = 650;
     private final int H = 450;
 
-    private final  double MIDDLE_X= (X_START + (W - X_START)) / 2;
-    private final double MIDDLE_Y= (H - X_START + H - X_START) / 2;
+    private final double MIDDLE_X = (X_START + (W - X_START)) / 2;
+    private final double MIDDLE_Y = (H - X_START + H - X_START) / 2;
+    private Point2D.Double tempPosition = new Point2D.Double(MIDDLE_X,MIDDLE_Y);
 
     private Plane centralPlane; //l'avion sur lequel la vue est centrée
     private Map<Integer, Plane> planes;  // la collection (trafic) des avions dans la vue radar
@@ -45,7 +47,6 @@ public class RadarView extends Parent {
         planes = new HashMap<Integer, Plane>();
         planeLabel = new Label("planeLabel");
         labelsMap = new HashMap();
-
 
         //--- la ligne verticale
         Line line = createLine(MIDDLE_X, X_START, MIDDLE_X, MIDDLE_Y);
@@ -79,8 +80,12 @@ public class RadarView extends Parent {
 
     public void addCentralPlane() {
         Circle circle = createPlane(MIDDLE_X, MIDDLE_Y, Color.YELLOW);
-        String str = centralPlane.getCallSign() + "\n" + centralPlane.getTwinklePosition().x + " , " + centralPlane.getTwinklePosition().y;
         centralPlane.setNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y));
+        String str = centralPlane.getCallSign();
+        str += "\n" + centralPlane.getTwinklePosition().x + " , " + centralPlane.getTwinklePosition().y;
+        //str += "\n" + centralPlane.getNdPosition().x + " , " + centralPlane.getNdPosition().y;
+        //tempPosition = new Point2D.Double(MIDDLE_X,MIDDLE_Y);
+        str += "\n" +tempPosition.x + " , " + tempPosition.y;
         VBox vb2 = createTextFields();
         hb.getChildren().remove(1);
         hb.getChildren().add(vb2);
@@ -96,33 +101,48 @@ public class RadarView extends Parent {
     public void addPlane(Plane p) {
         if (centralPlane.getTwinklePosition() != null) {
             if (!p.getCallSign().equals(centralPlane.getCallSign())) {
-
-                Label l  = labelsMap.get(p.getCallSign());
-                calculateNdPosition(p);
+                Label l = labelsMap.get(p.getCallSign());
+                this.calculateNdPosition(p);
+                double newX = (centralPlane.getNdPosition().x - p.getNdPosition().x) * 2;
+                double newY = (p.getNdPosition().y - centralPlane.getNdPosition().y) * 2;
+                p.setNdPosition(new Point2D.Double(p.getNdPosition().x + newX, p.getNdPosition().y + newY));
                 Point2D.Double pos = p.getNdPosition();
-                Tooltip tp  = new Tooltip();
+                Tooltip tp = new Tooltip();
                 //--- si le label n'existe pas déjà                
                 if (l == null) {
                     Label label = new Label(p.getCallSign());
                     Circle circle = createPlane(pos.x - 20, pos.y + 20, Color.GREEN);
                     label.setGraphic(circle);
-                    String str = p.getCallSign();
-                    tp.setText(" "+pos.x+" , "+pos.y+"\n heading: "+p.getHeading()+"\n afl: "+p.getAfl()+"\n afl: "+p.getAfl());
+                    String str = p.getCallSign(); 
+                    //str+= "\n" + p.getAngle() + " °," + getDistance(p);
+                    //str += "\n" + p.getTwinklePosition().x + "," + p.getTwinklePosition().y;
+                    //str += "\n" + p.getNdPosition().x + "," + p.getNdPosition().y;
+                    tp.setText(" " + pos.x + " , " + pos.y + "\n heading: " + p.getHeading() + "\n afl: " + p.getAfl());
                     label.setText(str);
                     label.setTooltip(tp);
                     label.setTextFill(Color.WHITE);
-                    label.relocate(pos.x, pos.y);
+                    //label.relocate(pos.x, pos.y);
+                    label.relocate(p.getNdPosition().x, p.getNdPosition().y);
+                    //label.relocate(MIDDLE_X+Math.cos((Math.toRadians(p.getAngle())))*(getDistance(p)*(-10)), MIDDLE_Y+Math.sin((Math.toRadians(p.getAngle())))*getDistance(p)*(-10));
                     labelsMap.put(p.getCallSign(), label);
-                    if (getDistance(p) <= centralPlane.getMAX_DISTANCE()) {
-                            this.getChildren().add(label);
+                    if (getDistance(p) <= centralPlane.getMAX_DISTANCE() && p.isInRange()) {
+                        this.getChildren().add(label);
                     }
-                } 
-                else {//--- si le label existe
-                      String str = p.getCallSign();
-                      tp.setText(" "+pos.x+" , "+pos.y+"\nafl: "+p.getAfl());
-                      l.setText(str);
-                      l.setTooltip(tp);
-                      l.relocate(pos.x, pos.y);
+                } else {//--- si le label existe
+                    if (getDistance(p) <= centralPlane.getMAX_DISTANCE() && p.isInRange()) {
+                        String str = p.getCallSign();
+                                //str += "\n" + p.getAngle() + " °," + getDistance(p);
+                        //str += "\n" + p.getTwinklePosition().x + "," + p.getTwinklePosition().y;
+                        //str += "\n" + p.getNdPosition().x + "," + p.getNdPosition().y;
+                        tp.setText(" " + pos.x + " , " + pos.y + "\n heading: " + p.getHeading() + "\n afl: " + p.getAfl());
+                        l.setText(str);
+                        l.setTooltip(tp);
+
+                        l.relocate(p.getNdPosition().x, p.getNdPosition().y);
+                        //l.relocate(MIDDLE_X+Math.cos(Math.toRadians(p.getAngle()))*(getDistance(p)*(-10)),MIDDLE_Y+Math.sin((Math.toRadians(p.getAngle())))*getDistance(p)*(-10));
+                    } else {
+                        this.getChildren().remove(l);
+                    }
                 }
 
             }
@@ -244,6 +264,15 @@ public class RadarView extends Parent {
         this.planes = planes;
     }
 
+    public Point2D.Double getTempPosition() {
+        return tempPosition;
+    }
+
+    public void setTempPosition(Point2D.Double tempPosition) {
+        this.tempPosition = tempPosition;
+    }
+
+    
     //----calcule la distance d'un avion par rapport à l'avion central
     //----les position X et Y sont en NM , la distance est donc en NM
     public double getDistance(Plane p) {
@@ -251,20 +280,46 @@ public class RadarView extends Parent {
         Point2D.Double p1 = centralPlane.getTwinklePosition();
         Point2D.Double p2 = p.getTwinklePosition();
 
-        return (Math.sqrt(
-                Math.pow(p1.x - p2.x, 2.0)
-                + Math.pow(p1.y - p2.y, 2.0)
-        ));
+        double sqrt = Math.sqrt(Math.pow(p1.x - p2.x, 2.0) + Math.pow(p1.y - p2.y, 2.));
+
+        return (double) ((int) sqrt * 100) / 100;
     }
 
-    //--- conversion lon, lat to xy
-    public void calculateNdPosition(Plane p) {
+    public Point2D.Double calculateNdPosition(Plane p) {
         if (centralPlane.getNdPosition() != null) {
-            double posX = (p.getTwinklePosition().x * centralPlane.getNdPosition().x) / centralPlane.getTwinklePosition().x;
-            double posY = (p.getTwinklePosition().y * centralPlane.getNdPosition().y) / centralPlane.getTwinklePosition().y;
-            p.setNdPosition(new Point2D.Double(posX, posY));
+            double posX = (p.getTwinklePosition().x * tempPosition.x) / centralPlane.getTwinklePosition().x;
+            double posY = (p.getTwinklePosition().y * tempPosition.y) / centralPlane.getTwinklePosition().y;
+            return (new Point2D.Double(posX, posY));
         }
+        return new Point2D.Double();
+    }
 
+    // permete de calculer l'angle entre l'avion central et un autre plane
+    public int getAngle(Plane p) {
+        if (centralPlane.getTwinklePosition() != null) {
+            //---
+
+            double Xa = centralPlane.getTwinklePosition().x;
+            double Ya = centralPlane.getTwinklePosition().y;
+            //---
+            double Xb = p.getTwinklePosition().x;
+            double Yb = p.getTwinklePosition().y;
+            //---
+            double Xc = Xb;
+            double Yc = Ya;
+            //---
+            Vector v1 = new Vector(Xa, Ya, Xb, Yb);
+            Vector v2 = new Vector(Xa, Ya, Xc, Yc);
+
+            int angle = v1.getAngle(v2);
+
+            if ((Xb >= Xa) && (Yb >= Ya)) {
+                return angle;
+            } else if ((Xb <= Xa) && (Yb >= Ya)) {
+                return 90 + (90 - angle);
+            }
+        }
+        return -1;
     }
 
     //---TO DO

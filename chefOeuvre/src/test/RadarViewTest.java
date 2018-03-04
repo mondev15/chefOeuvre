@@ -18,7 +18,7 @@ public class RadarViewTest extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Centered Plane View");
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         Group root = new Group();
         IvyManager ivyManager = new IvyManager(); 
         
