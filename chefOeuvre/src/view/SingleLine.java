@@ -5,11 +5,13 @@
  */
 package view;
 
+import java.util.Iterator;
 import java.util.List;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -21,6 +23,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.Block;
+import model.Tick;
 
 /**
  *
@@ -30,12 +33,18 @@ public class SingleLine extends Pane{
     
     private int LINE_LENGTH = 1012;
     private int LINE_HEIGHT = 150;
+    private final String STATE_IDLE = "IDLE";
+    private final String STATE_DRAG = "DRAG";
     private int totalStartTime = 0;
     private int totalEndTime = 10000;
     private IntegerProperty viewStartTime;
     private IntegerProperty viewEndTime;
     private IntegerProperty currentTime;
-    private SimpleStringProperty state = new SimpleStringProperty();
+    private StringProperty state = new SimpleStringProperty();
+    private IntegerProperty tickState = new SimpleIntegerProperty();
+    private final int TINY_TICKS = 60;
+    private final int MEDIUM_TICKS = 300;
+    private final int BIG_TICKS = 600;
     
     public SingleLine(){
         this(1012, 150);
@@ -54,16 +63,19 @@ public class SingleLine extends Pane{
         currentTime.addListener((observable) -> {updateBlocks();});
 
         state.addListener((Observable observable) -> {
-            if("IDLE".equals(state.get())){
+            if(STATE_IDLE.equals(state.get())){
                 this.setBackground(new Background(new BackgroundFill(Color.rgb(60, 60, 60), CornerRadii.EMPTY, Insets.EMPTY)));
             }
-            else if("DRAG".equals(state.get())){
+            else if(STATE_DRAG.equals(state.get())){
                 this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
             }
         });
         
-        state.set("IDLE");
-//        
+        state.set(STATE_IDLE);
+        tickState.addListener((observable) -> {updateTicks();});
+        tickState.set(MEDIUM_TICKS);
+        
+        
 //        this.setOnDragOver(new EventHandler<DragEvent>() {
 //            public void handle(DragEvent event) {
 //                if (event.getGestureSource() != this && event.getDragboard().hasString()) {
@@ -102,6 +114,66 @@ public class SingleLine extends Pane{
                 int pos = getXPos(b.timeProperty().get());
                 b.setTranslateX(pos);
             }
+            if(node instanceof Tick){
+                Tick tick = (Tick)node;
+                int pos = getXPos(tick.timeProperty().get());
+                tick.setTranslateX(pos);
+            }
+        }
+        
+        int range = viewEndTime.get() - viewStartTime.get();
+        switch (tickState.get()){
+            case TINY_TICKS:
+                if(range < 15*60){
+                    break;
+                }
+                if(range >= 15*60 && range <= 30*60){
+                    tickState.set(MEDIUM_TICKS);
+                }
+                if(range > 30*60){
+                    tickState.set(BIG_TICKS);
+                }
+            case MEDIUM_TICKS:
+                if(range < 15*60){
+                    tickState.set(TINY_TICKS);
+                }
+                if(range >= 15*60 && range <= 30*60){
+                    break;
+                }
+                if(range > 30*60){
+                    tickState.set(BIG_TICKS);
+                }
+            case BIG_TICKS:
+                if(range < 15*60){
+                    tickState.set(TINY_TICKS);
+                }
+                if(range >= 15*60 && range <= 30*60){
+                    tickState.set(MEDIUM_TICKS);
+                }
+                if(range > 30*60){
+                    break;
+                }
+        }        
+        
+    }
+    
+    public void updateTicks(){
+        System.out.println("view.SingleLine.updateTicks()");
+        Iterator<Node> iter = this.getChildren().iterator();
+        while(iter.hasNext()){
+            Node node = iter.next();
+            if(node instanceof Tick){
+                iter.remove();
+            }
+        }
+        
+        int tickTime = totalStartTime;
+        while(tickTime < totalEndTime){
+            System.out.println("yo");
+            Tick tick = new Tick();
+            this.getChildren().add(tick);
+            tick.setTime(tickTime);
+            tickTime += tickState.get();
         }
     }
     
@@ -136,5 +208,9 @@ public class SingleLine extends Pane{
     public int getTime(int xPos){
         int range = viewEndTime.get() - viewStartTime.get();
         return (int) ((xPos/(float)LINE_LENGTH)*range + viewStartTime.get());
+    }
+    
+    private void addTicks(){
+        
     }
 }

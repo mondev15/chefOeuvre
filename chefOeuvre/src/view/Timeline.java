@@ -21,6 +21,7 @@ import org.controlsfx.control.RangeSlider;
 public class Timeline extends VBox{
 
     private int LINE_HEIGHT = 150;
+    private int STEP = 60;
     
     private SingleLine mainLine;
     private SingleLine secondaryLine;
@@ -31,13 +32,13 @@ public class Timeline extends VBox{
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         int w = (int)primaryScreenBounds.getWidth();
         currentTime = new SimpleIntegerProperty();
-        setSecondaryLine(new SingleLine(w, LINE_HEIGHT));
+        //setSecondaryLine(new SingleLine(w, LINE_HEIGHT));
         setMainLine(new SingleLine(w, LINE_HEIGHT));
         setRangeSlider(new RangeSlider(0, 100, 30, 50));
         mainLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
         mainLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
-        secondaryLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
-        secondaryLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
+//        secondaryLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
+//        secondaryLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
         bindTime();
     }
     
@@ -51,7 +52,7 @@ public class Timeline extends VBox{
     
     public void bindTime(){
         mainLine.currentTimeProperty().bind(currentTime);
-        secondaryLine.currentTimeProperty().bind(currentTime);
+//        secondaryLine.currentTimeProperty().bind(currentTime);
     }
     
     public void setMainLine(SingleLine line){
