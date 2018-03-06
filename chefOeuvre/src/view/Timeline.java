@@ -5,7 +5,11 @@
  */
 package view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.VBox;
@@ -27,19 +31,48 @@ public class Timeline extends VBox{
     private SingleLine secondaryLine;
     private RangeSlider rangeSlider;
     private IntegerProperty currentTime;
+    private IntegerProperty totalStartTime;
+    private IntegerProperty totalEndTime;
+    private IntegerProperty clockTime;
     
     public Timeline() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         int w = (int)primaryScreenBounds.getWidth();
         currentTime = new SimpleIntegerProperty();
-        //setSecondaryLine(new SingleLine(w, LINE_HEIGHT));
+        clockTime = new SimpleIntegerProperty();        
+        totalStartTime = new SimpleIntegerProperty();
+        totalEndTime = new SimpleIntegerProperty();
         setMainLine(new SingleLine(w, LINE_HEIGHT));
-        setRangeSlider(new RangeSlider(0, 100, 30, 50));
-        mainLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
-        mainLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
+
+        //setSecondaryLine(new SingleLine(w, LINE_HEIGHT));
+        setRangeSlider(new RangeSlider(0, 100, 0, 24));
+        
+        
+        totalStartTime.addListener((observable) -> {
+            rangeSlider.setLowValue(0);
+        });
+        
+        totalEndTime.addListener((observable) -> {
+            rangeSlider.setHighValue(25);
+        });
+        
+        rangeSlider.lowValueProperty().addListener((observable) -> {
+            int range = (totalEndTime.get() - totalStartTime.get())/100;
+            mainLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
+//            secondaryLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
+        });
+        
+        rangeSlider.highValueProperty().addListener((observable) -> {
+            int range = (totalEndTime.get() - totalStartTime.get())/100;
+            mainLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
+//            secondaryLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
+        });
 //        secondaryLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
 //        secondaryLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
         bindTime();
+        totalEndTime.set(10000);
+        totalStartTime.set(0);
+        rangeSlider.setHighValue(25);
     }
     
     public SingleLine getMainLine(){
@@ -52,6 +85,8 @@ public class Timeline extends VBox{
     
     public void bindTime(){
         mainLine.currentTimeProperty().bind(currentTime);
+        mainLine.totalStartTimeProperty().bind(totalStartTime);
+        mainLine.totalEndTimeProperty().bind(totalEndTime);
 //        secondaryLine.currentTimeProperty().bind(currentTime);
     }
     
@@ -74,9 +109,30 @@ public class Timeline extends VBox{
         currentTime.set(time);
     }
     
-    private int string2Time(String stime){
-        String[] hms = stime.split(":");
-        return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Integer.parseInt(hms[2]);
+    public void setClockTime(int time){
+        if(clockTime.get() != 0){
+            double range = (totalEndTime.get() - totalStartTime.get())/100.0;
+            double step = 1/range;
+            currentTime.set(currentTime.get() + 1);
+            rangeSlider.setLowValue(rangeSlider.getLowValue() + step);
+            rangeSlider.setHighValue(rangeSlider.getHighValue() + step);
+        }
+        clockTime.set(time);
+    }
+    
+    public IntegerProperty totalStartTimeProperty(){
+        return totalStartTime;
+    }
+    
+    public IntegerProperty totalEndTimeProperty(){
+        return totalEndTime;
+    }
+    
+    public int hmsToInt(String hms){
+        List<String> splitted = new ArrayList(Arrays.asList(hms.split(":")));
+        return(Integer.parseInt(splitted.get(0)) * 3600
+                + Integer.parseInt(splitted.get(1)) * 60
+                + Integer.parseInt(splitted.get(2)));
     }
     
 }

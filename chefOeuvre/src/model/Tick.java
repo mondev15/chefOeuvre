@@ -23,6 +23,7 @@ public class Tick extends VBox{
     private Label timeLabel;
     private Line tick;
     private final int TICK_SIZE = 30;
+    private final String format = "%02d";
     
     public Tick(){
         timeLabel = new Label();
@@ -44,7 +45,7 @@ public class Tick extends VBox{
         time -= h*3600;
         int m = time/60;
         time -= m*60;
-        return (String.format("%02d", h) + ":" + String.format("%02d", m) + ":" + String.format("%02d", time));
+        return (String.format(format, h) + ":" + String.format(format, m) + ":" + String.format(format, time));
     }
     
     public void setTime(int t){

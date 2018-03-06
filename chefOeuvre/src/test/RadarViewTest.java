@@ -2,10 +2,13 @@ package test;
 
 import ivy.IvyManager;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.Block;
 
 
 public class RadarViewTest extends Application {
@@ -22,7 +25,26 @@ public class RadarViewTest extends Application {
         Group root = new Group();
         IvyManager ivyManager = new IvyManager(); 
         
-        root.getChildren().add(ivyManager.getRadarView());
+//        root.getChildren().add(ivyManager.getRadarView());
+        
+        Block blockTest1 = new Block(4950,
+           "APPROCHE -> PILOTE",
+           "180 kts",
+           "Left 260°",
+           "ILS 14D",
+           "CALL BACK");
+        
+        Block blockTest2 = new Block(3500,
+           "APPROCHE -> PILOTE",
+           "180 kts",
+           "Left 260°",
+           "ILS 14D",
+           "CALL BACK");
+        
+        ivyManager.getTimeline().getMainLine().addBlock(blockTest1);
+        ivyManager.getTimeline().getMainLine().addBlock(blockTest2);
+        root.getChildren().add(ivyManager.getTimeline());
+        
         //try {
             //Runtime rt = Runtime.getRuntime();
             //rt.exec("ivymon");
@@ -31,8 +53,10 @@ public class RadarViewTest extends Application {
         //} catch (IOException ex) {
         //    Logger.getLogger(RadarViewTest.class.getName()).log(Level.SEVERE, null, ex);
         //}
-       
-        Scene scene = new Scene(root, 650, 470, Color.BLACK);
+        
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        int w = (int)primaryScreenBounds.getWidth();
+        Scene scene = new Scene(root, w, 470, Color.BLACK);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
