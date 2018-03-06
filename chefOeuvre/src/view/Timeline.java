@@ -72,6 +72,7 @@ public class Timeline extends VBox{
         bindTime();
         totalEndTime.set(10000);
         totalStartTime.set(0);
+        currentTime.set(100);
         rangeSlider.setHighValue(25);
     }
     
@@ -126,6 +127,14 @@ public class Timeline extends VBox{
     
     public IntegerProperty totalEndTimeProperty(){
         return totalEndTime;
+    }
+    
+    public IntegerProperty clockTimeProperty(){
+        return clockTime;
+    }
+    
+    public RangeSlider getRangeSlider(){
+        return rangeSlider;
     }
     
     public int hmsToInt(String hms){

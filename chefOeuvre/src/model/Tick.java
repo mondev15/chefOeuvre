@@ -22,12 +22,12 @@ public class Tick extends VBox{
     private IntegerProperty time = new SimpleIntegerProperty();
     private Label timeLabel;
     private Line tick;
-    private final int TICK_SIZE = 30;
+    private final int TICK_SIZE = 15;
     private final String format = "%02d";
     
     public Tick(){
         timeLabel = new Label();
-        timeLabel.setTextFill(Color.RED);
+        timeLabel.setTextFill(Color.WHITE);
         timeLabel.setTranslateX(-25);
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));
@@ -35,7 +35,7 @@ public class Tick extends VBox{
         });
         
         tick = new Line(this.getTranslateX(), this.getTranslateY(), this.getTranslateX(), this.getTranslateY()+TICK_SIZE);
-        tick.setStroke(Color.RED);
+        tick.setStroke(Color.WHITE);
         this.getChildren().add(timeLabel);
         this.getChildren().add(tick);
     }

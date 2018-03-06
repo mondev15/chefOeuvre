@@ -50,7 +50,6 @@ public class Block extends Group{
     private Label infoLabel;
     private VBox content;
     private SimpleStringProperty state = new SimpleStringProperty();
-    private double sceneX, translateX;
     private BlockSkin forwardBlock;
     
     

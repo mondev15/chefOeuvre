@@ -16,6 +16,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -24,7 +25,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.Block;
+import model.PresentLine;
 import model.Tick;
+import org.controlsfx.control.RangeSlider;
 
 /**
  *
@@ -36,6 +39,7 @@ public class SingleLine extends Pane {
     private int LINE_HEIGHT = 150;
     private final String STATE_IDLE = "IDLE";
     private final String STATE_DRAG = "DRAG";
+    private final String STATE_PRESENT_OUT = "OUT";
     private IntegerProperty totalStartTime;
     private IntegerProperty totalEndTime;
     private IntegerProperty viewStartTime;
@@ -46,6 +50,9 @@ public class SingleLine extends Pane {
     private final int TINY_TICKS = 60;
     private final int MEDIUM_TICKS = 300;
     private final int BIG_TICKS = 600;
+    private PresentLine presentLine;
+    private Button leftGoBackButton;
+    private Button rightGoBackButton;
 
     public SingleLine() {
         this(1012, 150);
@@ -61,6 +68,18 @@ public class SingleLine extends Pane {
         totalEndTime = new SimpleIntegerProperty();
         viewStartTime = new SimpleIntegerProperty();
         viewEndTime = new SimpleIntegerProperty();
+        
+        rightGoBackButton = new Button(">>");
+        rightGoBackButton.setTranslateY(LINE_HEIGHT - 40);
+        rightGoBackButton.setTranslateX(LINE_LENGTH - 50);
+        leftGoBackButton = new Button("<<");
+        leftGoBackButton.setTranslateY(LINE_HEIGHT - 40);
+        leftGoBackButton.setTranslateX(50);
+        
+        rightGoBackButton.setOnAction((e) -> {centerOnPresent();});
+        leftGoBackButton.setOnAction((e) -> {centerOnPresent();});
+        
+                
         viewStartTime.addListener((observable) -> {
             Platform.runLater(new Runnable() {
                 @Override
@@ -82,6 +101,7 @@ public class SingleLine extends Pane {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    presentLine.timeProperty().set(currentTime.get());
                     updateBlocks();
                 }
             });
@@ -106,16 +126,40 @@ public class SingleLine extends Pane {
 ////        });
 
         state.addListener((Observable observable) -> {
-            if (STATE_IDLE.equals(state.get())) {
-                this.setBackground(new Background(new BackgroundFill(Color.rgb(60, 60, 60), CornerRadii.EMPTY, Insets.EMPTY)));
-            } else if (STATE_DRAG.equals(state.get())) {
-                this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+            String currentState = state.get();
+            switch (currentState){
+                case STATE_IDLE:
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+                    rightGoBackButton.setVisible(false);
+                    leftGoBackButton.setVisible(false);
+                    break;
+                case STATE_DRAG:
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(140, 140, 140), CornerRadii.EMPTY, Insets.EMPTY)));
+                    rightGoBackButton.setVisible(false);
+                    leftGoBackButton.setVisible(false);
+                    break;
+                case STATE_PRESENT_OUT:
+                    if (presentLine.timeProperty().get() <= viewStartTime.get()){
+                        rightGoBackButton.setVisible(false);
+                        leftGoBackButton.setVisible(true);
+                    }
+                    else if (presentLine.timeProperty().get() >= viewEndTime.get()){
+                        rightGoBackButton.setVisible(true);
+                        leftGoBackButton.setVisible(false);
+                    }
             }
         });
 
         state.set(STATE_IDLE);
         tickState.set(MEDIUM_TICKS);
         tickState.addListener((observable) -> {updateTicks();});
+        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
+        presentLine.timeProperty().addListener((observable) -> {
+            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
+        });
+        this.getChildren().add(presentLine);
+        this.getChildren().add(leftGoBackButton);
+        this.getChildren().add(rightGoBackButton);
 
 //        this.setOnDragOver(new EventHandler<DragEvent>() {
 //            public void handle(DragEvent event) {
@@ -148,8 +192,9 @@ public class SingleLine extends Pane {
     }
 
     public void updateBlocks() {
-        System.out.println("view.SingleLine.updateBlocks()");
-        for (Node node : this.getChildren()) {
+        Iterator<Node> iter = this.getChildren().iterator();
+        while (iter.hasNext()) {
+            Node node = iter.next();
             if (node instanceof Block) {
                 Block b = (Block) node;
                 int pos = getXPos(b.timeProperty().get());
@@ -159,12 +204,19 @@ public class SingleLine extends Pane {
                 Tick tick = (Tick) node;
                 int pos = getXPos(tick.timeProperty().get());
                 tick.setTranslateX(pos);
-            }
+            }            
+        }
+        
+        updatePresentLine();
+        if (presentLine.timeProperty().get() < viewStartTime.get()
+            || presentLine.timeProperty().get() > viewEndTime.get()){
+            state.set(STATE_PRESENT_OUT);
+        }
+        else{
+            state.set(STATE_IDLE);
         }
 
         int range = viewEndTime.get() - viewStartTime.get();
-        System.out.println(viewEndTime.get());
-        System.out.println(viewStartTime.get());
         switch (tickState.get()) {
             case TINY_TICKS:
                 if (range < 15 * 60) {
@@ -201,7 +253,6 @@ public class SingleLine extends Pane {
     }
 
     public void updateTicks() {
-        System.out.println("view.SingleLine.updateTicks()");
         Iterator<Node> iter = this.getChildren().iterator();
         while (iter.hasNext()) {
             Node node = iter.next();
@@ -209,13 +260,36 @@ public class SingleLine extends Pane {
                 iter.remove();
             }
         }
-        System.out.println(tickState.get());
         int tickTime = totalStartTime.get();
         while (tickTime < totalEndTime.get()) {
             Tick tick = new Tick();
             this.getChildren().add(tick);
             tick.setTime(tickTime);
+            tick.setTranslateY(this.getHeight() - 42);
             tickTime += tickState.get();
+        }
+    }
+    
+    public void updatePresentLine(){
+        int pos = getXPos(presentLine.timeProperty().get());
+        presentLine.setTranslateX(pos);
+    }
+    
+    private void centerOnPresent(){
+        int range = (totalEndTime.get() - totalStartTime.get())/10;
+        RangeSlider r = ((Timeline)this.getParent()).getRangeSlider();
+        if (presentLine.timeProperty().get() - range < totalStartTime.get()){
+            r.setLowValue(0);
+        }
+        else {
+            r.setLowValue(((presentLine.timeProperty().get() - range) - totalStartTime.get())/(range/10));
+        }
+        
+        if (presentLine.timeProperty().get() + range > totalEndTime.get()){
+            r.setHighValue(100);
+        }
+        else{
+            r.setHighValue(((presentLine.timeProperty().get() + range) - totalStartTime.get())/(range/10));
         }
     }
 
@@ -248,7 +322,7 @@ public class SingleLine extends Pane {
     public IntegerProperty totalEndTimeProperty() {
         return totalEndTime;
     }
-
+    
     public int getXPos(int t) {
         float range = (float) (viewEndTime.get() - viewStartTime.get());
         return (int) (((t - viewStartTime.get()) / range) * LINE_LENGTH);
