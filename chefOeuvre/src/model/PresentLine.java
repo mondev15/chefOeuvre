@@ -19,7 +19,7 @@ public class PresentLine extends Line {
 
     IntegerProperty time;
     private double sceneX, translateX;
-    private int WIDTH = 15;
+    private int WIDTH = 10;
 
     public PresentLine() {
         this(0, 0, 0, 0);

@@ -15,6 +15,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Control;
 import javafx.stage.Screen;
+import model.MainLine;
+import model.PresentLine;
+import model.SecondaryLine;
 import org.controlsfx.control.RangeSlider;
 
 
@@ -25,7 +28,7 @@ import org.controlsfx.control.RangeSlider;
 public class Timeline extends VBox{
 
     private int LINE_HEIGHT = 150;
-    private int STEP = 60;
+    private int SECONDARY_LINE_HEIGHT = 50;
     
     private SingleLine mainLine;
     private SingleLine secondaryLine;
@@ -34,6 +37,7 @@ public class Timeline extends VBox{
     private IntegerProperty totalStartTime;
     private IntegerProperty totalEndTime;
     private IntegerProperty clockTime;
+    private PresentLine presentLine;
     
     public Timeline() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -42,9 +46,11 @@ public class Timeline extends VBox{
         clockTime = new SimpleIntegerProperty();        
         totalStartTime = new SimpleIntegerProperty();
         totalEndTime = new SimpleIntegerProperty();
-        setMainLine(new SingleLine(w, LINE_HEIGHT));
-
-        //setSecondaryLine(new SingleLine(w, LINE_HEIGHT));
+        presentLine = new PresentLine(0, -SECONDARY_LINE_HEIGHT, 0, LINE_HEIGHT);
+        setSecondaryLine(new SecondaryLine(w, SECONDARY_LINE_HEIGHT));
+        setMainLine(new MainLine(w, LINE_HEIGHT));
+        mainLine.setPresentLine(presentLine);
+        secondaryLine.setPresentLine(presentLine);
         setRangeSlider(new RangeSlider(0, 100, 0, 24));
         
         
@@ -59,16 +65,15 @@ public class Timeline extends VBox{
         rangeSlider.lowValueProperty().addListener((observable) -> {
             int range = (totalEndTime.get() - totalStartTime.get())/100;
             mainLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
-//            secondaryLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
+            secondaryLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
         });
         
         rangeSlider.highValueProperty().addListener((observable) -> {
             int range = (totalEndTime.get() - totalStartTime.get())/100;
             mainLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
-//            secondaryLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
+            secondaryLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
         });
-//        secondaryLine.viewEndProperty().bind(rangeSlider.highValueProperty().multiply(100));
-//        secondaryLine.viewStartProperty().bind(rangeSlider.lowValueProperty().multiply(100));
+
         bindTime();
         totalEndTime.set(10000);
         totalStartTime.set(0);
@@ -88,7 +93,9 @@ public class Timeline extends VBox{
         mainLine.currentTimeProperty().bind(currentTime);
         mainLine.totalStartTimeProperty().bind(totalStartTime);
         mainLine.totalEndTimeProperty().bind(totalEndTime);
-//        secondaryLine.currentTimeProperty().bind(currentTime);
+        secondaryLine.currentTimeProperty().bind(currentTime);
+        secondaryLine.totalStartTimeProperty().bind(totalStartTime);
+        secondaryLine.totalEndTimeProperty().bind(totalEndTime);
     }
     
     public void setMainLine(SingleLine line){

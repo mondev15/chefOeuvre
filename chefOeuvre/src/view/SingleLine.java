@@ -6,19 +6,14 @@
 package view;
 
 import java.util.Iterator;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -27,32 +22,31 @@ import javafx.scene.paint.Color;
 import model.Block;
 import model.PresentLine;
 import model.Tick;
-import org.controlsfx.control.RangeSlider;
 
 /**
  *
  * @author Charlelie
  */
-public class SingleLine extends Pane {
+public abstract class SingleLine extends Pane {
 
-    private int LINE_LENGTH = 1012;
-    private int LINE_HEIGHT = 150;
-    private final String STATE_IDLE = "IDLE";
-    private final String STATE_DRAG = "DRAG";
-    private final String STATE_PRESENT_OUT = "OUT";
-    private IntegerProperty totalStartTime;
-    private IntegerProperty totalEndTime;
-    private IntegerProperty viewStartTime;
-    private IntegerProperty viewEndTime;
-    private IntegerProperty currentTime;
-    private StringProperty state = new SimpleStringProperty();
-    private IntegerProperty tickState = new SimpleIntegerProperty();
-    private final int TINY_TICKS = 60;
-    private final int MEDIUM_TICKS = 300;
-    private final int BIG_TICKS = 600;
-    private PresentLine presentLine;
-    private Button leftGoBackButton;
-    private Button rightGoBackButton;
+    protected int LINE_LENGTH;
+    protected int LINE_HEIGHT;
+    protected final String STATE_IDLE = "IDLE";
+    protected final String STATE_DRAG = "DRAG";
+    protected final String STATE_PRESENT_OUT = "OUT";
+    protected IntegerProperty totalStartTime;
+    protected IntegerProperty totalEndTime;
+    protected IntegerProperty viewStartTime;
+    protected IntegerProperty viewEndTime;
+    protected IntegerProperty currentTime;
+//    private StringProperty state;
+//    private IntegerProperty tickState = new SimpleIntegerProperty();
+//    private final int TINY_TICKS = 60;
+//    private final int MEDIUM_TICKS = 300;
+//    private final int BIG_TICKS = 600;
+//    private PresentLine presentLine;
+//    private Button leftGoBackButton;
+//    private Button rightGoBackButton;
 
     public SingleLine() {
         this(1012, 150);
@@ -69,15 +63,15 @@ public class SingleLine extends Pane {
         viewStartTime = new SimpleIntegerProperty();
         viewEndTime = new SimpleIntegerProperty();
         
-        rightGoBackButton = new Button(">>");
-        rightGoBackButton.setTranslateY(LINE_HEIGHT - 40);
-        rightGoBackButton.setTranslateX(LINE_LENGTH - 50);
-        leftGoBackButton = new Button("<<");
-        leftGoBackButton.setTranslateY(LINE_HEIGHT - 40);
-        leftGoBackButton.setTranslateX(50);
+//        rightGoBackButton = new Button(">>");
+//        rightGoBackButton.setTranslateY(LINE_HEIGHT - 40);
+//        rightGoBackButton.setTranslateX(LINE_LENGTH - 80);
+//        leftGoBackButton = new Button("<<");
+//        leftGoBackButton.setTranslateY(LINE_HEIGHT - 40);
+//        leftGoBackButton.setTranslateX(40);
         
-        rightGoBackButton.setOnAction((e) -> {centerOnPresent();});
-        leftGoBackButton.setOnAction((e) -> {centerOnPresent();});
+//        rightGoBackButton.setOnAction((e) -> {centerOnPresent();});
+//        leftGoBackButton.setOnAction((e) -> {centerOnPresent();});
         
                 
         viewStartTime.addListener((observable) -> {
@@ -97,69 +91,51 @@ public class SingleLine extends Pane {
             });
 
         });
-        currentTime.addListener((observable) -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    presentLine.timeProperty().set(currentTime.get());
-                    updateBlocks();
-                }
-            });
-        });
+//        currentTime.addListener((observable) -> {
+//            Platform.runLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    presentLine.timeProperty().set(currentTime.get());
+//                    updateBlocks();
+//                }
+//            });
+//        });
 
-////        totalStartTime.addListener((o) -> {
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                viewStartTime.set(totalStartTime.get());
+//        state.addListener((Observable observable) -> {
+//            String currentState = state.get();
+//            switch (currentState){
+//                case STATE_IDLE:
+//                    this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+//                    rightGoBackButton.setVisible(false);
+//                    leftGoBackButton.setVisible(false);
+//                    break;
+//                case STATE_DRAG:
+//                    this.setBackground(new Background(new BackgroundFill(Color.rgb(140, 140, 140), CornerRadii.EMPTY, Insets.EMPTY)));
+//                    rightGoBackButton.setVisible(false);
+//                    leftGoBackButton.setVisible(false);
+//                    break;
+//                case STATE_PRESENT_OUT:
+//                    if (presentLine.timeProperty().get() <= viewStartTime.get()){
+//                        rightGoBackButton.setVisible(false);
+//                        leftGoBackButton.setVisible(true);
+//                    }
+//                    else if (presentLine.timeProperty().get() >= viewEndTime.get()){
+//                        rightGoBackButton.setVisible(true);
+//                        leftGoBackButton.setVisible(false);
+//                    }
 //            }
 //        });
-////        });
-////        totalEndTime.addListener((o) -> {
-////            Platform.runLater(new Runnable() {
-////                @Override
-////                public void run() {
-////                    int range = totalEndTime.get() - totalStartTime.get();
-////                    viewEndTime.set(totalStartTime.get() + range / 4);
-////                }
-////            });
-////        });
 
-        state.addListener((Observable observable) -> {
-            String currentState = state.get();
-            switch (currentState){
-                case STATE_IDLE:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
-                    rightGoBackButton.setVisible(false);
-                    leftGoBackButton.setVisible(false);
-                    break;
-                case STATE_DRAG:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(140, 140, 140), CornerRadii.EMPTY, Insets.EMPTY)));
-                    rightGoBackButton.setVisible(false);
-                    leftGoBackButton.setVisible(false);
-                    break;
-                case STATE_PRESENT_OUT:
-                    if (presentLine.timeProperty().get() <= viewStartTime.get()){
-                        rightGoBackButton.setVisible(false);
-                        leftGoBackButton.setVisible(true);
-                    }
-                    else if (presentLine.timeProperty().get() >= viewEndTime.get()){
-                        rightGoBackButton.setVisible(true);
-                        leftGoBackButton.setVisible(false);
-                    }
-            }
-        });
-
-        state.set(STATE_IDLE);
-        tickState.set(MEDIUM_TICKS);
-        tickState.addListener((observable) -> {updateTicks();});
-        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
-        presentLine.timeProperty().addListener((observable) -> {
-            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
-        });
-        this.getChildren().add(presentLine);
-        this.getChildren().add(leftGoBackButton);
-        this.getChildren().add(rightGoBackButton);
+//        state.set(STATE_IDLE);
+//        tickState.set(MEDIUM_TICKS);
+//        tickState.addListener((observable) -> {updateTicks();});
+//        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
+//        presentLine.timeProperty().addListener((observable) -> {
+//            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
+//        });
+//        this.getChildren().add(presentLine);
+//        this.getChildren().add(leftGoBackButton);
+//        this.getChildren().add(rightGoBackButton);
 
 //        this.setOnDragOver(new EventHandler<DragEvent>() {
 //            public void handle(DragEvent event) {
@@ -200,105 +176,107 @@ public class SingleLine extends Pane {
                 int pos = getXPos(b.timeProperty().get());
                 b.setTranslateX(pos);
             }
-            if (node instanceof Tick) {
-                Tick tick = (Tick) node;
-                int pos = getXPos(tick.timeProperty().get());
-                tick.setTranslateX(pos);
-            }            
+//            if (node instanceof Tick) {
+//                Tick tick = (Tick) node;
+//                int pos = getXPos(tick.timeProperty().get());
+//                tick.setTranslateX(pos);
+//            }            
         }
         
         updatePresentLine();
-        if (presentLine.timeProperty().get() < viewStartTime.get()
-            || presentLine.timeProperty().get() > viewEndTime.get()){
-            state.set(STATE_PRESENT_OUT);
-        }
-        else{
-            state.set(STATE_IDLE);
-        }
-
-        int range = viewEndTime.get() - viewStartTime.get();
-        switch (tickState.get()) {
-            case TINY_TICKS:
-                if (range < 15 * 60) {
-                    break;
-                }
-                if (range >= 15 * 60 && range <= 30 * 60) {
-                    tickState.set(MEDIUM_TICKS);
-                }
-                if (range > 30 * 60) {
-                    tickState.set(BIG_TICKS);
-                }
-            case MEDIUM_TICKS:
-                if (range < 15 * 60) {
-                    tickState.set(TINY_TICKS);
-                }
-                if (range >= 15 * 60 && range <= 30 * 60) {
-                    break;
-                }
-                if (range > 30 * 60) {
-                    tickState.set(BIG_TICKS);
-                }
-            case BIG_TICKS:
-                if (range < 15 * 60) {
-                    tickState.set(TINY_TICKS);
-                }
-                if (range >= 15 * 60 && range <= 30 * 60) {
-                    tickState.set(MEDIUM_TICKS);
-                }
-                if (range > 30 * 60) {
-                    break;
-                }
-        }
+//        if (presentLine.timeProperty().get() < viewStartTime.get()
+//            || presentLine.timeProperty().get() > viewEndTime.get()){
+//            state.set(STATE_PRESENT_OUT);
+//        }
+//        else{
+//            state.set(STATE_IDLE);
+//        }
+//
+//        int range = viewEndTime.get() - viewStartTime.get();
+//        switch (tickState.get()) {
+//            case TINY_TICKS:
+//                if (range < 15 * 60) {
+//                    break;
+//                }
+//                if (range >= 15 * 60 && range <= 30 * 60) {
+//                    tickState.set(MEDIUM_TICKS);
+//                }
+//                if (range > 30 * 60) {
+//                    tickState.set(BIG_TICKS);
+//                }
+//            case MEDIUM_TICKS:
+//                if (range < 15 * 60) {
+//                    tickState.set(TINY_TICKS);
+//                }
+//                if (range >= 15 * 60 && range <= 30 * 60) {
+//                    break;
+//                }
+//                if (range > 30 * 60) {
+//                    tickState.set(BIG_TICKS);
+//                }
+//            case BIG_TICKS:
+//                if (range < 15 * 60) {
+//                    tickState.set(TINY_TICKS);
+//                }
+//                if (range >= 15 * 60 && range <= 30 * 60) {
+//                    tickState.set(MEDIUM_TICKS);
+//                }
+//                if (range > 30 * 60) {
+//                    break;
+//                }
+//        }
 
     }
 
-    public void updateTicks() {
-        Iterator<Node> iter = this.getChildren().iterator();
-        while (iter.hasNext()) {
-            Node node = iter.next();
-            if (node instanceof Tick) {
-                iter.remove();
-            }
-        }
-        int tickTime = totalStartTime.get();
-        while (tickTime < totalEndTime.get()) {
-            Tick tick = new Tick();
-            this.getChildren().add(tick);
-            tick.setTime(tickTime);
-            tick.setTranslateY(this.getHeight() - 42);
-            tickTime += tickState.get();
-        }
-    }
+//    public void updateTicks() {
+//        Iterator<Node> iter = this.getChildren().iterator();
+//        while (iter.hasNext()) {
+//            Node node = iter.next();
+//            if (node instanceof Tick) {
+//                iter.remove();
+//            }
+//        }
+//        int tickTime = totalStartTime.get();
+//        while (tickTime < totalEndTime.get()) {
+//            Tick tick = new Tick();
+//            this.getChildren().add(tick);
+//            tick.setTime(tickTime);
+//            tick.setTranslateY(this.getHeight() - 42);
+//            tickTime += tickState.get();
+//        }
+//    }
     
-    public void updatePresentLine(){
-        int pos = getXPos(presentLine.timeProperty().get());
-        presentLine.setTranslateX(pos);
-    }
+    public void updatePresentLine(){}
     
-    private void centerOnPresent(){
-        int range = (totalEndTime.get() - totalStartTime.get())/10;
-        RangeSlider r = ((Timeline)this.getParent()).getRangeSlider();
-        if (presentLine.timeProperty().get() - range < totalStartTime.get()){
-            r.setLowValue(0);
-        }
-        else {
-            r.setLowValue(((presentLine.timeProperty().get() - range) - totalStartTime.get())/(range/10));
-        }
-        
-        if (presentLine.timeProperty().get() + range > totalEndTime.get()){
-            r.setHighValue(100);
-        }
-        else{
-            r.setHighValue(((presentLine.timeProperty().get() + range) - totalStartTime.get())/(range/10));
-        }
-    }
+//    private void centerOnPresent(){
+//        int totalRrange = (totalEndTime.get() - totalStartTime.get())/100;
+//        int viewhalfRange = (viewEndTime.get() - viewStartTime.get())/2;
+//        RangeSlider r = ((Timeline)this.getParent()).getRangeSlider();
+//        if (presentLine.timeProperty().get() - viewhalfRange < totalStartTime.get()){
+//            r.setLowValue(0);
+//        }
+//        else {
+//            r.setLowValue(((presentLine.timeProperty().get() - viewhalfRange) - totalStartTime.get())/(totalRrange));
+//        }
+//        
+//        if (presentLine.timeProperty().get() + viewhalfRange > totalEndTime.get()){
+//            r.setHighValue(100);
+//        }
+//        else{
+//            r.setHighValue(((presentLine.timeProperty().get() + viewhalfRange) - totalStartTime.get())/(totalRrange));
+//        }
+//    }
 
-    public void addBlock(Block b) {
-        int pos = getXPos(b.timeProperty().get());
-        this.getChildren().add(b);
-        b.stateProperty().bindBidirectional(state);
-        b.setTranslateX(pos);
-    }
+//    public void addBlock(Block b) {
+//        int pos = getXPos(b.timeProperty().get());
+//        this.getChildren().add(b);
+//        b.stateProperty().bindBidirectional(state);
+//        b.setTranslateX(pos);
+//    }
+    
+    public void addBlock(Block b) {}
+    
+    public void setPresentLine(PresentLine pl){}
 
 //    public List<Block> getBlocks(){
 //        return this.getChildren();

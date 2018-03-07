@@ -38,6 +38,7 @@ public class Tick extends VBox{
         tick.setStroke(Color.WHITE);
         this.getChildren().add(timeLabel);
         this.getChildren().add(tick);
+        this.setMouseTransparent(true);
     }
     
     private String timeToString(int time){
