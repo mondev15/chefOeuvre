@@ -15,6 +15,7 @@ import java.awt.geom.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
 import model.Plane;
 
 public class RadarView extends Parent {
@@ -22,10 +23,19 @@ public class RadarView extends Parent {
     private static final int X_START = 50;
     private final int W = 650;
     private final int H = 450;
+    private final int SCALE =100;
 
     private static final int RADIUS_1 = 90;
     private static final int RADIUS_2 = 190;
     private static final int RADIUS_3 = 290;
+    
+    private static final int MIN_SPEED =180;
+    private static final int MAX_SPEED =380;
+    private static final double SPEED_STEP =10;
+    
+    private static final int MIN_LEVEL =110;
+    private static final int MAX_LEVEL =400;
+    private static final double LEVEL_STEP =10;
 
     private final double MIDDLE_X = (X_START + (W - X_START)) / 2;
     private final double MIDDLE_Y = (H - X_START + H - X_START) / 2;
@@ -41,6 +51,10 @@ public class RadarView extends Parent {
     private VBox vboxValues = new VBox();
 
     private Map<String, Label> labelsMap;
+    //---axes
+    private LineAxisView topAxis;
+    private LineAxisView leftAxis;
+    private LineAxisView rightAxis;
 
     public RadarView() {
         //---
@@ -66,6 +80,23 @@ public class RadarView extends Parent {
         vboxValues = createTextFields();
         hb.getChildren().add(vboxLabels);
         hb.getChildren().add(vboxValues);
+        
+        
+        //axis
+        topAxis =  new LineAxisView("Cap",110, 400, 10, (int)(RADIUS_3*2-X_START));
+        topAxis.relocate(X_START, MIDDLE_Y-RADIUS_3-RADIUS_1);
+        //topAxis.setPrefWidth(600);
+        //topAxis.getTransforms().add(new Rotate(270,0,0)); //
+        
+        leftAxis =  new LineAxisView("\nVitesse(Kts)",MIN_SPEED, MAX_SPEED, SPEED_STEP,(int)MIDDLE_Y);
+        leftAxis.relocate(0, MIDDLE_Y);
+        leftAxis.getTransforms().add(new Rotate(270,0,0)); //
+        
+        rightAxis =  new LineAxisView("\nNiveau",MIN_LEVEL,MAX_LEVEL, LEVEL_STEP,(int)MIDDLE_Y);
+        rightAxis.relocate(MIDDLE_X+RADIUS_3+30, MIDDLE_Y);
+        rightAxis.getTransforms().add(new Rotate(270,0,0)); //
+        
+        //leftAxis.autosize();
 
         //---AJOUT DU COMPOSANT POUR LA MODIFICATION DU CAP
         //Arc arc4 = new Arc();
@@ -73,9 +104,9 @@ public class RadarView extends Parent {
         //this.getChildren().add(arc4);
         //Circle circle = createPlane(x_middle, y_middle,Color.YELLOW);
         //Text text4 = createText(centralPlane.getCallSign(), x_middle-10,y_middle+20);
-        //--- AJOUT DU COMPOSANT POUR LA MODIFICATION DU NIVEAU
-        //---//AJOUT DU COMPOSANT POUR LA MODIFICATION DE LA VITESSE
-        this.getChildren().addAll(line, arc1, arc2, arc3, text10, text20, text30, hb);
+
+        this.getChildren().addAll(/*topAxis,*/leftAxis,line, arc1, arc2, arc3, text10, text20, text30, hb,rightAxis);
+
 
     }
 
@@ -92,6 +123,11 @@ public class RadarView extends Parent {
         centralPlaneLabel.setGraphic(circle);
         if (!this.getChildren().contains(centralPlaneLabel)) {
             this.getChildren().add(centralPlaneLabel);
+            //update labels
+            updateSpeedHeadingAFl();
+        }
+        else{
+            updateSpeedHeadingAFl();
         }
     }
 
@@ -295,6 +331,17 @@ public class RadarView extends Parent {
         );
     }
 
+    public void updateSpeedHeadingAFl(){
+        //---
+        leftAxis.getLabelValue().setText(""+centralPlane.getSpeed());
+        leftAxis.getAxis().setLowerBound(centralPlane.getSpeed()-SCALE);
+        leftAxis.getAxis().setUpperBound(centralPlane.getSpeed()+SCALE);
+        //---
+        rightAxis.getLabelValue().setText(""+centralPlane.getAfl());
+        rightAxis.getAxis().setLowerBound(centralPlane.getAfl()-SCALE);
+        rightAxis.getAxis().setUpperBound(centralPlane.getAfl()+SCALE);
+    
+    }
     //---TO DO
     //Label avec une position et le rendre  cliquable
     //applique une rotation pour centrer sur la valeur selectionnée
