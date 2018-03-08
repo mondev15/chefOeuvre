@@ -7,3 +7,5 @@ dist/
 nbdist/
 
 environnement_vocal_atc/.classpath
+.project
+environnement_vocal_atc/.project
