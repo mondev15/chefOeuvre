@@ -6,7 +6,20 @@ nbbuild/
 dist/
 nbdist/
 
-environnement_vocal_atc/.classpath
+# Environnement vocal ATC
 .project
+environnement_vocal_atc/.classpath
 environnement_vocal_atc/.project
-environnement_vocal_atc/.idea/*
+environnement_vocal_atc/.idea/workspace.xml
+environnement_vocal_atc/.idea/task.xml
+environnement_vocal_atc/.idea/gradle.xml
+environnement_vocal_atc/.idea/libraries/*.xml
+environnement_vocal_atc/.gradle/
+environnement_vocal_atc/.metadata/
+environnement_vocal_atc/.settings/
+environnement_vocal_atc/bin/
+environnement_vocal_atc/out/
+environnement_vocal_atc/gen/
+environnement_vocal_atc/build/
+environnement_vocal_atc/log/
+environnement_vocal_atc/cache/*
