@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<speak xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+       xmlns="http://www.w3.org/2001/10/synthesis"
+       xsi:schemaLocation="http://www.w3.org/2001/10/synthesis
+                   http://www.w3.org/TR/speech-synthesis/synthesis.xsd"
+       xml:lang="fr">
+
+    <prosody rate="+25%">
+
+        <if cond="Fl == flightAfl">
+            maintenons
+            <elseif cond="Fl &lt; flightAfl"/>
+            descendons
+            <elseif cond="Fl &gt; flightAfl"/>
+            montons
+        </if>
+        niveau
+        <say-as>
+            <value expr="Fl"/>
+        </say-as>
+
+        <value expr="flightCallSign"/>
+    </prosody>
+</speak>

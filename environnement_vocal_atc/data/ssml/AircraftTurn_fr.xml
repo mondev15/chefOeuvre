@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<speak xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+       xmlns="http://www.w3.org/2001/10/synthesis"
+       xsi:schemaLocation="http://www.w3.org/2001/10/synthesis
+                   http://www.w3.org/TR/speech-synthesis/synthesis.xsd"
+       xml:lang="fr">
+
+    <prosody rate="+25%">
+
+        <value expr="flightCallSign"/>,
+        tournez
+        <if cond="Angle &lt; 0">
+            à gauche
+            <elseif cond="Angle &gt; 0"/>
+            à droite
+        </if>
+        de
+            <value expr="Angle"/>
+        degrés
+
+    </prosody>
+
+</speak>

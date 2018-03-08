@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<speak xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+       xmlns="http://www.w3.org/2001/10/synthesis"
+       xsi:schemaLocation="http://www.w3.org/2001/10/synthesis
+                   http://www.w3.org/TR/speech-synthesis/synthesis.xsd"
+       xml:lang="en-US">
+
+    <prosody rate="+30%">
+
+        <if cond="To != 'maintain'">
+            we fly heading
+            <say-as>
+                <value expr="To"/>
+            </say-as>
+            <elseif cond="To == 'maintain'"/>
+            we maintain heading
+            <say-as>
+                <value expr="flightHeading"/>
+            </say-as>
+        </if>
+        <value expr="flightCallSign"/>
+        
+    </prosody>
+</speak>

@@ -1,0 +1,19 @@
+#Output folders
+bin/
+out/
+gen/
+build/
+log/
+cache/*
+
+# Eclipse
+.settings/
+
+
+# IDEA
+.idea/workspace.xml
+.idea/task.xml
+.idea/gradle.xml
+.idea/libraries/*.xml
+.gradle/
+.metadata/
