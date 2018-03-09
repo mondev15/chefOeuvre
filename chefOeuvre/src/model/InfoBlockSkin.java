@@ -43,8 +43,8 @@ public class InfoBlockSkin extends VBox{
     public InfoBlockSkin(InfoBlock b) {
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
-        setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBackground(new Background(new BackgroundFill(Color.rgb(229, 229, 229), CornerRadii.EMPTY, Insets.EMPTY)));
+//        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         setCursor(Cursor.HAND);
         setOpacity(0.4);
         

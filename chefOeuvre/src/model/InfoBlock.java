@@ -47,8 +47,8 @@ public class InfoBlock extends Group implements IBlock{
         content = new VBox();
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
-        content.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-        content.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        content.setBackground(new Background(new BackgroundFill(Color.rgb(229, 229, 229), CornerRadii.EMPTY, Insets.EMPTY)));
+//        content.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         content.setCursor(Cursor.HAND);
                 
         time = new SimpleIntegerProperty(t);
@@ -70,7 +70,7 @@ public class InfoBlock extends Group implements IBlock{
 
         state.addListener((Observable observable) -> {
             if("IDLE".equals(state.get())){
-                content.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
+                content.setBackground(new Background(new BackgroundFill(Color.rgb(229, 229, 229), CornerRadii.EMPTY, Insets.EMPTY)));
             }
             else if("DRAG".equals(state.get())){
                 content.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));

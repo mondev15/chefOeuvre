@@ -22,7 +22,7 @@ public class Tick extends VBox{
     private IntegerProperty time = new SimpleIntegerProperty();
     private Label timeLabel;
     private Line tick;
-    private final int TICK_SIZE = 15;
+    private final int TICK_SIZE = 8;
     private final String format = "%02d";
     
     public Tick(){

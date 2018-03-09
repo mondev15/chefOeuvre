@@ -44,7 +44,7 @@ public class CompactBlock extends Group implements IBlock{
         time = new SimpleIntegerProperty(t);
         duration = new SimpleIntegerProperty(d);
         main = new Rectangle(INITIAL_LENGTH, HEIGHT);
-        main.setFill(Color.CYAN);
+        main.setFill(Color.rgb(229, 229, 229));
         main.setCursor(Cursor.HAND);
         
         time.addListener((observable) -> {
@@ -53,7 +53,7 @@ public class CompactBlock extends Group implements IBlock{
 
         state.addListener((Observable observable) -> {
             if("IDLE".equals(state.get())){
-                main.setFill(Color.CYAN);
+                main.setFill(Color.rgb(229, 229, 229));
             }
             else if("DRAG".equals(state.get())){
                 main.setFill(Color.BLUE);

@@ -18,6 +18,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import model.MainLine;
 import model.PresentLine;
@@ -32,6 +34,9 @@ public class Timeline extends Pane {
 
     private int LINE_HEIGHT = 150;
     private int SECONDARY_LINE_HEIGHT = 50;
+    private int WIDTH = 10;
+    protected final String STATE_IDLE = "IDLE";
+    protected final String STATE_DRAG = "DRAG";
     protected final String STATE_PRESENT_OUT = "OUT";
 
     private VBox lines;
@@ -43,6 +48,8 @@ public class Timeline extends Pane {
     private IntegerProperty totalEndTime;
     private IntegerProperty clockTime;
     private PresentLine presentLine;
+    private PresentLine leftPresentLineSkin;
+    private PresentLine rightPresentLineSkin;
     private StringProperty state = new SimpleStringProperty();
 
     public Timeline() {
@@ -54,15 +61,41 @@ public class Timeline extends Pane {
         totalStartTime = new SimpleIntegerProperty();
         totalEndTime = new SimpleIntegerProperty();
         presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT);
+        presentLine.setStroke(Color.GOLD);
+        presentLine.setStrokeWidth(WIDTH);
+        leftPresentLineSkin = new PresentLine(0, SECONDARY_LINE_HEIGHT/2, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT/2);
+        leftPresentLineSkin.setStroke(Color.GOLD);
+        leftPresentLineSkin.setStrokeWidth(WIDTH);
+        leftPresentLineSkin.setOpacity(0.2);
+        leftPresentLineSkin.setTranslateX(15);
+        rightPresentLineSkin = new PresentLine(0, SECONDARY_LINE_HEIGHT/2, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT/2);
+        rightPresentLineSkin.setStroke(Color.GOLD);
+        rightPresentLineSkin.setStrokeWidth(WIDTH);
+        rightPresentLineSkin.setOpacity(0.2);
+        rightPresentLineSkin.setTranslateX(w - 15);
 
+        rightPresentLineSkin.setVisible(false);
+        leftPresentLineSkin.setVisible(false);
         setSecondaryLine(new SecondaryLine(w, SECONDARY_LINE_HEIGHT));
         setMainLine(new MainLine(w, LINE_HEIGHT));
         setRangeSlider(new RangeSlider(0, 100, 0, 24));
 
-        state.bind(mainLine.stateProperty());
+        this.getChildren().addAll(lines, presentLine, leftPresentLineSkin, rightPresentLineSkin);
+
+        state.bindBidirectional(mainLine.stateProperty());
 
         presentLine.timeProperty().addListener((observable) -> {
             presentLine.setTranslateX(mainLine.getXPos(presentLine.timeProperty().get()));
+        });
+
+        rightPresentLineSkin.timeProperty().addListener((observable) -> {
+            presentLine.timeProperty().set(rightPresentLineSkin.timeProperty().get());
+            rightPresentLineSkin.setTranslateX(0);
+        });
+
+        leftPresentLineSkin.timeProperty().addListener((observable) -> {
+            presentLine.timeProperty().set(leftPresentLineSkin.timeProperty().get());
+            leftPresentLineSkin.setTranslateX(0);
         });
 
         currentTime.addListener((observable) -> {
@@ -77,15 +110,28 @@ public class Timeline extends Pane {
         });
 
         state.addListener((observable) -> {
-            System.out.println(state.get());
-            if(state.get() == STATE_PRESENT_OUT){
+            switch (state.get()) {
+                case STATE_PRESENT_OUT:
                     if (presentLine.timeProperty().get() <= mainLine.viewStartProperty().get()) {
                         mainLine.getRightGoBackButton().setVisible(false);
+                        rightPresentLineSkin.setVisible(false);
                         mainLine.getLeftGoBackButton().setVisible(true);
+                        leftPresentLineSkin.setVisible(true);
                     } else if (presentLine.timeProperty().get() >= mainLine.viewEndProperty().get()) {
                         mainLine.getRightGoBackButton().setVisible(true);
+                        rightPresentLineSkin.setVisible(true);
                         mainLine.getLeftGoBackButton().setVisible(false);
+                        leftPresentLineSkin.setVisible(false);
                     }
+                    break;
+                case STATE_IDLE:
+                    rightPresentLineSkin.setVisible(false);
+                    leftPresentLineSkin.setVisible(false);
+                    break;
+                case STATE_DRAG:
+                    rightPresentLineSkin.setVisible(false);
+                    leftPresentLineSkin.setVisible(false);
+                    break;
             }
 
         });
@@ -116,7 +162,6 @@ public class Timeline extends Pane {
         currentTime.set(100);
         rangeSlider.setHighValue(25);
 
-        this.getChildren().addAll(lines, presentLine);
     }
 
     public SingleLine getMainLine() {
@@ -178,6 +223,10 @@ public class Timeline extends Pane {
         return clockTime;
     }
 
+    public StringProperty stateProperty(){
+        return state;
+    }
+    
     public RangeSlider getRangeSlider() {
         return rangeSlider;
     }

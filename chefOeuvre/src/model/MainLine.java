@@ -52,10 +52,6 @@ public class MainLine extends SingleLine {
         leftGoBackButton.setTranslateY(LINE_HEIGHT - 40);
         leftGoBackButton.setTranslateX(40);
 
-        setOnMouseClicked((event) -> {
-            System.out.println("model.MainLine.<init>()");
-        });
-
         rightGoBackButton.setOnAction((e) -> {
             ((Timeline) this.getParent().getParent()).centerOnPresent();
         });
@@ -67,12 +63,12 @@ public class MainLine extends SingleLine {
             String currentState = state.get();
             switch (currentState) {
                 case STATE_IDLE:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 100, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(64, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
                     rightGoBackButton.setVisible(false);
                     leftGoBackButton.setVisible(false);
                     break;
                 case STATE_DRAG:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(140, 140, 140), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(104, 104, 104), CornerRadii.EMPTY, Insets.EMPTY)));
                     rightGoBackButton.setVisible(false);
                     leftGoBackButton.setVisible(false);
                     break;
@@ -147,10 +143,8 @@ public class MainLine extends SingleLine {
         }
         Timeline timeline = (Timeline) getParent().getParent();
         timeline.updatePresentLine();
-        System.out.println(timeline.getPresentLine().timeProperty().get());
         if (timeline.getPresentLine().timeProperty().get() < viewStartTime.get()
                 || timeline.getPresentLine().timeProperty().get() > viewEndTime.get()) {
-            System.out.println("model.MainLine.updateBlocks()");
             state.set(STATE_PRESENT_OUT);
         } else {
             state.set(STATE_IDLE);
@@ -214,7 +208,7 @@ public class MainLine extends SingleLine {
             Tick tick = new Tick();
             this.getChildren().add(tick);
             tick.setTime(tickTime);
-            tick.setTranslateY(this.getHeight() - 42);
+            tick.setTranslateY(this.getHeight() - 36);
             tickTime += tickState.get();
         }
     }

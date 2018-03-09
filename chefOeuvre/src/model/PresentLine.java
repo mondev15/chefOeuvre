@@ -19,7 +19,7 @@ import view.Timeline;
 public class PresentLine extends Line {
     IntegerProperty time;
     private double sceneX, translateX;
-    private int WIDTH = 10;
+    private final String STATE_IDLE = "IDLE";
 
     public PresentLine() {
         this(0, 0, 0, 0);
@@ -28,8 +28,6 @@ public class PresentLine extends Line {
     public PresentLine(double xs, double ys, double xe, double ye) {
         super(xs, ys, xe, ye);
         time = new SimpleIntegerProperty();
-        setStroke(Color.GOLD);
-        setStrokeWidth(WIDTH);
 
         this.setOnMousePressed((event) -> {
             sceneX = event.getSceneX();
@@ -44,8 +42,10 @@ public class PresentLine extends Line {
         });
 
         this.setOnMouseReleased((event) -> {
-            SingleLine mainLine = ((Timeline) (this.getParent())).getMainLine();
+            Timeline timeline = (Timeline) (this.getParent());
+            SingleLine mainLine = timeline.getMainLine();
             this.time.set(mainLine.getTime((int) (this.getTranslateX())));
+            timeline.stateProperty().set(STATE_IDLE);
         });
     }
 

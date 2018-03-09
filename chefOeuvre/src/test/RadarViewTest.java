@@ -30,18 +30,18 @@ public class RadarViewTest extends Application {
 //        root.getChildren().add(ivyManager.getRadarView());
         
         InfoBlock blockTest1 = new InfoBlock(4950,
-           "APPROCHE -> PILOTE",
-           "180 kts",
-           "Left 260°",
-           "ILS 14D",
-           "CALL BACK");
+           " APPROCHE                    ",
+           " 180 kts",
+           " Left 260°",
+           " ILS 14D",
+           " CALL BACK");
         
         InfoBlock blockTest2 = new InfoBlock(3500,
-           "APPROCHE -> PILOTE",
-           "180 kts",
-           "Left 260°",
-           "ILS 14D",
-           "CALL BACK");
+           " APPROCHE                    ",
+           " 180 kts",
+           " Left 260°",
+           " ILS 14D",
+           " CALL BACK");
         
         CompactBlock blockTest3 = new CompactBlock(6000, 100);
         CompactBlock blockTest4 = new CompactBlock(50, 100);

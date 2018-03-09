@@ -39,10 +39,10 @@ public class SecondaryLine extends SingleLine {
             String currentState = state.get();
             switch (currentState) {
                 case STATE_IDLE:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(100, 0, 100), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(145, 145, 145), CornerRadii.EMPTY, Insets.EMPTY)));
                     break;
                 case STATE_DRAG:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(140, 0, 140), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(Color.rgb(185, 185, 185), CornerRadii.EMPTY, Insets.EMPTY)));
                     break;
                 case STATE_PRESENT_OUT:
                     break;
