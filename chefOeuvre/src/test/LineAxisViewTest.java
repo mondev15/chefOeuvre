@@ -10,7 +10,7 @@ import javafx.scene.transform.Rotate;
 import view.LineAxisView;
 
 
-public class AxisViewTest extends Application {
+public class LineAxisViewTest extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -18,7 +18,7 @@ public class AxisViewTest extends Application {
 
     @Override
     public void start(final Stage stage) {
-        LineAxisView axes = new LineAxisView("label",10,300, 10,300);
+        LineAxisView axes = new LineAxisView("label",10,300, 10,300,200);
         
         axes.getTransforms().add(new Rotate(-90,0,0));
 

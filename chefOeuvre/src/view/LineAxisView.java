@@ -18,17 +18,18 @@ public class LineAxisView extends Pane {
     private double max; //valeur max
     private double step;
     private Label label;
-    private double currentValue;
+    private int currentValue;
     private Point mousePosition;
     private Polygon polygon;
     private Label labelValue;
-    private static final int SCALE =100;
+    private  int scale;
 
-    public LineAxisView(String text, double low, double upper, double step,int width) {
+    public LineAxisView(String text, double lower, double upper, double stp,int width, int s) {
         //---
-        min = low;
+        scale = s;
+        min = lower;
         max= upper;        
-        step = step;
+        step = stp;
         label = new Label();
         label.setTextFill(Color.WHITE);
         label.setText(text);
@@ -38,7 +39,7 @@ public class LineAxisView extends Pane {
         labelValue.setText("value");
         labelValue.setTextFill(Color.WHITE);
         labelValue.getTransforms().add(new Rotate(90, 0, 0));
-        labelValue.relocate(210,35);
+        labelValue.relocate(220,35);
         
         setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
         //setPrefSize(width, height);
@@ -54,12 +55,12 @@ public class LineAxisView extends Pane {
          //line
         //--events
         axis.setOnMousePressed(mouseHandler);
-        axis.setOnMouseClicked(mouseHandler);
-        axis.setOnMouseDragged(mouseHandler);
-        axis.setOnMouseEntered(mouseHandler);
-        axis.setOnMouseExited(mouseHandler);
-        axis.setOnMouseMoved(mouseHandler);
-        axis.setOnMousePressed(mouseHandler);
+        //axis.setOnMouseClicked(mouseHandler);
+        //axis.setOnMouseDragged(mouseHandler);
+        //axis.setOnMouseEntered(mouseHandler);
+        //axis.setOnMouseExited(mouseHandler);
+        //axis.setOnMouseMoved(mouseHandler);
+        //axis.setOnMousePressed(mouseHandler);
         axis.setOnMouseReleased(mouseHandler);
         
         
@@ -74,12 +75,12 @@ public class LineAxisView extends Pane {
         @Override
         public void handle(MouseEvent mouseEvent) {
             if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
-                currentValue = (double) axis.getValueForDisplay(mouseEvent.getX());
+                currentValue =  (int) ((double)axis.getValueForDisplay(mouseEvent.getX()));
                 mousePosition = new Point((int) mouseEvent.getX(),(int) mouseEvent.getY());
                 System.out.println("cursor Value "+mousePosition);
                 System.out.println("current Value "+currentValue);
                 
-            } else if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED 
+            } /*else if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED 
                     || mouseEvent.getEventType() == MouseEvent.MOUSE_MOVED) {
 
                 double newMin = axis.getLowerBound(); 
@@ -99,12 +100,14 @@ public class LineAxisView extends Pane {
                 }
                  mousePosition = new Point((int)mouseEvent.getX(),(int)mouseEvent.getY());
                  currentValue = (double) axis.getValueForDisplay(mouseEvent.getX());
-            }
+            }*/
             else if(mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED){
-                 currentValue = (double) axis.getValueForDisplay(mouseEvent.getX());
-                 axis.setLowerBound(currentValue-SCALE);
+                 currentValue = (int)((double) axis.getValueForDisplay(mouseEvent.getX()));
+                 axis.setLowerBound(currentValue-scale);
                  labelValue.setText(""+ (int)currentValue);
-                 axis.setUpperBound(currentValue+SCALE);
+                 axis.setUpperBound(currentValue+scale);
+                 System.out.println("lower : "+axis.getLowerBound());
+                 System.out.println("upper : "+axis.getUpperBound());
             }
         }
     };
@@ -112,17 +115,11 @@ public class LineAxisView extends Pane {
         //à modifier par rapport à la position du milieu
     public Polygon createPolygon(){
         Polygon p = new Polygon();
-        /*p.getPoints().addAll(new Double[]{
-            150.0, 20.0,
-            160.0, 30.0,
-            140.0, 30.0 });        
-        p.setFill(Color.YELLOW);
-        */
        
         p.getPoints().addAll(new Double[]{
-            200.0, 22.0,
-            210.0, 32.0,
-            190.0, 32.0 });        
+            212.0, 22.0,
+            222.0, 32.0,
+            202.0, 32.0 });        
         p.setFill(Color.YELLOW);
         
         return p;

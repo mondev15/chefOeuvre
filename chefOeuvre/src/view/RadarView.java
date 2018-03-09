@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.Parent;
@@ -23,22 +24,31 @@ public class RadarView extends Parent {
     private static final int X_START = 50;
     private final int W = 650;
     private final int H = 450;
-    private final int SCALE =100;
 
     private static final int RADIUS_1 = 90;
     private static final int RADIUS_2 = 190;
     private static final int RADIUS_3 = 290;
+    private static final int RADIUS_4 = 390;
+    
+    private static final int ANGLE_180 =180;
+    private static final int ANGLE_90 =90;
+    
+    private static final int SPEED_SCALE =100;
+    private static final int LEVEL_SCALE =200;
+        
+    private static final int SPEED_STEP =10;
+    private static final int LEVEL_STEP =10;
     
     private static final int MIN_SPEED =180;
     private static final int MAX_SPEED =380;
-    private static final double SPEED_STEP =10;
     
     private static final int MIN_LEVEL =110;
     private static final int MAX_LEVEL =400;
-    private static final double LEVEL_STEP =10;
+    
+    //private static final int HEADING_SCALE= 45;
 
-    private final double MIDDLE_X = (X_START + (W - X_START)) / 2;
-    private final double MIDDLE_Y = (H - X_START + H - X_START) / 2;
+    private final double MIDDLE_X = (X_START + (W - X_START+50)) / 2;
+    private final double MIDDLE_Y = (H - X_START + H - X_START+50) / 2;
 
     private Plane centralPlane; //l'avion sur lequel la vue est centrée
     private Map<Integer, Plane> planes;  // la collection (trafic) des avions dans la vue radar
@@ -52,7 +62,7 @@ public class RadarView extends Parent {
 
     private Map<String, Label> labelsMap;
     //---axes
-    private LineAxisView topAxis;
+    private CircleAxisView topAxis;
     private LineAxisView leftAxis;
     private LineAxisView rightAxis;
 
@@ -64,11 +74,11 @@ public class RadarView extends Parent {
         labelsMap = new HashMap();
 
         //--- la ligne verticale
-        Line line = createLine(MIDDLE_X, X_START, MIDDLE_X, MIDDLE_Y);
+        Line line = createLine(MIDDLE_X, 30, MIDDLE_X, MIDDLE_Y);
         //--- les arcs                
-        Arc arc1 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_1, RADIUS_1);
-        Arc arc2 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_2, RADIUS_2);
-        Arc arc3 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_3, RADIUS_3);
+        Arc arc1 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_1, RADIUS_1,0,ANGLE_180);
+        Arc arc2 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_2, RADIUS_2,0,ANGLE_180);
+        Arc arc3 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_3, RADIUS_3,0,ANGLE_180);
 
         // les textes 10, 20  et 30
         text10 = createLabel("10", MIDDLE_X - (RADIUS_1 + 10), MIDDLE_Y - X_START);
@@ -79,33 +89,19 @@ public class RadarView extends Parent {
         vboxLabels = createLabels();
         vboxValues = createTextFields();
         hb.getChildren().add(vboxLabels);
-        hb.getChildren().add(vboxValues);
+        hb.getChildren().add(vboxValues);     
+
+        topAxis =  new CircleAxisView("cap",new Point((int)MIDDLE_X,(int)MIDDLE_Y),RADIUS_4,45,ANGLE_90);
         
-        
-        //axis
-        topAxis =  new LineAxisView("Cap",110, 400, 10, (int)(RADIUS_3*2-X_START));
-        topAxis.relocate(X_START, MIDDLE_Y-RADIUS_3-RADIUS_1);
-        //topAxis.setPrefWidth(600);
-        //topAxis.getTransforms().add(new Rotate(270,0,0)); //
-        
-        leftAxis =  new LineAxisView("\nVitesse(Kts)",MIN_SPEED, MAX_SPEED, SPEED_STEP,(int)MIDDLE_Y);
+        leftAxis =  new LineAxisView("\nVitesse(Kts)",MIN_SPEED, MAX_SPEED, SPEED_STEP,(int)MIDDLE_Y,SPEED_SCALE);
         leftAxis.relocate(0, MIDDLE_Y);
         leftAxis.getTransforms().add(new Rotate(270,0,0)); //
         
-        rightAxis =  new LineAxisView("\nNiveau",MIN_LEVEL,MAX_LEVEL, LEVEL_STEP,(int)MIDDLE_Y);
+        rightAxis =  new LineAxisView("\nNiveau",MIN_LEVEL,MAX_LEVEL, LEVEL_STEP,(int)MIDDLE_Y,LEVEL_SCALE);
         rightAxis.relocate(MIDDLE_X+RADIUS_3+30, MIDDLE_Y);
         rightAxis.getTransforms().add(new Rotate(270,0,0)); //
-        
-        //leftAxis.autosize();
 
-        //---AJOUT DU COMPOSANT POUR LA MODIFICATION DU CAP
-        //Arc arc4 = new Arc();
-        //animateArc(arc4);
-        //this.getChildren().add(arc4);
-        //Circle circle = createPlane(x_middle, y_middle,Color.YELLOW);
-        //Text text4 = createText(centralPlane.getCallSign(), x_middle-10,y_middle+20);
-
-        this.getChildren().addAll(/*topAxis,*/leftAxis,line, arc1, arc2, arc3, text10, text20, text30, hb,rightAxis);
+        this.getChildren().addAll(topAxis,leftAxis,line, arc1, arc2, arc3, text10, text20, text30,rightAxis);
 
 
     }
@@ -117,9 +113,11 @@ public class RadarView extends Parent {
         hb.getChildren().remove(1);
         hb.getChildren().add(vb2);
         String str = centralPlane.getCallSign();
+        str += ","+centralPlane.getHeading();
+        str += "\n"+centralPlane.getSpeed()+", "+centralPlane.getAfl();
         centralPlaneLabel.setText(str);
         centralPlaneLabel.setTextFill(Color.WHITE);
-        centralPlaneLabel.relocate(pos.x, pos.y);
+        centralPlaneLabel.relocate(pos.x-5, pos.y-5);
         centralPlaneLabel.setGraphic(circle);
         if (!this.getChildren().contains(centralPlaneLabel)) {
             this.getChildren().add(centralPlaneLabel);
@@ -186,7 +184,7 @@ public class RadarView extends Parent {
         return label;
     }
 
-    public Arc createArc(double centerX, double centerY, int radiusX, int radiusY) {
+    public Arc createArc(double centerX, double centerY, int radiusX, int radiusY, int start,int angle) {
 
         Arc arc = new Arc();
         //---
@@ -194,8 +192,8 @@ public class RadarView extends Parent {
         arc.setCenterY(centerY);
         arc.setRadiusX(radiusX);
         arc.setRadiusY(radiusY);
-        arc.setStartAngle(0.0f);
-        arc.setLength(180.0f);
+        arc.setStartAngle(start);
+        arc.setLength(angle);
         arc.setFill(Color.TRANSPARENT);
         arc.setType(ArcType.OPEN);
         arc.setStroke(Color.DARKGRAY);
@@ -305,7 +303,7 @@ public class RadarView extends Parent {
         return res;
     }
 
-    public Point2D.Double getNdPosition(Point2D.Double center, double angleRad, double radius) {
+    public static Point2D.Double getNdPosition(Point2D.Double center, double angleRad, double radius) {
         double x;
         double y;
         if (angleRad > 0) {
@@ -334,19 +332,23 @@ public class RadarView extends Parent {
     public void updateSpeedHeadingAFl(){
         //---
         leftAxis.getLabelValue().setText(""+centralPlane.getSpeed());
-        leftAxis.getAxis().setLowerBound(centralPlane.getSpeed()-SCALE);
-        leftAxis.getAxis().setUpperBound(centralPlane.getSpeed()+SCALE);
+        leftAxis.getAxis().setLowerBound(centralPlane.getSpeed()-SPEED_SCALE);
+        leftAxis.getAxis().setUpperBound(centralPlane.getSpeed()+SPEED_SCALE);
         //---
         rightAxis.getLabelValue().setText(""+centralPlane.getAfl());
-        rightAxis.getAxis().setLowerBound(centralPlane.getAfl()-SCALE);
-        rightAxis.getAxis().setUpperBound(centralPlane.getAfl()+SCALE);
-    
+        rightAxis.getAxis().setLowerBound(centralPlane.getAfl()-LEVEL_SCALE);
+        rightAxis.getAxis().setUpperBound(centralPlane.getAfl()+LEVEL_SCALE);
+        //
+        topAxis.getLabelValue().setText(""+centralPlane.getHeading());        
+        topAxis.getLinesLabel().get(0).setText(""+(centralPlane.getHeading()+30));
+        topAxis.getLinesLabel().get(1).setText(""+(centralPlane.getHeading()+20));
+        topAxis.getLinesLabel().get(2).setText(""+(centralPlane.getHeading()+10));
+        topAxis.getLinesLabel().get(3).setText(""+(centralPlane.getHeading()));
+        topAxis.getLinesLabel().get(4).setText(""+(centralPlane.getHeading()-10));
+        topAxis.getLinesLabel().get(5).setText(""+(centralPlane.getHeading()-20));
+        topAxis.getLinesLabel().get(6).setText(""+(centralPlane.getHeading()-30));        
     }
-    //---TO DO
-    //Label avec une position et le rendre  cliquable
-    //applique une rotation pour centrer sur la valeur selectionnée
-    public void animateArc(Arc arc) {
 
-    }
+
 
 }

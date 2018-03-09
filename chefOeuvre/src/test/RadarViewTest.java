@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 
 public class RadarViewTest extends Application {
 
-    private  static final int W = 720;
-    private static final int H = 460;
+    private  static final int W = 750;
+    private static final int H = 470;
     public static void main(String[] args) {
         Application.launch(RadarViewTest.class, args);
     }
