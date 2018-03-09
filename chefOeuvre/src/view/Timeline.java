@@ -8,29 +8,34 @@ package view;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Control;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import model.MainLine;
 import model.PresentLine;
 import model.SecondaryLine;
 import org.controlsfx.control.RangeSlider;
 
-
 /**
  *
  * @author Charlelie
  */
-public class Timeline extends VBox{
+public class Timeline extends Pane {
 
     private int LINE_HEIGHT = 150;
     private int SECONDARY_LINE_HEIGHT = 50;
-    
-    private SingleLine mainLine;
+    protected final String STATE_PRESENT_OUT = "OUT";
+
+    private VBox lines;
+    private MainLine mainLine;
     private SingleLine secondaryLine;
     private RangeSlider rangeSlider;
     private IntegerProperty currentTime;
@@ -38,40 +43,71 @@ public class Timeline extends VBox{
     private IntegerProperty totalEndTime;
     private IntegerProperty clockTime;
     private PresentLine presentLine;
-    
+    private StringProperty state = new SimpleStringProperty();
+
     public Timeline() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        int w = (int)primaryScreenBounds.getWidth();
+        int w = (int) primaryScreenBounds.getWidth();
+        lines = new VBox();
         currentTime = new SimpleIntegerProperty();
-        clockTime = new SimpleIntegerProperty();        
+        clockTime = new SimpleIntegerProperty();
         totalStartTime = new SimpleIntegerProperty();
         totalEndTime = new SimpleIntegerProperty();
-        presentLine = new PresentLine(0, -SECONDARY_LINE_HEIGHT, 0, LINE_HEIGHT);
+        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT);
+
         setSecondaryLine(new SecondaryLine(w, SECONDARY_LINE_HEIGHT));
         setMainLine(new MainLine(w, LINE_HEIGHT));
-        mainLine.setPresentLine(presentLine);
-        secondaryLine.setPresentLine(presentLine);
         setRangeSlider(new RangeSlider(0, 100, 0, 24));
-        
-        
+
+        state.bind(mainLine.stateProperty());
+
+        presentLine.timeProperty().addListener((observable) -> {
+            presentLine.setTranslateX(mainLine.getXPos(presentLine.timeProperty().get()));
+        });
+
+        currentTime.addListener((observable) -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    presentLine.timeProperty().set(currentTime.get());
+                    mainLine.updateBlocks();
+                    secondaryLine.updateBlocks();
+                }
+            });
+        });
+
+        state.addListener((observable) -> {
+            System.out.println(state.get());
+            if(state.get() == STATE_PRESENT_OUT){
+                    if (presentLine.timeProperty().get() <= mainLine.viewStartProperty().get()) {
+                        mainLine.getRightGoBackButton().setVisible(false);
+                        mainLine.getLeftGoBackButton().setVisible(true);
+                    } else if (presentLine.timeProperty().get() >= mainLine.viewEndProperty().get()) {
+                        mainLine.getRightGoBackButton().setVisible(true);
+                        mainLine.getLeftGoBackButton().setVisible(false);
+                    }
+            }
+
+        });
+
         totalStartTime.addListener((observable) -> {
             rangeSlider.setLowValue(0);
         });
-        
+
         totalEndTime.addListener((observable) -> {
             rangeSlider.setHighValue(25);
         });
-        
+
         rangeSlider.lowValueProperty().addListener((observable) -> {
-            int range = (totalEndTime.get() - totalStartTime.get())/100;
-            mainLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
-            secondaryLine.viewStartProperty().set((int)(rangeSlider.lowValueProperty().get()*range) + totalStartTime.get());
+            int range = (totalEndTime.get() - totalStartTime.get()) / 100;
+            mainLine.viewStartProperty().set((int) (rangeSlider.lowValueProperty().get() * range) + totalStartTime.get());
+            secondaryLine.viewStartProperty().set((int) (rangeSlider.lowValueProperty().get() * range) + totalStartTime.get());
         });
-        
+
         rangeSlider.highValueProperty().addListener((observable) -> {
-            int range = (totalEndTime.get() - totalStartTime.get())/100;
-            mainLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
-            secondaryLine.viewEndProperty().set((int)(rangeSlider.highValueProperty().get()*range) + totalStartTime.get());
+            int range = (totalEndTime.get() - totalStartTime.get()) / 100;
+            mainLine.viewEndProperty().set((int) (rangeSlider.highValueProperty().get() * range) + totalStartTime.get());
+            secondaryLine.viewEndProperty().set((int) (rangeSlider.highValueProperty().get() * range) + totalStartTime.get());
         });
 
         bindTime();
@@ -79,17 +115,19 @@ public class Timeline extends VBox{
         totalStartTime.set(0);
         currentTime.set(100);
         rangeSlider.setHighValue(25);
+
+        this.getChildren().addAll(lines, presentLine);
     }
-    
-    public SingleLine getMainLine(){
+
+    public SingleLine getMainLine() {
         return mainLine;
     }
-    
-    public SingleLine getSecondaryLine(){
+
+    public SingleLine getSecondaryLine() {
         return secondaryLine;
     }
-    
-    public void bindTime(){
+
+    public void bindTime() {
         mainLine.currentTimeProperty().bind(currentTime);
         mainLine.totalStartTimeProperty().bind(totalStartTime);
         mainLine.totalEndTimeProperty().bind(totalEndTime);
@@ -97,58 +135,83 @@ public class Timeline extends VBox{
         secondaryLine.totalStartTimeProperty().bind(totalStartTime);
         secondaryLine.totalEndTimeProperty().bind(totalEndTime);
     }
-    
-    public void setMainLine(SingleLine line){
-        mainLine = line;
-        this.getChildren().add(mainLine);
+
+    public void setMainLine(SingleLine line) {
+        mainLine = (MainLine) line;
+        lines.getChildren().add(mainLine);
     }
-    
-    public void setSecondaryLine(SingleLine line){
+
+    public void setSecondaryLine(SingleLine line) {
         secondaryLine = line;
-        this.getChildren().add(secondaryLine);
+        lines.getChildren().add(secondaryLine);
     }
-    
-    public void setRangeSlider(RangeSlider rSlider){
+
+    public void setRangeSlider(RangeSlider rSlider) {
         rangeSlider = rSlider;
-        this.getChildren().add(rangeSlider);
+        lines.getChildren().add(rangeSlider);
     }
-    
-    public void setCurrentTime(int time){
+
+    public void setCurrentTime(int time) {
         currentTime.set(time);
     }
-    
-    public void setClockTime(int time){
-        if(clockTime.get() != 0){
-            double range = (totalEndTime.get() - totalStartTime.get())/100.0;
-            double step = 1/range;
+
+    public void setClockTime(int time) {
+        if (clockTime.get() != 0) {
+            double range = (totalEndTime.get() - totalStartTime.get()) / 100.0;
+            double step = 1 / range;
             currentTime.set(currentTime.get() + 1);
             rangeSlider.setLowValue(rangeSlider.getLowValue() + step);
             rangeSlider.setHighValue(rangeSlider.getHighValue() + step);
         }
         clockTime.set(time);
     }
-    
-    public IntegerProperty totalStartTimeProperty(){
+
+    public IntegerProperty totalStartTimeProperty() {
         return totalStartTime;
     }
-    
-    public IntegerProperty totalEndTimeProperty(){
+
+    public IntegerProperty totalEndTimeProperty() {
         return totalEndTime;
     }
-    
-    public IntegerProperty clockTimeProperty(){
+
+    public IntegerProperty clockTimeProperty() {
         return clockTime;
     }
-    
-    public RangeSlider getRangeSlider(){
+
+    public RangeSlider getRangeSlider() {
         return rangeSlider;
     }
-    
-    public int hmsToInt(String hms){
+
+    public PresentLine getPresentLine() {
+        return presentLine;
+    }
+
+    public void centerOnPresent() {
+        int totalRrange = (totalEndTime.get() - totalStartTime.get()) / 100;
+        int viewhalfRange = (mainLine.viewEndTime.get() - mainLine.viewStartTime.get()) / 2;
+        if (presentLine.timeProperty().get() - viewhalfRange < totalStartTime.get()) {
+            rangeSlider.setLowValue(0);
+        } else {
+            rangeSlider.setLowValue(((presentLine.timeProperty().get() - viewhalfRange) - totalStartTime.get()) / (totalRrange));
+        }
+
+        if (presentLine.timeProperty().get() + viewhalfRange > totalEndTime.get()) {
+            rangeSlider.setHighValue(100);
+        } else {
+            rangeSlider.setHighValue(((presentLine.timeProperty().get() + viewhalfRange) - totalStartTime.get()) / (totalRrange));
+        }
+    }
+
+    public void updatePresentLine() {
+        int pos = mainLine.getXPos(presentLine.timeProperty().get());
+        presentLine.setTranslateX(pos);
+    }
+
+    public int hmsToInt(String hms) {
         List<String> splitted = new ArrayList(Arrays.asList(hms.split(":")));
-        return(Integer.parseInt(splitted.get(0)) * 3600
+        return (Integer.parseInt(splitted.get(0)) * 3600
                 + Integer.parseInt(splitted.get(1)) * 60
                 + Integer.parseInt(splitted.get(2)));
     }
-    
+
 }

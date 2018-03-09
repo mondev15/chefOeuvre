@@ -36,14 +36,15 @@ public class MainLine extends SingleLine {
     private final int TINY_TICKS = 60;
     private final int MEDIUM_TICKS = 300;
     private final int BIG_TICKS = 600;
-    private PresentLine presentLine;
+    private final int VERTICAL_PADDING = 10;
+//    private PresentLine presentLine;
+
     public MainLine() {
         this(1012, 150);
     }
 
     public MainLine(int w, int h) {
         super(w, h);
-
         rightGoBackButton = new Button(">>");
         rightGoBackButton.setTranslateY(LINE_HEIGHT - 40);
         rightGoBackButton.setTranslateX(LINE_LENGTH - 80);
@@ -51,11 +52,15 @@ public class MainLine extends SingleLine {
         leftGoBackButton.setTranslateY(LINE_HEIGHT - 40);
         leftGoBackButton.setTranslateX(40);
 
+        setOnMouseClicked((event) -> {
+            System.out.println("model.MainLine.<init>()");
+        });
+
         rightGoBackButton.setOnAction((e) -> {
-            centerOnPresent();
+            ((Timeline) this.getParent().getParent()).centerOnPresent();
         });
         leftGoBackButton.setOnAction((e) -> {
-            centerOnPresent();
+            ((Timeline) this.getParent().getParent()).centerOnPresent();
         });
 
         state.addListener((Observable observable) -> {
@@ -72,66 +77,65 @@ public class MainLine extends SingleLine {
                     leftGoBackButton.setVisible(false);
                     break;
                 case STATE_PRESENT_OUT:
-                    if (presentLine.timeProperty().get() <= viewStartTime.get()) {
-                        rightGoBackButton.setVisible(false);
-                        leftGoBackButton.setVisible(true);
-                    } else if (presentLine.timeProperty().get() >= viewEndTime.get()) {
-                        rightGoBackButton.setVisible(true);
-                        leftGoBackButton.setVisible(false);
-                    }
+//                    if (timeline.getPresentLine().timeProperty().get() <= viewStartTime.get()) {
+//                        rightGoBackButton.setVisible(false);
+//                        leftGoBackButton.setVisible(true);
+//                    } else if (timeline.getPresentLine().timeProperty().get() >= viewEndTime.get()) {
+//                        rightGoBackButton.setVisible(true);
+//                        leftGoBackButton.setVisible(false);
+//                    }
             }
-        });
-        
-        currentTime.addListener((observable) -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    presentLine.timeProperty().set(currentTime.get());
-                    updateBlocks();
-                }
-            });
         });
 
         state.set(STATE_IDLE);
+
+//        currentTime.addListener((observable) -> {
+//            Platform.runLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    presentLine.timeProperty().set(currentTime.get());
+//                    updateBlocks();
+//                }
+//            });
+//        });
         tickState.set(MEDIUM_TICKS);
         tickState.addListener((observable) -> {
             updateTicks();
         });
 
-        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
-        presentLine.timeProperty().addListener((observable) -> {
-            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
-        });
-        
-        this.getChildren().add(presentLine);
+//        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
+//        presentLine.timeProperty().addListener((observable) -> {
+//            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
+//        });
+//        
+//        this.getChildren().add(presentLine);
         this.getChildren().add(leftGoBackButton);
         this.getChildren().add(rightGoBackButton);
     }
 
-    private void centerOnPresent() {
-        int totalRrange = (totalEndTime.get() - totalStartTime.get()) / 100;
-        int viewhalfRange = (viewEndTime.get() - viewStartTime.get()) / 2;
-        RangeSlider r = ((Timeline) this.getParent()).getRangeSlider();
-        if (presentLine.timeProperty().get() - viewhalfRange < totalStartTime.get()) {
-            r.setLowValue(0);
-        } else {
-            r.setLowValue(((presentLine.timeProperty().get() - viewhalfRange) - totalStartTime.get()) / (totalRrange));
-        }
-
-        if (presentLine.timeProperty().get() + viewhalfRange > totalEndTime.get()) {
-            r.setHighValue(100);
-        } else {
-            r.setHighValue(((presentLine.timeProperty().get() + viewhalfRange) - totalStartTime.get()) / (totalRrange));
-        }
-    }
-
+//    private void centerOnPresent() {
+//        int totalRrange = (totalEndTime.get() - totalStartTime.get()) / 100;
+//        int viewhalfRange = (viewEndTime.get() - viewStartTime.get()) / 2;
+//        RangeSlider r = ((Timeline) this.getParent()).getRangeSlider();
+//        if (presentLine.timeProperty().get() - viewhalfRange < totalStartTime.get()) {
+//            r.setLowValue(0);
+//        } else {
+//            r.setLowValue(((presentLine.timeProperty().get() - viewhalfRange) - totalStartTime.get()) / (totalRrange));
+//        }
+//
+//        if (presentLine.timeProperty().get() + viewhalfRange > totalEndTime.get()) {
+//            r.setHighValue(100);
+//        } else {
+//            r.setHighValue(((presentLine.timeProperty().get() + viewhalfRange) - totalStartTime.get()) / (totalRrange));
+//        }
+//    }
     @Override
     public void updateBlocks() {
         Iterator<Node> iter = this.getChildren().iterator();
         while (iter.hasNext()) {
             Node node = iter.next();
-            if (node instanceof Block) {
-                Block b = (Block) node;
+            if (node instanceof InfoBlock) {
+                InfoBlock b = (InfoBlock) node;
                 int pos = getXPos(b.timeProperty().get());
                 b.setTranslateX(pos);
             }
@@ -141,10 +145,12 @@ public class MainLine extends SingleLine {
                 tick.setTranslateX(pos);
             }
         }
-
-        updatePresentLine();
-        if (presentLine.timeProperty().get() < viewStartTime.get()
-                || presentLine.timeProperty().get() > viewEndTime.get()) {
+        Timeline timeline = (Timeline) getParent().getParent();
+        timeline.updatePresentLine();
+        System.out.println(timeline.getPresentLine().timeProperty().get());
+        if (timeline.getPresentLine().timeProperty().get() < viewStartTime.get()
+                || timeline.getPresentLine().timeProperty().get() > viewEndTime.get()) {
+            System.out.println("model.MainLine.updateBlocks()");
             state.set(STATE_PRESENT_OUT);
         } else {
             state.set(STATE_IDLE);
@@ -184,19 +190,17 @@ public class MainLine extends SingleLine {
                 }
         }
     }
-    
-    @Override
-    public void setPresentLine(PresentLine pl){
-        presentLine = pl;
-        getChildren().add(presentLine);
-    }
-    
-    @Override
-    public void updatePresentLine(){
-        int pos = getXPos(presentLine.timeProperty().get());
-        presentLine.setTranslateX(pos);
-    }
-    
+
+//    @Override
+//    public void setPresentLine(PresentLine pl){
+//        presentLine = pl;
+//        getChildren().add(presentLine);
+//    }
+//    @Override
+//    public void updatePresentLine(){
+//        int pos = getXPos(presentLine().timeProperty().get());
+//        presentLine().setTranslateX(pos);
+//    }
     public void updateTicks() {
         Iterator<Node> iter = this.getChildren().iterator();
         while (iter.hasNext()) {
@@ -214,12 +218,26 @@ public class MainLine extends SingleLine {
             tickTime += tickState.get();
         }
     }
-    
+
+    public Button getRightGoBackButton() {
+        return rightGoBackButton;
+    }
+
+    public Button getLeftGoBackButton() {
+        return leftGoBackButton;
+    }
+
+    public StringProperty stateProperty() {
+        return state;
+    }
+
     @Override
-    public void addBlock(Block b) {
+    public void addBlock(IBlock ib) {
+        InfoBlock b = (InfoBlock) ib;
         int pos = getXPos(b.timeProperty().get());
         this.getChildren().add(b);
         b.stateProperty().bindBidirectional(state);
         b.setTranslateX(pos);
+        b.setTranslateY(VERTICAL_PADDING);
     }
 }

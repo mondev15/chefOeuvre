@@ -10,13 +10,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import view.SingleLine;
+import view.Timeline;
 
 /**
  *
  * @author Charlelie
  */
 public class PresentLine extends Line {
-
     IntegerProperty time;
     private double sceneX, translateX;
     private int WIDTH = 10;
@@ -44,8 +44,8 @@ public class PresentLine extends Line {
         });
 
         this.setOnMouseReleased((event) -> {
-            SingleLine parent = (SingleLine) (this.getParent());
-            this.time.set(parent.getTime((int) (this.getTranslateX())));
+            SingleLine mainLine = ((Timeline) (this.getParent())).getMainLine();
+            this.time.set(mainLine.getTime((int) (this.getTranslateX())));
         });
     }
 

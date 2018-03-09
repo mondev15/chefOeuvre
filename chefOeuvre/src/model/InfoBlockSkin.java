@@ -25,7 +25,7 @@ import view.SingleLine;
  *
  * @author Charlelie
  */
-public class BlockSkin extends VBox{
+public class InfoBlockSkin extends VBox{
 
     private int time;
     private Label titleLabel;
@@ -40,7 +40,7 @@ public class BlockSkin extends VBox{
     
     private final int SIZE = 180;
     
-    BlockSkin(Block b) {
+    public InfoBlockSkin(InfoBlock b) {
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
         setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
