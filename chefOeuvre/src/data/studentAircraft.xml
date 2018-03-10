@@ -18,7 +18,9 @@
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
     		<parameters>
-    			<order>descend 110 level, standard for 14 right, speed 220 knots.</order>
+    			<order>descend 110 level</order>
+    			<order>standard for 14 right</order>
+    			<order>speed 220 knots.</order>
     		</parameters>
     	</command>
     </message>

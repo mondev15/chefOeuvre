@@ -43,61 +43,62 @@ public class Parser {
 			builder = factory.newDocumentBuilder();
 			docXml = builder.parse(new File("src/data/studentAircraft.xml"));
 			Element racine = docXml.getDocumentElement();
-			NodeList messages = racine.getChildNodes();
 			
+			//Recovery messages
+			NodeList messages = racine.getChildNodes();
+			List<String> parameters;
 			for (int i = 0; i < messages.getLength(); i++) {
 				Node message = messages.item(i);
+				parameters = new ArrayList<>();
 				
 				if (message.getNodeType() == Node.ELEMENT_NODE) {
 					Element elementMessage = (Element) message;
 					
 					//Recovery of time
 					String[] timeString = elementMessage.getElementsByTagName("time")
-							.item(0).getChildNodes().item(0).getNodeValue().split(":");
+							.item(0).getTextContent().split(":");
 					
 					int time = convertToSecond(Integer.parseInt(timeString[0]), 
 							Integer.parseInt(timeString[1]), 
 							Integer.parseInt(timeString[2]));
 					
 					//Recovery of command
-					NodeList command = elementMessage.getElementsByTagName("command");
-					for (int j = 0; j < command.getLength(); j++) {
-						Element elementCommand = (Element) command.item(j);
+					String typeOrder = elementMessage.getElementsByTagName("type")
+							.item(0).getTextContent();
+					System.out.println(typeOrder);
+					
+					//Recovery of flight identifier
+					String flight = elementMessage.getElementsByTagName("flight")
+							.item(0).getTextContent();
+					
+					if (typeOrder.equals("AircraftContact")) {
+						//Recovery of contact person
+						String contact = elementMessage.getElementsByTagName("contact")
+						.item(0).getTextContent();
+						parameters.add(contact);
 						
-						//Recovery of type of order
-						String typeOrder = elementCommand.getElementsByTagName("type")
-								.item(0).getChildNodes().item(0).getNodeValue();
-						System.out.println(typeOrder);
+						//Recovery of Frequency
+						String frequency = elementMessage.getElementsByTagName("frequency")
+								.item(0).getTextContent();
+						parameters.add(frequency);
 						
-						//Recovery of flight identifier
-						String flight = elementCommand.getElementsByTagName("flight")
-								.item(0).getChildNodes().item(0).getNodeValue();
+						//Recovery of other order
+						String prefix = elementMessage.getElementsByTagName("prefix")
+								.item(0).getTextContent();
+						parameters.add(prefix);
 						
-						//Recovery of parameters
-						NodeList parameter = elementCommand.getElementsByTagName("parameters");
-						List<String> parameters = new ArrayList<>();
-						for (int k = 0; k < parameter.getLength(); k++) {
-							Element elementParameter = (Element) parameter.item(k);
+					} else if (typeOrder.equals("AircraftNewContact")) {
+						
+						//Recovery of orders
+						NodeList orders = elementMessage.getElementsByTagName("order");
+						for(int j = 0; j < orders.getLength(); j++) {
+							Element order = (Element) orders.item(j);
 							
-							if (typeOrder.equals("AircraftContact")) {
-								//Recovery of contact person
-								String contact = elementParameter.getElementsByTagName("contact")
-								.item(0).getChildNodes().item(0).getNodeValue();
-								parameters.add(contact);
-								
-								//Recovery of Frequency
-								String frequency = elementParameter.getElementsByTagName("frequency")
-										.item(0).getChildNodes().item(0).getNodeValue();
-								parameters.add(frequency);
-								
-								//Recovery of other order
-								String prefix = elementParameter.getElementsByTagName("prefix")
-										.item(0).getChildNodes().item(0).getNodeValue();
-								parameters.add(prefix);
-							}
-						}
-						buildBlock(typeOrder, time, parameters);
+							parameters.add(order.getTextContent());
+							System.out.println(order.getTextContent());
+						}						
 					}
+					//buildBlock(typeOrder, time, parameters);
 				}
 			}
 			
