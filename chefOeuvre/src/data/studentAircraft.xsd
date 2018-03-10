@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="studentAircraft">
+	<xsd:complexType>
+	<xsd:sequence>
+		<xsd:element name="message" minOccurs="0" maxOccurs="unbounded">
+		<xsd:complexType>
+		<xsd:sequence>
+			<xsd:element name="time" type="xsd:time"></xsd:element>
+			<xsd:element name="command">
+			<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="type" type="xsd:string"></xsd:element>
+				<xsd:element name="flight" type="xsd:integer"></xsd:element>
+				<xsd:element name="parameters"></xsd:element>
+			</xsd:sequence>
+			</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+	</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

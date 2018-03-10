@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<studentAircraft xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./studentAircraft.xsd">
+    <message>
+    	<time>00:01:00</time>
+    	<command>
+    		<type>AircraftContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<contact>Toulouse Approach</contact>
+    			<frequency>129.3</frequency>
+    			<prefix> </prefix>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:05:00</time>
+    	<command>
+    		<type>AircraftNewContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>descend 110 level, standard for 14 right, speed 220 knots.</order>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:10:00</time>
+    	<command>
+    		<type>AircraftLevel</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<fl>5000</fl>
+    			<option>QNH 1014</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:15:00</time>
+    	<command>
+    		<type>AircraftHeading</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<to>240</to>
+    			<option>when reaching NOPTA</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:20:00</time>
+    	<command>
+    		<type>AircraftLevel</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<fl>3000</fl>
+    			<option>QNH 1014. speed 180 knots. Calling back for interception.</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:25:00</time>
+    	<command>
+    		<type>AircraftHeading</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<to>180</to>
+    			<option>cleared for ILS approach, 14 right, call back when established.</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:30:00</time>
+    	<command>
+    		<type>AircraftContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<contact>Tower</contact>
+    			<frequency>118.10</frequency>
+    			<prefix>cleared for final approach 14 right</prefix>
+    		</parameters>
+    	</command>
+    </message>
+</studentAircraft>
