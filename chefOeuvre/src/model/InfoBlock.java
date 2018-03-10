@@ -41,7 +41,8 @@ public class InfoBlock extends Group implements IBlock{
     private SimpleStringProperty state = new SimpleStringProperty();
     private InfoBlockSkin forwardBlock;
     private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
-    private Color DRAGGED_COLOR = Color.rgb(150, 150, 255);
+    private Color DRAGGED_COLOR = Color.rgb(166, 165, 165);
+    private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
     private DropShadow shadow;
 
     
@@ -54,7 +55,7 @@ public class InfoBlock extends Group implements IBlock{
         content.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         content.setCursor(Cursor.HAND);
         
-        shadow = new DropShadow(5.0, 3.0, 3.0, Color.WHITE);
+        shadow = new DropShadow(5.0, 3.0, 3.0, SHADOW_COLOR);
         content.setEffect(shadow);
         
         time = new SimpleIntegerProperty(t);

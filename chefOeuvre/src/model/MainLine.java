@@ -37,6 +37,8 @@ public class MainLine extends SingleLine {
     private final int MEDIUM_TICKS = 300;
     private final int BIG_TICKS = 600;
     private final int VERTICAL_PADDING = 10;
+    private final Color BACKGROUND_COLOR = Color.rgb(64, 64, 64);
+    private final Color DRAGGED_COLOR = Color.rgb(102, 92, 92);
 
     public MainLine() {
         this(1012, 150);
@@ -44,6 +46,7 @@ public class MainLine extends SingleLine {
 
     public MainLine(int w, int h) {
         super(w, h);
+                
         rightGoBackButton = new Button(">>");
         rightGoBackButton.setTranslateY(LINE_HEIGHT - 40);
         rightGoBackButton.setTranslateX(LINE_LENGTH - 80);
@@ -62,12 +65,12 @@ public class MainLine extends SingleLine {
             String currentState = state.get();
             switch (currentState) {
                 case STATE_IDLE:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(64, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                     rightGoBackButton.setVisible(false);
                     leftGoBackButton.setVisible(false);
                     break;
                 case STATE_DRAG:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(104, 104, 104), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(DRAGGED_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                     rightGoBackButton.setVisible(false);
                     leftGoBackButton.setVisible(false);
                     break;

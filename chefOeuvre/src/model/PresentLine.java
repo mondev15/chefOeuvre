@@ -6,9 +6,12 @@
 package model;
 
 import ivy.IvyManager;
+import java.awt.Stroke;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import view.SingleLine;
 import view.Timeline;
@@ -21,13 +24,24 @@ public class PresentLine extends Line {
     IntegerProperty time;
     private double sceneX, translateX;
     private final String STATE_IDLE = "IDLE";
-
+    private final Paint COLOR = Color.rgb(255, 180, 0);
+    private final Color SHADOW_COLOR = Color.rgb(51, 50, 48);
+    private final int WIDTH = 10;
+    private DropShadow shadow;
+    
     public PresentLine() {
         this(0, 0, 0, 0);
     }
 
     public PresentLine(double xs, double ys, double xe, double ye) {
         super(xs, ys, xe, ye);
+        
+        shadow = new DropShadow(WIDTH, 8, 0, SHADOW_COLOR); 
+        
+        this.setStroke(COLOR);
+        this.setStrokeWidth(WIDTH);
+        this.setEffect(shadow);
+        
         time = new SimpleIntegerProperty();
 
         this.setOnMousePressed((event) -> {

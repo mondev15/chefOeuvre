@@ -33,8 +33,9 @@ public class CompactBlock extends Group implements IBlock{
     private CompactBlockSkin forwardBlock;
     private final int HEIGHT = 40;
     private final int INITIAL_LENGTH = 10;
-    private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
-    private Color DRAGGED_COLOR = Color.rgb(150, 150, 255);
+    private Color BACKGROUND_COLOR = Color.rgb(149, 209, 230);
+    private Color DRAGGED_COLOR = Color.rgb(204, 243, 255);
+    private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
     private DropShadow shadow;
 
     public CompactBlock(){
@@ -51,8 +52,10 @@ public class CompactBlock extends Group implements IBlock{
         main = new Rectangle(INITIAL_LENGTH, HEIGHT);
         main.setFill(BACKGROUND_COLOR);
         main.setCursor(Cursor.HAND);
+        main.setArcHeight(20);
+        main.setArcWidth(20);
         
-        shadow = new DropShadow(5.0, 3.0, 3.0, Color.BLACK);
+        shadow = new DropShadow(5.0, 3.0, 3.0, SHADOW_COLOR); 
         main.setEffect(shadow);
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));

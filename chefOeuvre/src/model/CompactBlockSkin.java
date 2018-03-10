@@ -38,6 +38,9 @@ public class CompactBlockSkin extends Rectangle {
         setCursor(Cursor.HAND);
         setFill(cb.getColor());
         setOpacity(OPACITY);
+        
+        setArcHeight(20);
+        setArcWidth(20);
 
         time = cb.timeProperty().get();
         

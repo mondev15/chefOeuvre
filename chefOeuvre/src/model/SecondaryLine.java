@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -26,7 +27,11 @@ import view.Timeline;
 public class SecondaryLine extends SingleLine {
 
     private StringProperty state = new SimpleStringProperty();
+    private DropShadow shadow;
     private final int VERTICAL_PADDING = 5;
+    private final Color BACKGROUND_COLOR = Color.rgb(71, 78, 102);
+    private final Color DRAGGED_COLOR = Color.rgb(98, 108, 140);
+    private final Color SHADOW_COLOR = Color.rgb(48, 49, 51);
 
     public SecondaryLine() {
         this(1012, 150);
@@ -34,14 +39,18 @@ public class SecondaryLine extends SingleLine {
 
     public SecondaryLine(int w, int h) {
         super(w, h);
+        
+        shadow = new DropShadow(10, 0, 3, SHADOW_COLOR);
+        setEffect(shadow);
+                
         state.addListener((Observable observable) -> {
             String currentState = state.get();
             switch (currentState) {
                 case STATE_IDLE:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(145, 145, 145), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                     break;
                 case STATE_DRAG:
-                    this.setBackground(new Background(new BackgroundFill(Color.rgb(185, 185, 185), CornerRadii.EMPTY, Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(DRAGGED_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                     break;
                 case STATE_PRESENT_OUT:
                     break;

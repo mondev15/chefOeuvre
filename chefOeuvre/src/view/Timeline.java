@@ -33,7 +33,6 @@ public class Timeline extends Pane {
 
     private int LINE_HEIGHT = 150;
     private int SECONDARY_LINE_HEIGHT = 50;
-    private int WIDTH = 10;
     protected final String STATE_IDLE = "IDLE";
     protected final String STATE_DRAG = "DRAG";
     protected final String STATE_PRESENT_OUT = "OUT";
@@ -56,16 +55,10 @@ public class Timeline extends Pane {
         totalStartTime = new SimpleIntegerProperty();
         totalEndTime = new SimpleIntegerProperty();
         presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT);
-        presentLine.setStroke(Color.GOLD);
-        presentLine.setStrokeWidth(WIDTH);
         leftPresentLineSkin = new PresentLine(0, SECONDARY_LINE_HEIGHT / 2, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT / 2);
-        leftPresentLineSkin.setStroke(Color.GOLD);
-        leftPresentLineSkin.setStrokeWidth(WIDTH);
         leftPresentLineSkin.setOpacity(0.2);
         leftPresentLineSkin.setTranslateX(15);
         rightPresentLineSkin = new PresentLine(0, SECONDARY_LINE_HEIGHT / 2, 0, LINE_HEIGHT + SECONDARY_LINE_HEIGHT / 2);
-        rightPresentLineSkin.setStroke(Color.GOLD);
-        rightPresentLineSkin.setStrokeWidth(WIDTH);
         rightPresentLineSkin.setOpacity(0.2);
         rightPresentLineSkin.setTranslateX(w - 15);
         rightPresentLineSkin.setVisible(false);
