@@ -5,25 +5,16 @@
  */
 package model;
 
-import java.awt.BasicStroke;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Stroke;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.input.DragEvent;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -31,16 +22,14 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import view.SingleLine;
 
 /**
  *
  * @author Charlelie
  */
-public class Block extends Group{
+public class InfoBlock extends Group implements IBlock{
     
     private IntegerProperty time;
     private Label titleLabel;
@@ -50,20 +39,25 @@ public class Block extends Group{
     private Label infoLabel;
     private VBox content;
     private SimpleStringProperty state = new SimpleStringProperty();
-    private double sceneX, translateX;
-    private BlockSkin forwardBlock;
-    
+    private InfoBlockSkin forwardBlock;
+    private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
+    private Color DRAGGED_COLOR = Color.rgb(166, 165, 165);
+    private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
+    private DropShadow shadow;
+
     
     private final int SIZE = 180;
     
-    public Block(int t, String title, String hdg, String fl, String speed, String info){
+    public InfoBlock(int t, String title, String hdg, String fl, String speed, String info){
         content = new VBox();
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
-        content.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-        content.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        content.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         content.setCursor(Cursor.HAND);
-                
+        
+        shadow = new DropShadow(5.0, 3.0, 3.0, SHADOW_COLOR);
+        content.setEffect(shadow);
+        
         time = new SimpleIntegerProperty(t);
         titleLabel = new Label(title);
         hdgLabel = new Label(hdg);
@@ -80,82 +74,42 @@ public class Block extends Group{
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));
         });
-                
-//        this.setOnDragDetected((event) -> {
-//            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
-//            
-//            ClipboardContent content = new ClipboardContent();
-//            content.putString(titleLabel.getText());
-//            db.setContent(content);
-//            System.out.println("model.Block.<init>()");
-//            event.consume();
-//        });
-        
-//        this.setOnMousePressed((event) -> {
-//            sceneX = event.getSceneX();
-//            translateX = this.getTranslateX();
-//            
-//        });
-//        
-//        this.setOnMouseDragged((event) -> {
-//            state.set("DRAG");
-//            double offsetX = event.getSceneX() - sceneX;
-//            double newTranslateX = translateX + offsetX;
-//            if (forwardBlock != null){
-//                forwardBlock.setTranslateX(newTranslateX);
-//            }
-//        });
-//        
-//        this.setOnMouseReleased((event) -> {
-//            state.set("IDLE");
-//            SingleLine parent = (SingleLine)(getParent());
-//            this.setTime( parent.getTime((int)this.getTranslateX()) );
-//        });
-//        
-//        state.addListener((Observable observable) -> {
-//            if("IDLE".equals(state.get())){
-//                content.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-//            }
-//            else if("DRAG".equals(state.get())){
-//                content.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-//            }
-//        });
 
         state.addListener((Observable observable) -> {
             if("IDLE".equals(state.get())){
-                content.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
+                content.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
             }
             else if("DRAG".equals(state.get())){
-                content.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                content.setBackground(new Background(new BackgroundFill(DRAGGED_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
             }
         });
 
-        forwardBlock = new BlockSkin(this);
+        forwardBlock = new InfoBlockSkin(this);
 
         this.getChildren().addAll(content, forwardBlock);
     }
     
-    public Block(){
+    public InfoBlock(){
         this(0, "", "", "", "", "");
     }
     
-    public Block(int t){
+    public InfoBlock(int t){
         this(t, "", "", "", "", "");
     }
     
-    public Block(int t, String title){
+    public InfoBlock(int t, String title){
         this(t, title, "", "", "", "");
     }
     
-    public Block(int t, String title, String hdg){
+    public InfoBlock(int t, String title, String hdg){
         this(t, title, hdg, "", "", "");
     }
 
-    public Block(int t, String title, String hdg, String fl){
+    public InfoBlock(int t, String title, String hdg, String fl){
         this(t, title, hdg, fl, "", "");
     }
     
-    public Block(int t, String title, String hdg, String fl, String speed){
+    public InfoBlock(int t, String title, String hdg, String fl, String speed){
         this(t, title, hdg, fl, speed, "");
     }
 
@@ -209,5 +163,9 @@ public class Block extends Group{
     
     public Label getInfo(){
         return infoLabel;
+    }
+    
+    public Background getBackground(){
+        return content.getBackground();
     }
 }

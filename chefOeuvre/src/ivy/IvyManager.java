@@ -12,21 +12,40 @@ import model.Plane;
 import model.Route;
 import view.RadarView;
 import java.awt.geom.Point2D;
+import model.TimeFunctions;
+import view.Timeline;
 
 public class IvyManager {
 
     private static Ivy bus;
     private RadarView radar;
+    private Timeline timeline;
 
     public IvyManager() {
 
         radar = new RadarView();
         bus = new Ivy("IvyManager", "IvyManager CONNECTED", null);
+        timeline = new Timeline();
 
         try {
             //---Connexion au bus ivy
             bus.start("127.255.255.255:2010");
 
+            bus.bindMsg("FileReadEvent Type=REJEU Name=(.+) StartTime=(.*) EndTime=(.*)", new IvyMessageListener() {
+                @Override
+                public void receive(IvyClient client, String[] args) {
+                    timeline.totalStartTimeProperty().set(TimeFunctions.hmsToInt(args[1]));
+                    timeline.totalEndTimeProperty().set(TimeFunctions.hmsToInt(args[2]));
+                }
+            });
+            
+            bus.bindMsg("ClockEvent Time=(.+) Rate=(.+)", new IvyMessageListener() {
+                @Override
+                public void receive(IvyClient client, String[] args) {
+                    timeline.setClockTime(TimeFunctions.hmsToInt(args[0]), Integer.parseInt(args[1]));
+                }
+            });
+            
             //---Selection depuis twinkle de l'avion surlequel la vue est centrée 
             bus.bindMsg("SelectionEvent acc.*Flight=(.*)", new IvyMessageListener() {
                 @Override
@@ -202,6 +221,14 @@ public class IvyManager {
         }
 
     }
+    
+    public static void setClockTime(int time){
+        try {
+            bus.sendMsg("SetClock Time=" + TimeFunctions.intTohms(time));
+        } catch (IvyException ex) {
+            Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public Ivy getBus() {
         return bus;
@@ -209,5 +236,9 @@ public class IvyManager {
 
     public RadarView getRadarView() {
         return radar;
+    }
+    
+    public Timeline getTimeline(){
+        return timeline;
     }
 }

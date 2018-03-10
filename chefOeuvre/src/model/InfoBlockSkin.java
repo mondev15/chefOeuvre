@@ -25,7 +25,7 @@ import view.SingleLine;
  *
  * @author Charlelie
  */
-public class BlockSkin extends VBox{
+public class InfoBlockSkin extends VBox{
 
     private int time;
     private Label titleLabel;
@@ -35,18 +35,18 @@ public class BlockSkin extends VBox{
     private Label infoLabel;
     private double sceneX, translateX;
     private SimpleStringProperty state = new SimpleStringProperty();
+    private final double OPACITY = 0.6;
 
     
     
     private final int SIZE = 180;
     
-    BlockSkin(Block b) {
+    public InfoBlockSkin(InfoBlock b) {
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
-        setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBackground(b.getBackground());
         setCursor(Cursor.HAND);
-        setOpacity(0.4);
+        setOpacity(OPACITY);
         
         
         time = b.timeProperty().get();
