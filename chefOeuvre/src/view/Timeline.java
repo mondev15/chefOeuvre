@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -43,7 +44,6 @@ public class Timeline extends Pane {
     private RangeSlider rangeSlider;
     private IntegerProperty totalStartTime;
     private IntegerProperty totalEndTime;
-    private IntegerProperty clockTime;
     private PresentLine presentLine;
     private PresentLine leftPresentLineSkin;
     private PresentLine rightPresentLineSkin;
@@ -73,7 +73,8 @@ public class Timeline extends Pane {
         setSecondaryLine(new SecondaryLine(w, SECONDARY_LINE_HEIGHT));
         setMainLine(new MainLine(w, LINE_HEIGHT));
         setRangeSlider(new RangeSlider(0, 100, 0, 24));
-
+        
+        
         this.getChildren().addAll(lines, presentLine, leftPresentLineSkin, rightPresentLineSkin);
 
         state.bindBidirectional(mainLine.stateProperty());
@@ -196,16 +197,11 @@ public class Timeline extends Pane {
     }
 
     public void setClockTime(int time, int rate) {
-        if (clockTime.get() != 0) {
-            double range = (totalEndTime.get() - totalStartTime.get()) / 100.0;
-            double step = rate / range;
-            presentLine.timeProperty().set((int) Math.floor(presentLine.timeProperty().get() + rate));
-            rangeSlider.setLowValue(rangeSlider.getLowValue() + step);
-            rangeSlider.setHighValue(rangeSlider.getHighValue() + step);
-        } else {
-            presentLine.timeProperty().set(time);
-        }
-        clockTime.set(time);
+        double range = (totalEndTime.get() - totalStartTime.get()) / 100.0;
+        double step = rate / range;
+        presentLine.timeProperty().set(time);
+        rangeSlider.setLowValue(rangeSlider.getLowValue() + step);
+        rangeSlider.setHighValue(rangeSlider.getHighValue() + step);
     }
 
     public IntegerProperty totalStartTimeProperty() {
@@ -214,10 +210,6 @@ public class Timeline extends Pane {
 
     public IntegerProperty totalEndTimeProperty() {
         return totalEndTime;
-    }
-
-    public IntegerProperty clockTimeProperty() {
-        return clockTime;
     }
 
     public StringProperty stateProperty() {

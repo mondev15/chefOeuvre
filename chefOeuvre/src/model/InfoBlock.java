@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -41,7 +42,8 @@ public class InfoBlock extends Group implements IBlock{
     private InfoBlockSkin forwardBlock;
     private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
     private Color DRAGGED_COLOR = Color.rgb(150, 150, 255);
-    
+    private DropShadow shadow;
+
     
     private final int SIZE = 180;
     
@@ -51,7 +53,10 @@ public class InfoBlock extends Group implements IBlock{
         this.prefHeight(SIZE);
         content.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         content.setCursor(Cursor.HAND);
-                
+        
+        shadow = new DropShadow(5.0, 3.0, 3.0, Color.WHITE);
+        content.setEffect(shadow);
+        
         time = new SimpleIntegerProperty(t);
         titleLabel = new Label(title);
         hdgLabel = new Label(hdg);

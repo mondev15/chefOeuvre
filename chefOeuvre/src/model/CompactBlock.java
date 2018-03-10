@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -34,6 +35,7 @@ public class CompactBlock extends Group implements IBlock{
     private final int INITIAL_LENGTH = 10;
     private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
     private Color DRAGGED_COLOR = Color.rgb(150, 150, 255);
+    private DropShadow shadow;
 
     public CompactBlock(){
         this(1000, 10);
@@ -50,6 +52,8 @@ public class CompactBlock extends Group implements IBlock{
         main.setFill(BACKGROUND_COLOR);
         main.setCursor(Cursor.HAND);
         
+        shadow = new DropShadow(5.0, 3.0, 3.0, Color.BLACK);
+        main.setEffect(shadow);
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));
         });
