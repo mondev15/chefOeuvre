@@ -26,6 +26,9 @@ public class Parser {
 	public final static int CONTACT = 0;
 	public final static int FREQUENCY = 1;
 	public final static int PREFIX = 2;
+	public final static int LEVEL = 0;
+	public final static int OPTION = 1;
+	public final static int HEADING = 1;
 	
 	List<Block> blocks;
 	
@@ -95,9 +98,58 @@ public class Parser {
 							Element order = (Element) orders.item(j);
 							
 							parameters.add(order.getTextContent());
-							System.out.println(order.getTextContent());
-						}						
+						}
+						
+					} else if (typeOrder.equals("AircraftLevel")) {
+						
+						//Recovery of level
+						String level = elementMessage.getElementsByTagName("fl")
+								.item(0).getTextContent();
+						parameters.add(level);
+						
+						//Recovery of options
+						String option = elementMessage.getElementsByTagName("option")
+								.item(0).getTextContent();
+						parameters.add(option);
+						
+					} else if (typeOrder.equals("AircraftHeading")) {
+						
+						//Recovery of heading
+						String level = elementMessage.getElementsByTagName("to")
+								.item(0).getTextContent();
+						parameters.add(level);
+						
+						//Recovery of options
+						String option = elementMessage.getElementsByTagName("option")
+								.item(0).getTextContent();
+						parameters.add(option);
+						
+					} else if (typeOrder.equals("AircraftClearToLand")) {						
+						
+						//Recovery of orders
+						NodeList orders = elementMessage.getElementsByTagName("order");
+						for(int j = 0; j < orders.getLength(); j++) {
+							Element order = (Element) orders.item(j);
+							
+							parameters.add(order.getTextContent());
+						}
+						
+						//Recovery of informations
+						String option = elementMessage.getElementsByTagName("option")
+								.item(0).getTextContent();
+						parameters.add(option);
+					
+					} else if (typeOrder.equals("AircraftGoAround")) {
+						
+						//Recovery of orders
+						NodeList orders = elementMessage.getElementsByTagName("order");
+						for(int j = 0; j < orders.getLength(); j++) {
+							Element order = (Element) orders.item(j);
+							
+							parameters.add(order.getTextContent());
+						}
 					}
+					
 					//buildBlock(typeOrder, time, parameters);
 				}
 			}
@@ -124,6 +176,36 @@ public class Parser {
 			newBlock.setHDG(parameters.get(CONTACT));
 			newBlock.setFL(parameters.get(FREQUENCY));
 			newBlock.setSpeed(parameters.get(PREFIX));
+			
+		} else if (typeOrder.equals("AircraftNewContact")) { //TODO Rendre dynamique les labels des blocs
+			newBlock.setTitle("Contact made");
+			if (!parameters.isEmpty()) {
+				if (parameters.size() == 1) newBlock.setHDG(parameters.get(0));
+				if (parameters.size() == 2) {
+					newBlock.setHDG(parameters.get(0));
+					newBlock.setFL(parameters.get(1));
+				} else {
+					newBlock.setHDG(parameters.get(0));
+					newBlock.setHDG(parameters.get(0));
+					newBlock.setFL(parameters.get(1));
+				}
+			}
+			
+		} else if (typeOrder.equals("AircraftLevel")) {
+			newBlock.setTitle("Contact made");
+			newBlock.setHDG(parameters.get(LEVEL));
+			newBlock.setFL(parameters.get(OPTION));
+			
+		} else if (typeOrder.equals("AircraftHeading")) {
+			newBlock.setTitle("Contact made");
+			newBlock.setHDG(parameters.get(HEADING));
+			newBlock.setFL(parameters.get(OPTION));
+			
+		} else if (typeOrder.equals("AircraftClearToLand")) {
+			//TODO blocs dynamiques
+		
+		} else if (typeOrder.equals("AircraftGoAround")) {
+			//TODO blocs dynamiques
 		}
 		
 		blocks.add(newBlock);

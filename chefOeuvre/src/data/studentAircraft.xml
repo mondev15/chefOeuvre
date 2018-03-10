@@ -30,7 +30,7 @@
     		<type>AircraftLevel</type>
     		<flight>110</flight>
     		<parameters>
-    			<fl>5000</fl>
+    			<fl>descend to 5000</fl>
     			<option>QNH 1014</option>
     		</parameters>
     	</command>
@@ -77,6 +77,109 @@
     			<contact>Tower</contact>
     			<frequency>118.10</frequency>
     			<prefix>cleared for final approach 14 right</prefix>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:35:00</time>
+    	<command>
+    		<type>AircraftNewContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>call back 4NM short final 14 right.</order>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:40:00</time>
+    	<command>
+    		<type>AircraftClearToLand</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>runway 14 right</order>
+    			<order>wind 160 degrees</order>
+    			<order>5 knots</order>
+    			<information>For information, traffic on runway 14 left.</information>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:45:00</time>
+    	<command>
+    		<type>AircraftGoAround</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>keep heading 143</order>
+    			<order>climb 1000 feets</order>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:50:00</time>
+    	<command>
+    		<type>AircraftContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<contact>Toulouse Approach</contact>
+    			<frequency>129.3</frequency>
+    			<prefix> </prefix>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>00:55:00</time>
+    	<command>
+    		<type>AircraftHeading</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<to>180</to>
+    			<option>climb 3000 feets, intercept QDR 332 TOE.</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>01:00:00</time>
+    	<command>
+    		<type>AircraftHeading</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<to>260</to>
+    			<option>speed 180 knots to intercept ILS 14 right, cleared, callback when established.</option>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>01:05:00</time>
+    	<command>
+    		<type>AircraftContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<contact>Tower</contact>
+    			<frequency>118.10</frequency>
+    			<prefix>cleared for final approach 14 right</prefix>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>01:10:00</time>
+    	<command>
+    		<type>AircraftNewContact</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>call back 4NM short final 14 right.</order>
+    		</parameters>
+    	</command>
+    </message>
+    <message>
+    	<time>01:15:00</time>
+    	<command>
+    		<type>AircraftClearToLand</type>
+    		<flight>110</flight>
+    		<parameters>
+    			<order>runway 14 right</order>
+    			<order>wind 160 degrees</order>
+    			<order>10 knots</order>
+    			<information> </information>
     		</parameters>
     	</command>
     </message>
