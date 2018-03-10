@@ -6,7 +6,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.InfoBlock;
@@ -45,7 +44,6 @@ public class RadarViewTest extends Application {
         
         CompactBlock blockTest3 = new CompactBlock(6000, 100);
         CompactBlock blockTest4 = new CompactBlock(50, 100);
-        
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest3);
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest4);
         ivyManager.getTimeline().getMainLine().addBlock(blockTest1);

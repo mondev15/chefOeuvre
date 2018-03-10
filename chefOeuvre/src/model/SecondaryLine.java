@@ -26,7 +26,6 @@ import view.Timeline;
 public class SecondaryLine extends SingleLine {
 
     private StringProperty state = new SimpleStringProperty();
-//    private PresentLine presentLine;
     private final int VERTICAL_PADDING = 5;
 
     public SecondaryLine() {
@@ -61,17 +60,6 @@ public class SecondaryLine extends SingleLine {
 
         state.set(STATE_IDLE);
     }
-
-//    @Override
-//    public void setPresentLine(PresentLine pl) {
-//        presentLine = pl;
-//    }
-//    
-//    @Override
-//    public void updatePresentLine(){
-//        int pos = getXPos(presentLine.timeProperty().get());
-//        presentLine.setTranslateX(pos);
-//    }
     
     @Override
     public void updateBlocks(){
@@ -86,8 +74,6 @@ public class SecondaryLine extends SingleLine {
                 b.setTranslateX(pos);
             }
         }
-        Timeline timeline = (Timeline) getParent().getParent();
-        timeline.updatePresentLine();
     }
     
     @Override
@@ -98,6 +84,5 @@ public class SecondaryLine extends SingleLine {
         b.stateProperty().bindBidirectional(state);
         b.setTranslateX(pos);
         b.setTranslateY(VERTICAL_PADDING);
-        System.out.println(b.timeProperty().get());
     }
 }

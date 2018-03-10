@@ -37,7 +37,6 @@ public class MainLine extends SingleLine {
     private final int MEDIUM_TICKS = 300;
     private final int BIG_TICKS = 600;
     private final int VERTICAL_PADDING = 10;
-//    private PresentLine presentLine;
 
     public MainLine() {
         this(1012, 150);
@@ -72,59 +71,22 @@ public class MainLine extends SingleLine {
                     rightGoBackButton.setVisible(false);
                     leftGoBackButton.setVisible(false);
                     break;
-                case STATE_PRESENT_OUT:
-//                    if (timeline.getPresentLine().timeProperty().get() <= viewStartTime.get()) {
-//                        rightGoBackButton.setVisible(false);
-//                        leftGoBackButton.setVisible(true);
-//                    } else if (timeline.getPresentLine().timeProperty().get() >= viewEndTime.get()) {
-//                        rightGoBackButton.setVisible(true);
-//                        leftGoBackButton.setVisible(false);
-//                    }
+                case STATE_PRESENT_OUT: //Managed by the Timeline
+                    break;
             }
         });
 
         state.set(STATE_IDLE);
 
-//        currentTime.addListener((observable) -> {
-//            Platform.runLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    presentLine.timeProperty().set(currentTime.get());
-//                    updateBlocks();
-//                }
-//            });
-//        });
         tickState.set(MEDIUM_TICKS);
         tickState.addListener((observable) -> {
             updateTicks();
         });
 
-//        presentLine = new PresentLine(0, 0, 0, LINE_HEIGHT);
-//        presentLine.timeProperty().addListener((observable) -> {
-//            presentLine.setTranslateX(getXPos(presentLine.timeProperty().get()));
-//        });
-//        
-//        this.getChildren().add(presentLine);
         this.getChildren().add(leftGoBackButton);
         this.getChildren().add(rightGoBackButton);
     }
 
-//    private void centerOnPresent() {
-//        int totalRrange = (totalEndTime.get() - totalStartTime.get()) / 100;
-//        int viewhalfRange = (viewEndTime.get() - viewStartTime.get()) / 2;
-//        RangeSlider r = ((Timeline) this.getParent()).getRangeSlider();
-//        if (presentLine.timeProperty().get() - viewhalfRange < totalStartTime.get()) {
-//            r.setLowValue(0);
-//        } else {
-//            r.setLowValue(((presentLine.timeProperty().get() - viewhalfRange) - totalStartTime.get()) / (totalRrange));
-//        }
-//
-//        if (presentLine.timeProperty().get() + viewhalfRange > totalEndTime.get()) {
-//            r.setHighValue(100);
-//        } else {
-//            r.setHighValue(((presentLine.timeProperty().get() + viewhalfRange) - totalStartTime.get()) / (totalRrange));
-//        }
-//    }
     @Override
     public void updateBlocks() {
         Iterator<Node> iter = this.getChildren().iterator();
@@ -140,14 +102,6 @@ public class MainLine extends SingleLine {
                 int pos = getXPos(tick.timeProperty().get());
                 tick.setTranslateX(pos);
             }
-        }
-        Timeline timeline = (Timeline) getParent().getParent();
-        timeline.updatePresentLine();
-        if (timeline.getPresentLine().timeProperty().get() < viewStartTime.get()
-                || timeline.getPresentLine().timeProperty().get() > viewEndTime.get()) {
-            state.set(STATE_PRESENT_OUT);
-        } else {
-            state.set(STATE_IDLE);
         }
 
         int range = viewEndTime.get() - viewStartTime.get();
@@ -185,16 +139,6 @@ public class MainLine extends SingleLine {
         }
     }
 
-//    @Override
-//    public void setPresentLine(PresentLine pl){
-//        presentLine = pl;
-//        getChildren().add(presentLine);
-//    }
-//    @Override
-//    public void updatePresentLine(){
-//        int pos = getXPos(presentLine().timeProperty().get());
-//        presentLine().setTranslateX(pos);
-//    }
     public void updateTicks() {
         Iterator<Node> iter = this.getChildren().iterator();
         while (iter.hasNext()) {

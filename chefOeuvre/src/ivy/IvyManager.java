@@ -12,6 +12,7 @@ import model.Plane;
 import model.Route;
 import view.RadarView;
 import java.awt.geom.Point2D;
+import model.TimeFunctions;
 import view.Timeline;
 
 public class IvyManager {
@@ -33,15 +34,15 @@ public class IvyManager {
             bus.bindMsg("FileReadEvent Type=REJEU Name=(.+) StartTime=(.*) EndTime=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    timeline.totalStartTimeProperty().set(timeline.hmsToInt(args[1]));
-                    timeline.totalEndTimeProperty().set(timeline.hmsToInt(args[2]));
+                    timeline.totalStartTimeProperty().set(TimeFunctions.hmsToInt(args[1]));
+                    timeline.totalEndTimeProperty().set(TimeFunctions.hmsToInt(args[2]));
                 }
             });
             
-            bus.bindMsg("ClockEvent Time=(.*) Rate=.*", new IvyMessageListener() {
+            bus.bindMsg("ClockEvent Time=(.+) Rate=(.+)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    timeline.setClockTime(timeline.hmsToInt(args[0]));
+                    timeline.setClockTime(TimeFunctions.hmsToInt(args[0]), Integer.parseInt(args[1]));
                 }
             });
             
@@ -219,6 +220,14 @@ public class IvyManager {
             Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    public static void setClockTime(int time){
+        try {
+            bus.sendMsg("SetClock Time=" + TimeFunctions.intTohms(time));
+        } catch (IvyException ex) {
+            Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Ivy getBus() {

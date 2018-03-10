@@ -5,23 +5,15 @@
  */
 package view;
 
-import java.util.Iterator;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import model.InfoBlock;
-import model.PresentLine;
-import model.Tick;
 import model.IBlock;
 
 /**

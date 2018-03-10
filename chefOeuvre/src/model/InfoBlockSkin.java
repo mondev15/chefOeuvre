@@ -35,6 +35,7 @@ public class InfoBlockSkin extends VBox{
     private Label infoLabel;
     private double sceneX, translateX;
     private SimpleStringProperty state = new SimpleStringProperty();
+    private final double OPACITY = 0.6;
 
     
     
@@ -43,10 +44,9 @@ public class InfoBlockSkin extends VBox{
     public InfoBlockSkin(InfoBlock b) {
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
-        setBackground(new Background(new BackgroundFill(Color.rgb(229, 229, 229), CornerRadii.EMPTY, Insets.EMPTY)));
-//        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBackground(b.getBackground());
         setCursor(Cursor.HAND);
-        setOpacity(0.4);
+        setOpacity(OPACITY);
         
         
         time = b.timeProperty().get();

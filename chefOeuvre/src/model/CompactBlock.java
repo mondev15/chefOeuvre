@@ -16,6 +16,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import view.SingleLine;
 
@@ -31,7 +32,9 @@ public class CompactBlock extends Group implements IBlock{
     private CompactBlockSkin forwardBlock;
     private final int HEIGHT = 40;
     private final int INITIAL_LENGTH = 10;
-    
+    private Color BACKGROUND_COLOR = Color.rgb(229, 229, 229);
+    private Color DRAGGED_COLOR = Color.rgb(150, 150, 255);
+
     public CompactBlock(){
         this(1000, 10);
     }
@@ -44,7 +47,7 @@ public class CompactBlock extends Group implements IBlock{
         time = new SimpleIntegerProperty(t);
         duration = new SimpleIntegerProperty(d);
         main = new Rectangle(INITIAL_LENGTH, HEIGHT);
-        main.setFill(Color.rgb(229, 229, 229));
+        main.setFill(BACKGROUND_COLOR);
         main.setCursor(Cursor.HAND);
         
         time.addListener((observable) -> {
@@ -53,10 +56,10 @@ public class CompactBlock extends Group implements IBlock{
 
         state.addListener((Observable observable) -> {
             if("IDLE".equals(state.get())){
-                main.setFill(Color.rgb(229, 229, 229));
+                main.setFill(BACKGROUND_COLOR);
             }
             else if("DRAG".equals(state.get())){
-                main.setFill(Color.BLUE);
+                main.setFill(DRAGGED_COLOR);
             }
         });
 
@@ -84,5 +87,9 @@ public class CompactBlock extends Group implements IBlock{
     public void setWidth(int w){
         main.setWidth(w);
         forwardBlock.setWidth(w);
+    }
+    
+    public Paint getColor(){
+        return main.getFill();
     }
 }

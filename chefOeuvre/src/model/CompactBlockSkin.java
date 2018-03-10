@@ -30,13 +30,14 @@ public class CompactBlockSkin extends Rectangle {
     private SimpleStringProperty state = new SimpleStringProperty();
     private final int HEIGHT = 40;
     private final int INITIAL_LENGTH = 10;
+    private final double OPACITY = 0.6;
 
     public CompactBlockSkin(CompactBlock cb) {
         setWidth(INITIAL_LENGTH);
         setHeight(HEIGHT);
         setCursor(Cursor.HAND);
-        setFill(Color.rgb(229, 229, 229));
-        setOpacity(0.4);
+        setFill(cb.getColor());
+        setOpacity(OPACITY);
 
         time = cb.timeProperty().get();
         

@@ -5,6 +5,7 @@
  */
 package model;
 
+import ivy.IvyManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.paint.Color;
@@ -46,6 +47,7 @@ public class PresentLine extends Line {
             SingleLine mainLine = timeline.getMainLine();
             this.time.set(mainLine.getTime((int) (this.getTranslateX())));
             timeline.stateProperty().set(STATE_IDLE);
+            IvyManager.setClockTime(time.get());
         });
     }
 

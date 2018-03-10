@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import view.SingleLine;
+import view.Timeline;
 
 /**
  *
@@ -23,7 +24,6 @@ public class Tick extends VBox{
     private Label timeLabel;
     private Line tick;
     private final int TICK_SIZE = 8;
-    private final String format = "%02d";
     
     public Tick(){
         timeLabel = new Label();
@@ -31,7 +31,7 @@ public class Tick extends VBox{
         timeLabel.setTranslateX(-25);
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));
-            timeLabel.setText(timeToString(time.get()));
+            timeLabel.setText(TimeFunctions.intTohms(time.get()));
         });
         
         tick = new Line(this.getTranslateX(), this.getTranslateY(), this.getTranslateX(), this.getTranslateY()+TICK_SIZE);
@@ -39,14 +39,6 @@ public class Tick extends VBox{
         this.getChildren().add(timeLabel);
         this.getChildren().add(tick);
         this.setMouseTransparent(true);
-    }
-    
-    private String timeToString(int time){
-        int h = time/3600;
-        time -= h*3600;
-        int m = time/60;
-        time -= m*60;
-        return (String.format(format, h) + ":" + String.format(format, m) + ":" + String.format(format, time));
     }
     
     public void setTime(int t){
