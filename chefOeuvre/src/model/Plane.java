@@ -18,7 +18,7 @@ public class Plane {
     private String sector;
     private Point2D.Double twinklePosition; // twinklePosition dans la vue twinkle
     private Point2D.Double ndPosition; // twinklePosition dans la vue navigation display
-    private int heading; //cap
+    private double heading; //cap
     private int afl; // niveau
     private double vx;
     private double vy;
@@ -42,7 +42,7 @@ public class Plane {
         sector = "default_Sector";
         callSign = "default_CallSign";
         route = new Route("default_Dep", "default_Arr", "default_List");
-        heading = 0;
+        heading = 0.0;
         afl = 0;
         //angle = 0;
     }
@@ -142,11 +142,11 @@ public class Plane {
         this.route = route;
     }
 
-    public int getHeading() {
+    public double getHeading() {
         return heading;
     }
 
-    public void setHeading(int heading) {
+    public void setHeading(double heading) {
         this.heading = heading;
     }
 

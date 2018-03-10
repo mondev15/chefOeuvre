@@ -1,5 +1,8 @@
 package view;
 
+import fr.dgac.ivy.Ivy;
+import fr.dgac.ivy.IvyException;
+import ivy.IvyManager;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +16,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.awt.geom.Point2D;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import model.Plane;
@@ -22,6 +25,11 @@ import model.Plane;
 public class RadarView extends Parent {
 
     private static final int X_START = 50;
+
+    static void sendNewSpeedOrLevelToRadar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     private final int W = 650;
     private final int H = 450;
 
@@ -29,42 +37,40 @@ public class RadarView extends Parent {
     private static final int RADIUS_2 = 190;
     private static final int RADIUS_3 = 290;
     private static final int RADIUS_4 = 390;
-    
-    private static final int ANGLE_180 =180;
-    private static final int ANGLE_90 =90;
-    
-    private static final int SPEED_SCALE =100;
-    private static final int LEVEL_SCALE =200;
-        
-    private static final int SPEED_STEP =10;
-    private static final int LEVEL_STEP =10;
-    
-    private static final int MIN_SPEED =180;
-    private static final int MAX_SPEED =380;
-    
-    private static final int MIN_LEVEL =110;
-    private static final int MAX_LEVEL =400;
-    
+
+    private static final int ANGLE_180 = 180;
+    private static final int ANGLE_90 = 90;
+
+    private static final int SPEED_SCALE = 100;
+    private static final int LEVEL_SCALE = 200;
+
+    private static final int SPEED_STEP = 10;
+    private static final int LEVEL_STEP = 10;
+
+    private static final int MIN_SPEED = 180;
+    private static final int MAX_SPEED = 380;
+
+    private static final int MIN_LEVEL = 110;
+    private static final int MAX_LEVEL = 400;
+
     //private static final int HEADING_SCALE= 45;
+    private final double MIDDLE_X = (X_START + (W - X_START + 50)) / 2;
+    private final double MIDDLE_Y = (H - X_START + H - X_START + 50) / 2;
 
-    private final double MIDDLE_X = (X_START + (W - X_START+50)) / 2;
-    private final double MIDDLE_Y = (H - X_START + H - X_START+50) / 2;
-
-    private Plane centralPlane; //l'avion sur lequel la vue est centrée
+    private static Plane centralPlane; //l'avion sur lequel la vue est centrée
     private Map<Integer, Plane> planes;  // la collection (trafic) des avions dans la vue radar
 
     private Label text10, text20, text30;
     private Label centralPlaneLabel;
 
-    private HBox hb = new HBox();
     private VBox vboxLabels = new VBox();
     private VBox vboxValues = new VBox();
 
     private Map<String, Label> labelsMap;
     //---axes
     private CircleAxisView topAxis;
-    private LineAxisView leftAxis;
-    private LineAxisView rightAxis;
+    private static LineAxisView leftAxis;
+    private static LineAxisView rightAxis;
 
     public RadarView() {
         //---
@@ -76,55 +82,59 @@ public class RadarView extends Parent {
         //--- la ligne verticale
         Line line = createLine(MIDDLE_X, 30, MIDDLE_X, MIDDLE_Y);
         //--- les arcs                
-        Arc arc1 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_1, RADIUS_1,0,ANGLE_180);
-        Arc arc2 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_2, RADIUS_2,0,ANGLE_180);
-        Arc arc3 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_3, RADIUS_3,0,ANGLE_180);
+        Arc arc1 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_1, RADIUS_1, 0, ANGLE_180);
+        Arc arc2 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_2, RADIUS_2, 0, ANGLE_180);
+        Arc arc3 = createArc(MIDDLE_X, MIDDLE_Y, RADIUS_3, RADIUS_3, 0, ANGLE_180);
 
         // les textes 10, 20  et 30
         text10 = createLabel("10", MIDDLE_X - (RADIUS_1 + 10), MIDDLE_Y - X_START);
         text20 = createLabel("20", MIDDLE_X - (RADIUS_2 + 10), MIDDLE_Y - (X_START + 20));
         text30 = createLabel("30", MIDDLE_X - (RADIUS_3 + 10), MIDDLE_Y - (X_START + 40));
 
-        // label pour afficher cap , niveau et vitesse
-        vboxLabels = createLabels();
-        vboxValues = createTextFields();
-        hb.getChildren().add(vboxLabels);
-        hb.getChildren().add(vboxValues);     
+        /*VBox vb = */
+        createCentralPlane();
+        topAxis = new CircleAxisView("Heading", new Point((int) MIDDLE_X, (int) MIDDLE_Y), RADIUS_4, 45, ANGLE_90);
 
-        topAxis =  new CircleAxisView("cap",new Point((int)MIDDLE_X,(int)MIDDLE_Y),RADIUS_4,45,ANGLE_90);
-        
-        leftAxis =  new LineAxisView("\nVitesse(Kts)",MIN_SPEED, MAX_SPEED, SPEED_STEP,(int)MIDDLE_Y,SPEED_SCALE);
+        leftAxis = new LineAxisView("\nSpeed(Kts)", MIN_SPEED, MAX_SPEED, SPEED_STEP, (int) MIDDLE_Y, SPEED_SCALE);
         leftAxis.relocate(0, MIDDLE_Y);
-        leftAxis.getTransforms().add(new Rotate(270,0,0)); //
-        
-        rightAxis =  new LineAxisView("\nNiveau",MIN_LEVEL,MAX_LEVEL, LEVEL_STEP,(int)MIDDLE_Y,LEVEL_SCALE);
-        rightAxis.relocate(MIDDLE_X+RADIUS_3+30, MIDDLE_Y);
-        rightAxis.getTransforms().add(new Rotate(270,0,0)); //
+        leftAxis.getTransforms().add(new Rotate(270, 0, 0)); //
 
-        this.getChildren().addAll(topAxis,leftAxis,line, arc1, arc2, arc3, text10, text20, text30,rightAxis);
+        rightAxis = new LineAxisView("\nLevel", MIN_LEVEL, MAX_LEVEL, LEVEL_STEP, (int) MIDDLE_Y, LEVEL_SCALE);
+        rightAxis.relocate(MIDDLE_X + RADIUS_3 + 30, MIDDLE_Y);
+        rightAxis.getTransforms().add(new Rotate(270, 0, 0)); //
 
+        this.getChildren().addAll(topAxis, leftAxis, line, arc1, arc2, arc3, text10, text20, text30, rightAxis);
 
     }
 
+    public void createCentralPlane() {
+        Line l1 = new Line(MIDDLE_X - 20, MIDDLE_Y, MIDDLE_X + 20, MIDDLE_Y); //ligne  horizontale haute
+        l1.setStroke(Color.YELLOW);
+        l1.setStrokeWidth(2);
+                   l1.setStrokeWidth(3.0);
+        Line l2 = new Line(MIDDLE_X - 10, MIDDLE_Y + 25, MIDDLE_X + 10, MIDDLE_Y + 25); //ligne horizontale basse
+        l2.setStroke(Color.YELLOW);
+        l2.setStrokeWidth(2);
+         l2.setStrokeWidth(3.0);
+        Line l3 = new Line(MIDDLE_X, MIDDLE_Y - 5, MIDDLE_X, MIDDLE_Y + 30); //ligne verticale milieu
+        l3.setStroke(Color.YELLOW);
+        l3.setStrokeWidth(2);
+         l3.setStrokeWidth(3.0);
+        this.getChildren().addAll(l1, l2, l3);
+    }
+
     public void addCentralPlane() {
-        Circle circle = createPlane(MIDDLE_X, MIDDLE_Y, Color.YELLOW);
         Point2D.Double pos = getNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y), centralPlane.getHeading(), 0.0);
-        VBox vb2 = createTextFields();
-        hb.getChildren().remove(1);
-        hb.getChildren().add(vb2);
-        String str = centralPlane.getCallSign();
-        str += ","+centralPlane.getHeading();
-        str += "\n"+centralPlane.getSpeed()+", "+centralPlane.getAfl();
+        String str = "\n" + centralPlane.getCallSign();
+        str += "," + centralPlane.getHeading();
+        str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
         centralPlaneLabel.setText(str);
         centralPlaneLabel.setTextFill(Color.WHITE);
-        centralPlaneLabel.relocate(pos.x-5, pos.y-5);
-        centralPlaneLabel.setGraphic(circle);
+        centralPlaneLabel.relocate(pos.x - 20, pos.y + 30);
         if (!this.getChildren().contains(centralPlaneLabel)) {
             this.getChildren().add(centralPlaneLabel);
-            //update labels
             updateSpeedHeadingAFl();
-        }
-        else{
+        } else {
             updateSpeedHeadingAFl();
         }
     }
@@ -140,7 +150,7 @@ public class RadarView extends Parent {
                 Point2D.Double pos = getNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y), angle, dist);
                 //---
                 String str = p.getCallSign();
-                str += "\n" + Math.toDegrees(angle);
+                //str += "\n" + Math.toDegrees(angle);
 
                 //--- si le label n'existe pas déjà,on le crée                
                 if (l == null) {
@@ -184,7 +194,7 @@ public class RadarView extends Parent {
         return label;
     }
 
-    public Arc createArc(double centerX, double centerY, int radiusX, int radiusY, int start,int angle) {
+    public Arc createArc(double centerX, double centerY, int radiusX, int radiusY, int start, int angle) {
 
         Arc arc = new Arc();
         //---
@@ -221,32 +231,6 @@ public class RadarView extends Parent {
         line.setStrokeWidth(0.4);
         line.setSmooth(true);
         return line;
-    }
-
-    public VBox createTextFields() {
-        //---
-        TextField tfcap = new TextField();
-        tfcap.setText("" + centralPlane.getHeading());
-        tfcap.setEditable(false);
-        tfcap.setPrefWidth(45);
-        tfcap.setPrefHeight(10);
-        //---
-        TextField tfni = new TextField();
-        tfni.setText("" + centralPlane.getAfl());
-        tfni.setEditable(false);
-        tfni.setPrefWidth(45);
-        tfni.setPrefHeight(10);
-        //---
-        TextField tfvi = new TextField();
-        tfvi.setText("" + centralPlane.getSpeed());
-        tfvi.setEditable(false);
-        tfvi.setPrefWidth(45);
-        tfvi.setPrefHeight(10);
-        //---
-        VBox vb = new VBox();
-        vb.getChildren().addAll(tfcap, tfni, tfvi);
-        vb.setSpacing(3);
-        return vb;
     }
 
     public VBox createLabels() {
@@ -329,26 +313,57 @@ public class RadarView extends Parent {
         );
     }
 
-    public void updateSpeedHeadingAFl(){
+    public void updateSpeedHeadingAFl() {
         //---
-        leftAxis.getLabelValue().setText(""+centralPlane.getSpeed());
-        leftAxis.getAxis().setLowerBound(centralPlane.getSpeed()-SPEED_SCALE);
-        leftAxis.getAxis().setUpperBound(centralPlane.getSpeed()+SPEED_SCALE);
+        Point2D.Double pos = getNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y), centralPlane.getHeading(), 0.0);
+        String str="";
+        str +=centralPlane.getCallSign();
+        str += "," + centralPlane.getHeading();
+        str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
+        centralPlaneLabel.setText(str);
+
+        
+        leftAxis.getLabelValue().setText("" + centralPlane.getSpeed());
+        leftAxis.getAxis().setLowerBound(centralPlane.getSpeed() - SPEED_SCALE);
+        leftAxis.getAxis().setUpperBound(centralPlane.getSpeed() + SPEED_SCALE);
         //---
-        rightAxis.getLabelValue().setText(""+centralPlane.getAfl());
-        rightAxis.getAxis().setLowerBound(centralPlane.getAfl()-LEVEL_SCALE);
-        rightAxis.getAxis().setUpperBound(centralPlane.getAfl()+LEVEL_SCALE);
+        rightAxis.getLabelValue().setText("" + centralPlane.getAfl());
+        rightAxis.getAxis().setLowerBound(centralPlane.getAfl() - LEVEL_SCALE);
+        rightAxis.getAxis().setUpperBound(centralPlane.getAfl() + LEVEL_SCALE);
         //
-        topAxis.getLabelValue().setText(""+centralPlane.getHeading());        
-        topAxis.getLinesLabel().get(0).setText(""+(centralPlane.getHeading()+30));
-        topAxis.getLinesLabel().get(1).setText(""+(centralPlane.getHeading()+20));
-        topAxis.getLinesLabel().get(2).setText(""+(centralPlane.getHeading()+10));
-        topAxis.getLinesLabel().get(3).setText(""+(centralPlane.getHeading()));
-        topAxis.getLinesLabel().get(4).setText(""+(centralPlane.getHeading()-10));
-        topAxis.getLinesLabel().get(5).setText(""+(centralPlane.getHeading()-20));
-        topAxis.getLinesLabel().get(6).setText(""+(centralPlane.getHeading()-30));        
+        topAxis.getLabelValue().setText("" + centralPlane.getHeading());
+
+
+        //topAxis.getLinesLabel().get(0).setText("" + (centralPlane.getHeading() + 30));
+        //topAxis.getLinesLabel().get(1).setText("" + (centralPlane.getHeading() + 20));
+        //topAxis.getLinesLabel().get(2).setText("" + (centralPlane.getHeading() + 10));
+        //topAxis.getLinesLabel().get(3).setText("" + (centralPlane.getHeading()));
+        //topAxis.getLinesLabel().get(4).setText("" + (centralPlane.getHeading() - 10));
+        //topAxis.getLinesLabel().get(5).setText("" + (centralPlane.getHeading() - 20));
+        //topAxis.getLinesLabel().get(6).setText("" + (centralPlane.getHeading() - 30));
     }
 
+    public CircleAxisView getTopAxis() {
+        return topAxis;
+    }
 
+    public LineAxisView getLeftAxis() {
+        return leftAxis;
+    }
 
+    public LineAxisView getRightAxis() {
+        return rightAxis;
+    }
+    
+    public static void sendNewHeadingToIvy(double newHeading) {
+        IvyManager.setNewHeading(newHeading);
+    }
+    
+  public static void sendNewSpeedToIvy(double newSpeed) {
+        IvyManager.setNewSpeed(newSpeed);
+    }
+        
+    public static void sendNewLevelToIvy(double newLevel) {
+        IvyManager.setNewLevel(newLevel);
+    }
 }
