@@ -36,10 +36,6 @@ public class InfoBlock extends Group implements IBlock{
     
     private IntegerProperty time;
     private Label titleLabel;
-    private Label hdgLabel;
-    private Label flLabel;
-    private Label speedLabel;
-    private Label infoLabel;
     private List<Label> listInfosLabels;
     private String messageIvy;
     
@@ -54,8 +50,7 @@ public class InfoBlock extends Group implements IBlock{
     
     private final int SIZE = 180;
     
-    public InfoBlock(int t, String title, String hdg, String fl, 
-    		String speed, String info, List<String> listInfos, String messageIvy){
+    public InfoBlock(int t, String title, List<String> listInfos, String messageIvy){
         content = new VBox();
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
@@ -67,10 +62,6 @@ public class InfoBlock extends Group implements IBlock{
         
         time = new SimpleIntegerProperty(t);
         titleLabel = new Label(title);
-        hdgLabel = new Label(hdg);
-        flLabel = new Label(fl);
-        speedLabel = new Label(speed);
-        infoLabel = new Label(info);
         
         listInfosLabels = new ArrayList<>();
         for (int i = 0; i < listInfos.size(); i++) {
@@ -80,11 +71,6 @@ public class InfoBlock extends Group implements IBlock{
         messageIvy = "";
         
         content.getChildren().add(titleLabel);
-        
-        if (!hdgLabel.equals("")) content.getChildren().add(hdgLabel);
-        if (!flLabel.equals("")) content.getChildren().add(flLabel);
-        if (!speedLabel.equals("")) content.getChildren().add(speedLabel);
-        if (!infoLabel.equals("")) content.getChildren().add(infoLabel);
         
         for (int j = 0; j < listInfosLabels.size(); j++) {
         	content.getChildren().add(listInfosLabels.get(j));
@@ -109,31 +95,19 @@ public class InfoBlock extends Group implements IBlock{
     }
     
     public InfoBlock(){
-        this(0, "", "", "", "", "", null, "");
+        this(0, "", null, "");
     }
     
     public InfoBlock(int t){
-        this(t, "", "", "", "", "", null, "");
+        this(t, "", null, "");
     }
     
     public InfoBlock(int t, String title){
-        this(t, title, "", "", "", "", null, "");
+        this(t, title, null, "");
     }
     
-    public InfoBlock(int t, String title, String hdg){
-        this(t, title, hdg, "", "", "", null, "");
-    }
-
-    public InfoBlock(int t, String title, String hdg, String fl){
-        this(t, title, hdg, fl, "", "", null, "");
-    }
-    
-    public InfoBlock(int t, String title, String hdg, String fl, String speed){
-        this(t, title, hdg, fl, speed, "", null, "");
-    }
-    
-    public InfoBlock(int t, String title, String hdg, String fl, String speed, List<String> listInfos){
-        this(t, title, hdg, fl, speed, "", listInfos, "");
+    public InfoBlock(int t, String title, List<String> listInfo){
+        this(t, title, listInfo, "");
     }
 
     public SimpleStringProperty stateProperty(){
@@ -146,22 +120,6 @@ public class InfoBlock extends Group implements IBlock{
     
     public void setTitle(String s){
         titleLabel.setText(s);
-    }
-    
-    public void setHDG(String s){
-        hdgLabel.setText(s);
-    }
-    
-    public void setFL(String s){
-        flLabel.setText(s);
-    }
-    
-    public void setSpeed(String s){
-        speedLabel.setText(s);
-    }
-    
-    public void setInfo(String s){
-        infoLabel.setText(s);
     }
     
     public void setListInfos(int index, String s) {
@@ -178,22 +136,6 @@ public class InfoBlock extends Group implements IBlock{
     
     public Label getTitle(){
         return titleLabel;
-    }
-    
-    public Label getHDG(){
-        return hdgLabel;
-    }
-    
-    public Label getFL(){
-        return flLabel;
-    }
-    
-    public Label getSpeed(){
-        return speedLabel;
-    }
-    
-    public Label getInfo(){
-        return infoLabel;
     }
     
     public List<Label> getListInfos() {

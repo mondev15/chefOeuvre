@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import model.Block;
+import model.InfoBlock;
 
 /**
 *
@@ -30,10 +30,10 @@ public class Parser {
 	public final static int OPTION = 1;
 	public final static int HEADING = 1;
 	
-	List<Block> blocks;
+	List<InfoBlock> blocks;
 	
 	public Parser() {
-		blocks = new ArrayList<>();
+            blocks = new ArrayList<>();
 	}
 	
 	public void parsing() {
@@ -169,20 +169,20 @@ public class Parser {
 	}
 	
 	private void buildBlock(String typeOrder, int time, String flight, List<String> parameters) {
-		Block newBlock = new Block(time);
+		InfoBlock newBlock = new InfoBlock(time, "", parameters);
 		String messageIvy = typeOrder + " Flight=" + flight;
 		
 		if (typeOrder.equals("AircraftContact")) {
 			newBlock.setTitle("New contact");
 			
 			String contact = parameters.get(CONTACT);
-			newBlock.setHDG(contact);
-			
+//			newBlock.setHDG(contact);
+//			
 			String frequency = parameters.get(FREQUENCY);
-			newBlock.setFL(frequency);
-			
+//			newBlock.setFL(frequency);
+//			
 			String prefix = parameters.get(PREFIX);
-			newBlock.setSpeed(prefix);
+//			newBlock.setSpeed(prefix);
 			
 			messageIvy.concat(" Contact='"+contact+" "+frequency+"' Prefix='"+prefix+"'");
 			newBlock.setMessageIvy(messageIvy);
@@ -193,7 +193,7 @@ public class Parser {
 			String order;
 			for (int i = 0; i < parameters.size(); i++) {
 				order = parameters.get(i);
-				newBlock.getListInfos().add(order);
+//				newBlock.getListInfos().add(order);
 				messageIvy.concat(" Order='"+order+", ");
 			}
 			messageIvy.concat("'");
@@ -203,10 +203,10 @@ public class Parser {
 			newBlock.setTitle("Level");
 			
 			String level = parameters.get(LEVEL);
-			newBlock.setHDG(level);
-			
+//			newBlock.setHDG(level);
+//			
 			String option = parameters.get(OPTION);
-			newBlock.setFL(option);
+//			newBlock.setFL(option);
 			
 			messageIvy.concat(" Fl="+level+" Option='"+option+"'");
 			newBlock.setMessageIvy(messageIvy);
@@ -215,10 +215,10 @@ public class Parser {
 			newBlock.setTitle("Heading");
 			
 			String heading = parameters.get(HEADING);
-			newBlock.setHDG(heading);
+//			newBlock.setHDG(heading);
 			
 			String option = parameters.get(OPTION);
-			newBlock.setFL(option);
+//			newBlock.setFL(option);
 			
 			messageIvy.concat(" To="+heading+" Option='"+option+"'");
 			newBlock.setMessageIvy(messageIvy);
@@ -229,7 +229,7 @@ public class Parser {
 			String order;
 			for (int i = 0; i < parameters.size(); i++) {
 				order = parameters.get(i);
-				newBlock.getListInfos().add(order);
+//				newBlock.getListInfos().add(order);
 				
 				if (i == 0) messageIvy.concat(" Runway='"+order+"'");
 				if (i == 1) messageIvy.concat(" Wind="+order);
@@ -248,7 +248,7 @@ public class Parser {
 			String order;
 			for (int i = 0; i < parameters.size(); i++) {
 				order = parameters.get(i);
-				newBlock.getListInfos().add(order);
+//				newBlock.getListInfos().add(order);
 				messageIvy.concat(" Order='"+order+", ");
 			}
 			messageIvy.concat("'");
@@ -257,4 +257,8 @@ public class Parser {
 		
 		blocks.add(newBlock);
 	}
+        
+        public List<InfoBlock> getBlocks(){
+            return blocks;
+        }
 }

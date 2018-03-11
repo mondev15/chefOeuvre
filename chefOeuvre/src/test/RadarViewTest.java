@@ -1,5 +1,6 @@
 package test;
 
+import controller.Parser;
 import ivy.IvyManager;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -26,28 +27,30 @@ public class RadarViewTest extends Application {
         Group root = new Group();
         IvyManager ivyManager = new IvyManager(); 
         
+        Parser parser = new Parser();
+        
 //        root.getChildren().add(ivyManager.getRadarView());
         
-        InfoBlock blockTest1 = new InfoBlock(4950,
-           " APPROCHE                    ",
-           " 180 kts",
-           " Left 260°",
-           " ILS 14D",
-           " CALL BACK");
-        
-        InfoBlock blockTest2 = new InfoBlock(3500,
-           " APPROCHE                    ",
-           " 180 kts",
-           " Left 260°",
-           " ILS 14D",
-           " CALL BACK");
+//        InfoBlock blockTest1 = new InfoBlock(4950,
+//           " APPROCHE                    ",
+//           " 180 kts",
+//           " Left 260°",
+//           " ILS 14D",
+//           " CALL BACK");
+//        
+//        InfoBlock blockTest2 = new InfoBlock(3500,
+//           " APPROCHE                    ",
+//           " 180 kts",
+//           " Left 260°",
+//           " ILS 14D",
+//           " CALL BACK");
         
         CompactBlock blockTest3 = new CompactBlock(6000, 100);
         CompactBlock blockTest4 = new CompactBlock(50, 100);
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest3);
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest4);
-        ivyManager.getTimeline().getMainLine().addBlock(blockTest1);
-        ivyManager.getTimeline().getMainLine().addBlock(blockTest2);
+//        ivyManager.getTimeline().getMainLine().addBlock(blockTest1);
+//        ivyManager.getTimeline().getMainLine().addBlock(blockTest2);
         root.getChildren().add(ivyManager.getTimeline());
 
         

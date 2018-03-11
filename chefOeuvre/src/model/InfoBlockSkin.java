@@ -32,10 +32,6 @@ public class InfoBlockSkin extends VBox{
 
     private int time;
     private Label titleLabel;
-    private Label hdgLabel;
-    private Label flLabel;
-    private Label speedLabel;
-    private Label infoLabel;
     private double sceneX, translateX;
     private SimpleStringProperty state = new SimpleStringProperty();
     private List<Label> listInfosLabels;
@@ -54,14 +50,6 @@ public class InfoBlockSkin extends VBox{
         time = b.timeProperty().get();
         titleLabel = new Label();
         titleLabel.textProperty().bind(b.getTitle().textProperty());
-        hdgLabel = new Label();
-        hdgLabel.textProperty().bind(b.getHDG().textProperty());
-        flLabel = new Label();
-        flLabel.textProperty().bind(b.getFL().textProperty());
-        speedLabel = new Label();
-        speedLabel.textProperty().bind(b.getSpeed().textProperty());
-        infoLabel = new Label();
-        infoLabel.textProperty().bind(b.getInfo().textProperty());
         
         listInfosLabels = new ArrayList<>();
         for (int i = 0; i < b.getListInfos().size(); i++) {
@@ -71,7 +59,8 @@ public class InfoBlockSkin extends VBox{
         
         b.stateProperty().bindBidirectional(state);
         
-        getChildren().addAll(titleLabel, hdgLabel, flLabel, speedLabel, infoLabel, listInfosLabels);
+        getChildren().add(titleLabel);
+        getChildren().addAll(listInfosLabels);
         
         this.setOnMousePressed((event) -> {
             sceneX = event.getSceneX();
