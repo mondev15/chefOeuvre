@@ -30,7 +30,7 @@
     		<type>AircraftLevel</type>
     		<flight>110</flight>
     		<parameters>
-    			<fl>descend to 5000</fl>
+    			<fl>5000</fl>
     			<option>QNH 1014</option>
     		</parameters>
     	</command>

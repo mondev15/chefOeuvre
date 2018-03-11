@@ -28,7 +28,7 @@ public class Parser {
 	public final static int PREFIX = 2;
 	public final static int LEVEL = 0;
 	public final static int OPTION = 1;
-	public final static int HEADING = 1;
+	public final static int HEADING = 0;
 	
 	List<InfoBlock> blocks;
 	
@@ -68,7 +68,6 @@ public class Parser {
 					//Recovery of command
 					String typeOrder = elementMessage.getElementsByTagName("type")
 							.item(0).getTextContent();
-					System.out.println(typeOrder);
 					
 					//Recovery of flight identifier
 					String flight = elementMessage.getElementsByTagName("flight")
@@ -118,9 +117,9 @@ public class Parser {
 					} else if (typeOrder.equals("AircraftHeading")) {
 						
 						//Recovery of heading
-						String level = elementMessage.getElementsByTagName("to")
+						String heading = elementMessage.getElementsByTagName("to")
 								.item(0).getTextContent();
-						parameters.add(level);
+						parameters.add(heading);
 						
 						//Recovery of options
                                                 NodeList options = elementMessage.getElementsByTagName("option");
@@ -190,19 +189,20 @@ public class Parser {
 			String prefix = parameters.get(PREFIX);
 //			newBlock.setSpeed(prefix);
 			
-			messageIvy.concat(" Contact='"+contact+" "+frequency+"' Prefix='"+prefix+"'");
+			messageIvy = messageIvy.concat(" Contact='"+contact+" "+frequency+"' Prefix='"+prefix+"'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftNewContact")) {
 			newBlock.setTitle("Contact made");
 			
 			String order;
+                        messageIvy = messageIvy.concat(" Order='");
 			for (int i = 0; i < parameters.size(); i++) {
 				order = parameters.get(i);
 //				newBlock.getListInfos().add(order);
-				messageIvy.concat(" Order='"+order+", ");
+				messageIvy = messageIvy.concat(order+", ");
 			}
-			messageIvy.concat("'");
+			messageIvy = messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftLevel")) {
@@ -214,11 +214,11 @@ public class Parser {
 			//String option = parameters.get(OPTION);
 //			newBlock.setFL(option);
 
-                        messageIvy.concat(" Fl="+level+" Option='");
+                        messageIvy = messageIvy.concat(" Fl="+level+" Option='");
                         for(int i = 1; i < parameters.size(); i++) {
-                            messageIvy.concat(" "+parameters.get(i));
+                            messageIvy = messageIvy.concat(parameters.get(i)+" ");
                         }
-                        messageIvy.concat("'");
+                        messageIvy = messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftHeading")) {
@@ -230,11 +230,11 @@ public class Parser {
 			String option = parameters.get(OPTION);
 //			newBlock.setFL(option);
 			
-                        messageIvy.concat(" To="+heading+" Option='");
+                        messageIvy = messageIvy.concat(" To="+heading+" Option='");
 			for(int i = 1; i < parameters.size(); i++) {
-                            messageIvy.concat(" "+parameters.get(i));
+                            messageIvy = messageIvy.concat(parameters.get(i)+" ");
                         }
-                        messageIvy.concat("'");
+                        messageIvy = messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftClearToLand")) {
@@ -245,28 +245,28 @@ public class Parser {
 				order = parameters.get(i);
 //				newBlock.getListInfos().add(order);
 				
-				if (i == 0) messageIvy.concat(" Runway='"+order+"'");
-				if (i == 1) messageIvy.concat(" Wind="+order);
-				if (i == 2) messageIvy.concat(" Speed="+order);
-				if (i == 3) messageIvy.concat(" Option='"+order+"'");
+				if (i == 0) messageIvy = messageIvy.concat(" Runway='"+order+"'");
+				if (i == 1) messageIvy =  messageIvy.concat(" Wind='"+order+"'");
+				if (i == 2) messageIvy =  messageIvy.concat(" Speed='"+order+"'");
+				if (i == 3) messageIvy =  messageIvy.concat(" Option='"+order+"'");
 				
 			}
 			//AircraftClearToLand Flight=110 Runway='14 right' Wind=160 Speed=10 Option=''
-			
-			messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 		
 		} else if (typeOrder.equals("AircraftGoAround")) {
 			newBlock.setTitle("Go around");
 			
 			String order;
+                        messageIvy = messageIvy.concat(" Order='");
 			for (int i = 0; i < parameters.size(); i++) {
 				order = parameters.get(i);
 //				newBlock.getListInfos().add(order);
-				messageIvy.concat(" Order='"+order+", ");
+				messageIvy = messageIvy.concat(order+", ");
 			}
-			messageIvy.concat("'");
+			messageIvy = messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
+                        System.out.println(messageIvy);
 		}
 		
 		blocks.add(newBlock);
