@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <studentAircraft xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./studentAircraft.xsd">
     <message>
-    	<time>00:01:00</time>
+    	<time>00:00:10</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -13,7 +13,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:05:00</time>
+    	<time>00:00:12</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -21,11 +21,11 @@
     			<order>descend 110 level</order>
     			<order>standard for 14 right</order>
     			<order>speed 220 knots.</order>
-    		</parameters>
+                </parameters>
     	</command>
     </message>
     <message>
-    	<time>00:10:00</time>
+    	<time>00:00:30</time>
     	<command>
     		<type>AircraftLevel</type>
     		<flight>110</flight>
@@ -36,7 +36,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:15:00</time>
+    	<time>00:01:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
@@ -47,29 +47,32 @@
     	</command>
     </message>
     <message>
-    	<time>00:20:00</time>
+    	<time>00:02:00</time>
     	<command>
     		<type>AircraftLevel</type>
     		<flight>110</flight>
     		<parameters>
     			<fl>3000</fl>
-    			<option>QNH 1014. speed 180 knots. Calling back for interception.</option>
+    			<option>QNH 1014. speed 180 knots.</option>
+                        <option>Calling back for interception.</option>
     		</parameters>
     	</command>
     </message>
     <message>
-    	<time>00:25:00</time>
+    	<time>00:09:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
     		<parameters>
     			<to>180</to>
-    			<option>cleared for ILS approach, 14 right, call back when established.</option>
+    			<option>cleared for ILS approach</option>
+                        <option>14 right</option>
+                        <option>call back when established.</option>
     		</parameters>
     	</command>
     </message>
     <message>
-    	<time>00:30:00</time>
+    	<time>00:11:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -81,7 +84,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:35:00</time>
+    	<time>00:13:00</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -91,7 +94,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:40:00</time>
+    	<time>00:17:00</time>
     	<command>
     		<type>AircraftClearToLand</type>
     		<flight>110</flight>
@@ -104,7 +107,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:45:00</time>
+    	<time>00:19:00</time>
     	<command>
     		<type>AircraftGoAround</type>
     		<flight>110</flight>
@@ -115,7 +118,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:50:00</time>
+    	<time>00:20:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -127,29 +130,33 @@
     	</command>
     </message>
     <message>
-    	<time>00:55:00</time>
+    	<time>00:22:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
     		<parameters>
     			<to>180</to>
-    			<option>climb 3000 feets, intercept QDR 332 TOE.</option>
+    			<option>climb 3000 feets</option>
+                        <option>intercept QDR 332 TOE.</option>
     		</parameters>
     	</command>
     </message>
     <message>
-    	<time>01:00:00</time>
+    	<time>00:24:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
     		<parameters>
     			<to>260</to>
-    			<option>speed 180 knots to intercept ILS 14 right, cleared, callback when established.</option>
+    			<option>speed 180 knots</option>
+                        <option>to intercept ILS 14 right</option>
+                        <option>cleared</option>
+                        <option>callback when established.</option>
     		</parameters>
     	</command>
     </message>
     <message>
-    	<time>01:05:00</time>
+    	<time>00:27:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -161,7 +168,7 @@
     	</command>
     </message>
     <message>
-    	<time>01:10:00</time>
+    	<time>00:32:00</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -171,7 +178,7 @@
     	</command>
     </message>
     <message>
-    	<time>01:15:00</time>
+    	<time>00:35:00</time>
     	<command>
     		<type>AircraftClearToLand</type>
     		<flight>110</flight>

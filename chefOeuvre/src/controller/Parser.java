@@ -44,7 +44,7 @@ public class Parser {
 		
 		try {
 			builder = factory.newDocumentBuilder();
-			docXml = builder.parse(new File("src/data/studentAircraft.xml"));
+			docXml = builder.parse(new File("../ChefOeuvre/src/data/studentAircraft.xml"));
 			Element racine = docXml.getDocumentElement();
 			
 			//Recovery messages
@@ -108,9 +108,12 @@ public class Parser {
 						parameters.add(level);
 						
 						//Recovery of options
-						String option = elementMessage.getElementsByTagName("option")
-								.item(0).getTextContent();
-						parameters.add(option);
+                                                NodeList options = elementMessage.getElementsByTagName("option");
+						for(int j = 0; j < options.getLength(); j++) {
+							Element option = (Element) options.item(j);
+							
+							parameters.add(option.getTextContent());
+						}
 						
 					} else if (typeOrder.equals("AircraftHeading")) {
 						
@@ -120,9 +123,12 @@ public class Parser {
 						parameters.add(level);
 						
 						//Recovery of options
-						String option = elementMessage.getElementsByTagName("option")
-								.item(0).getTextContent();
-						parameters.add(option);
+                                                NodeList options = elementMessage.getElementsByTagName("option");
+						for(int j = 0; j < options.getLength(); j++) {
+							Element option = (Element) options.item(j);
+							
+							parameters.add(option.getTextContent());
+						}
 						
 					} else if (typeOrder.equals("AircraftClearToLand")) {						
 						
@@ -135,7 +141,7 @@ public class Parser {
 						}
 						
 						//Recovery of informations
-						String option = elementMessage.getElementsByTagName("option")
+						String option = elementMessage.getElementsByTagName("information")
 								.item(0).getTextContent();
 						parameters.add(option);
 					
@@ -205,10 +211,14 @@ public class Parser {
 			String level = parameters.get(LEVEL);
 //			newBlock.setHDG(level);
 //			
-			String option = parameters.get(OPTION);
+			//String option = parameters.get(OPTION);
 //			newBlock.setFL(option);
-			
-			messageIvy.concat(" Fl="+level+" Option='"+option+"'");
+
+                        messageIvy.concat(" Fl="+level+" Option='");
+                        for(int i = 1; i < parameters.size(); i++) {
+                            messageIvy.concat(" "+parameters.get(i));
+                        }
+                        messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftHeading")) {
@@ -220,7 +230,11 @@ public class Parser {
 			String option = parameters.get(OPTION);
 //			newBlock.setFL(option);
 			
-			messageIvy.concat(" To="+heading+" Option='"+option+"'");
+                        messageIvy.concat(" To="+heading+" Option='");
+			for(int i = 1; i < parameters.size(); i++) {
+                            messageIvy.concat(" "+parameters.get(i));
+                        }
+                        messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);
 			
 		} else if (typeOrder.equals("AircraftClearToLand")) {

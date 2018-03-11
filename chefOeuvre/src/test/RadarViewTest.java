@@ -2,6 +2,7 @@ package test;
 
 import controller.Parser;
 import ivy.IvyManager;
+import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -28,7 +29,7 @@ public class RadarViewTest extends Application {
         IvyManager ivyManager = new IvyManager(); 
         
         Parser parser = new Parser();
-        
+        parser.parsing();
 //        root.getChildren().add(ivyManager.getRadarView());
         
 //        InfoBlock blockTest1 = new InfoBlock(4950,
@@ -49,6 +50,13 @@ public class RadarViewTest extends Application {
         CompactBlock blockTest4 = new CompactBlock(50, 100);
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest3);
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest4);
+        
+        List<InfoBlock> blocks = parser.getBlocks();
+        
+        for (InfoBlock block : blocks) {
+            ivyManager.getTimeline().getMainLine().addBlock(block);
+        }
+        
 //        ivyManager.getTimeline().getMainLine().addBlock(blockTest1);
 //        ivyManager.getTimeline().getMainLine().addBlock(blockTest2);
         root.getChildren().add(ivyManager.getTimeline());
