@@ -14,12 +14,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Screen;
+import model.IBlock;
 import model.MainLine;
 import model.PresentLine;
 import model.SecondaryLine;
@@ -89,6 +91,24 @@ public class Timeline extends Pane {
                     updatePresentLine();
                     mainLine.updateBlocks();
                     secondaryLine.updateBlocks();
+                    for (Node node : mainLine.getChildren()) {
+                        if (node instanceof IBlock){
+                            IBlock block = (IBlock)node;
+                            if(block.timeProperty().get() - 5 < presentLine.timeProperty().get()
+                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10){
+                                //Trigger audio
+                            }
+                        }
+                    }
+                    for (Node node : secondaryLine.getChildren()) {
+                        if (node instanceof IBlock){
+                            IBlock block = (IBlock)node;
+                            if(block.timeProperty().get() - 5 < presentLine.timeProperty().get()
+                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10){
+                                //Trigger audio
+                            }
+                        }
+                    }
                 }
             });
         });
