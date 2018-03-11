@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -37,6 +40,7 @@ public class InfoBlock extends Group implements IBlock{
     private Label flLabel;
     private Label speedLabel;
     private Label infoLabel;
+    private List<sun.font.Decoration.Label> listInfosLabels;
     private VBox content;
     private SimpleStringProperty state = new SimpleStringProperty();
     private InfoBlockSkin forwardBlock;
@@ -48,7 +52,7 @@ public class InfoBlock extends Group implements IBlock{
     
     private final int SIZE = 180;
     
-    public InfoBlock(int t, String title, String hdg, String fl, String speed, String info){
+    public InfoBlock(int t, String title, String hdg, String fl, String speed, String info, List<String> listInfos){
         content = new VBox();
         this.prefWidth(SIZE);
         this.prefHeight(SIZE);
@@ -65,11 +69,20 @@ public class InfoBlock extends Group implements IBlock{
         speedLabel = new Label(speed);
         infoLabel = new Label(info);
         
+        listInfosLabels = new ArrayList<>();
+        for (int i = 0; i < listInfos.size(); i++) {
+        	listInfosLabels.add(new Label(listInfos.get(i)));
+        }
+        
         content.getChildren().add(titleLabel);
         content.getChildren().add(hdgLabel);
         content.getChildren().add(flLabel);
         content.getChildren().add(speedLabel);
         content.getChildren().add(infoLabel);
+        
+        for (int j = 0; j < listInfosLabels.size(); j++) {
+        	content.getChildren().add(listInfosLabels.get(j));
+        }
         
         time.addListener((observable) -> {
             setTranslateX(((SingleLine)getParent()).getXPos(time.get()));
@@ -90,27 +103,31 @@ public class InfoBlock extends Group implements IBlock{
     }
     
     public InfoBlock(){
-        this(0, "", "", "", "", "");
+        this(0, "", "", "", "", "", null);
     }
     
     public InfoBlock(int t){
-        this(t, "", "", "", "", "");
+        this(t, "", "", "", "", "", null);
     }
     
     public InfoBlock(int t, String title){
-        this(t, title, "", "", "", "");
+        this(t, title, "", "", "", "", null);
     }
     
     public InfoBlock(int t, String title, String hdg){
-        this(t, title, hdg, "", "", "");
+        this(t, title, hdg, "", "", "", null);
     }
 
     public InfoBlock(int t, String title, String hdg, String fl){
-        this(t, title, hdg, fl, "", "");
+        this(t, title, hdg, fl, "", "", null);
     }
     
     public InfoBlock(int t, String title, String hdg, String fl, String speed){
-        this(t, title, hdg, fl, speed, "");
+        this(t, title, hdg, fl, speed, "", null);
+    }
+    
+    public InfoBlock(int t, String title, String hdg, String fl, String speed, List<String> listInfos){
+        this(t, title, hdg, fl, speed, "", listInfos);
     }
 
     public SimpleStringProperty stateProperty(){
@@ -141,6 +158,10 @@ public class InfoBlock extends Group implements IBlock{
         infoLabel.setText(s);
     }
     
+    public void setListInfos(int index, String s) {
+    	listInfosLabels.set(index, new Label(s));
+    }
+    
     public IntegerProperty timeProperty(){
         return time;
     }
@@ -163,6 +184,10 @@ public class InfoBlock extends Group implements IBlock{
     
     public Label getInfo(){
         return infoLabel;
+    }
+    
+    public List<Label> getListInfos() {
+    	return listInfosLabels;
     }
     
     public Background getBackground(){

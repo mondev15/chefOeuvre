@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -35,10 +38,9 @@ public class InfoBlockSkin extends VBox{
     private Label infoLabel;
     private double sceneX, translateX;
     private SimpleStringProperty state = new SimpleStringProperty();
+    private List<Label> listInfosLabels;
+    
     private final double OPACITY = 0.6;
-
-    
-    
     private final int SIZE = 180;
     
     public InfoBlockSkin(InfoBlock b) {
@@ -61,9 +63,15 @@ public class InfoBlockSkin extends VBox{
         infoLabel = new Label();
         infoLabel.textProperty().bind(b.getInfo().textProperty());
         
+        listInfosLabels = new ArrayList<>();
+        for (int i = 0; i < b.getListInfos().size(); i++) {
+        	listInfosLabels.add(new Label());
+        	listInfosLabels.get(i).textProperty().bind(b.getListInfos().get(i).textProperty());
+        }
+        
         b.stateProperty().bindBidirectional(state);
         
-        getChildren().addAll(titleLabel, hdgLabel, flLabel, speedLabel, infoLabel);
+        getChildren().addAll(titleLabel, hdgLabel, flLabel, speedLabel, infoLabel, listInfosLabels);
         
         this.setOnMousePressed((event) -> {
             sceneX = event.getSceneX();

@@ -150,7 +150,7 @@ public class Parser {
 						}
 					}
 					
-					//buildBlock(typeOrder, time, parameters);
+					buildBlock(typeOrder, time, parameters);
 				}
 			}
 			
@@ -177,35 +177,33 @@ public class Parser {
 			newBlock.setFL(parameters.get(FREQUENCY));
 			newBlock.setSpeed(parameters.get(PREFIX));
 			
-		} else if (typeOrder.equals("AircraftNewContact")) { //TODO Rendre dynamique les labels des blocs
+		} else if (typeOrder.equals("AircraftNewContact")) {
 			newBlock.setTitle("Contact made");
-			if (!parameters.isEmpty()) {
-				if (parameters.size() == 1) newBlock.setHDG(parameters.get(0));
-				if (parameters.size() == 2) {
-					newBlock.setHDG(parameters.get(0));
-					newBlock.setFL(parameters.get(1));
-				} else {
-					newBlock.setHDG(parameters.get(0));
-					newBlock.setHDG(parameters.get(0));
-					newBlock.setFL(parameters.get(1));
-				}
+			for (int i = 0; i < parameters.size(); i++) {
+				newBlock.getListInfos().add(parameters.get(i));
 			}
 			
 		} else if (typeOrder.equals("AircraftLevel")) {
-			newBlock.setTitle("Contact made");
+			newBlock.setTitle("Level");
 			newBlock.setHDG(parameters.get(LEVEL));
 			newBlock.setFL(parameters.get(OPTION));
 			
 		} else if (typeOrder.equals("AircraftHeading")) {
-			newBlock.setTitle("Contact made");
+			newBlock.setTitle("Heading");
 			newBlock.setHDG(parameters.get(HEADING));
 			newBlock.setFL(parameters.get(OPTION));
 			
 		} else if (typeOrder.equals("AircraftClearToLand")) {
-			//TODO blocs dynamiques
+			newBlock.setTitle("Clear to land");
+			for (int i = 0; i < parameters.size(); i++) {
+				newBlock.getListInfos().add(parameters.get(i));
+			}
 		
 		} else if (typeOrder.equals("AircraftGoAround")) {
-			//TODO blocs dynamiques
+			newBlock.setTitle("Go around");
+			for (int i = 0; i < parameters.size(); i++) {
+				newBlock.getListInfos().add(parameters.get(i));
+			}
 		}
 		
 		blocks.add(newBlock);
