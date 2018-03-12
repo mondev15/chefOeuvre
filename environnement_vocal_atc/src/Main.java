@@ -14,7 +14,7 @@ public class Main {
         AudioPlayer audioPlayer = new MaryTTS();
         IndicatifConvert.loadCompanies("data/compagny.xml");
         try {
-        	String ivydomain = "224.2.0.11:2011";
+        	String ivydomain = "127.255.255.255:2010";
         	if ( args.length > 0) ivydomain = args[0];
             //IvyManager ivyManager = 
             		new IvyManager(audioPlayer,ivydomain);
