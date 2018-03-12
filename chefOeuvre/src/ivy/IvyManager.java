@@ -39,10 +39,12 @@ public class IvyManager {
                 }
             });
             
-            bus.bindMsg("ClockEvent Time=(.+) Rate=(.+)", new IvyMessageListener() {
+            bus.bindMsg("ClockEvent Time=(.+) Rate=(.+) Bs=.*", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    timeline.setClockTime(TimeFunctions.hmsToInt(args[0]), Integer.parseInt(args[1]));
+//                    System.out.println("setClock time :"+TimeFunctions.hmsToInt(args[0]));
+//                     System.out.println("integer :"+(args[1]));
+                    timeline.setClockTime(TimeFunctions.hmsToInt(args[0]), (int)Double.parseDouble(args[1]));
                 }
             });
             
@@ -100,9 +102,9 @@ public class IvyManager {
                         p.setRoute(new Route(args[4], args[5], args[6])); //args[4] : dep, args[5]arr, args[6]: list
                         map.put(key, p);
                     }
-                    System.out.println("---------pln event-------------");
+                    /*System.out.println("---------pln event-------------");
                     System.out.println(radar.getCentralPlane());
-                    System.out.println(radar.getPlanes().toString());
+                    System.out.println(radar.getPlanes().toString());*/
                 }
 
             });
@@ -194,9 +196,9 @@ public class IvyManager {
                         });
                         }
                     }
-                    System.out.println("---------trackmoved-------------");
+                    /*System.out.println("---------trackmoved-------------");
                     System.out.println(radar.getCentralPlane());
-                    System.out.println(radar.getPlanes().toString());
+                    System.out.println(radar.getPlanes().toString());*/
                 }
 
             });

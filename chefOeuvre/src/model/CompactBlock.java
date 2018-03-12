@@ -37,6 +37,7 @@ public class CompactBlock extends Group implements IBlock{
     private Color DRAGGED_COLOR = Color.rgb(204, 243, 255);
     private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
     private DropShadow shadow;
+    private boolean isread = false;
 
     public CompactBlock(){
         this(1000, 10);
@@ -98,5 +99,13 @@ public class CompactBlock extends Group implements IBlock{
     
     public Paint getColor(){
         return main.getFill();
+    }
+    
+    public void setIsRead(boolean b){
+        isread = b;
+    }
+    
+    public boolean isRead(){
+        return isread;
     }
 }

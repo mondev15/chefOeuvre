@@ -46,6 +46,7 @@ public class InfoBlock extends Group implements IBlock{
     private Color DRAGGED_COLOR = Color.rgb(166, 165, 165);
     private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
     private DropShadow shadow;
+    private boolean isread = false;
 
     
     private final int SIZE = 180;
@@ -148,5 +149,13 @@ public class InfoBlock extends Group implements IBlock{
     
     public Background getBackground(){
         return content.getBackground();
+    }
+    
+    public void setIsRead(boolean b){
+        isread = b;
+    }
+    
+    public boolean isRead(){
+        return isread;
     }
 }

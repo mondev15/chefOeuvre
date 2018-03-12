@@ -30,14 +30,15 @@ import org.controlsfx.control.RangeSlider;
 
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyException;
+import model.CompactBlock;
 
 /**
  *
  * @author Charlelie
  */
 public class Timeline extends Pane {
-	
-	Ivy bus;
+
+    Ivy bus;
 
     private int LINE_HEIGHT = 150;
     private int SECONDARY_LINE_HEIGHT = 50;
@@ -57,13 +58,13 @@ public class Timeline extends Pane {
     private StringProperty state = new SimpleStringProperty();
 
     public Timeline() {
-    	bus = new Ivy("Timeline", "Timeline CONNECTED", null);
-    	try {
-			bus.start("127.255.255.255:2010");
-		} catch (IvyException e) {
-			e.printStackTrace();
-		}
-    	
+        bus = new Ivy("Timeline", "Timeline CONNECTED", null);
+        try {
+            bus.start("127.255.255.255:2010");
+        } catch (IvyException e) {
+            e.printStackTrace();
+        }
+
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         int w = (int) primaryScreenBounds.getWidth();
         lines = new VBox();
@@ -81,8 +82,7 @@ public class Timeline extends Pane {
         setSecondaryLine(new SecondaryLine(w, SECONDARY_LINE_HEIGHT));
         setMainLine(new MainLine(w, LINE_HEIGHT));
         setRangeSlider(new RangeSlider(0, 100, 0, 24));
-        
-        
+
         this.getChildren().addAll(lines, presentLine, leftPresentLineSkin, rightPresentLineSkin);
 
         state.bindBidirectional(mainLine.stateProperty());
@@ -105,27 +105,31 @@ public class Timeline extends Pane {
                     mainLine.updateBlocks();
                     secondaryLine.updateBlocks();
                     for (Node node : mainLine.getChildren()) {
-                        if (node instanceof IBlock){
-                            IBlock block = (IBlock)node;
-                            if(block.timeProperty().get() - 5 < presentLine.timeProperty().get()
-                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10){
-                                if (block instanceof InfoBlock) {
-                                	InfoBlock infoBlock = (InfoBlock)block;
-                                	System.out.println(infoBlock.getMessageIvy());
-                                	try {
-										bus.sendMsg(infoBlock.getMessageIvy());
-									} catch (IvyException e) {
-										e.printStackTrace();
-									}
+                        if (node instanceof InfoBlock) {
+                            InfoBlock block = (InfoBlock) node;
+                            System.out.println(block.isRead());
+                            if (block.timeProperty().get() - 5 < presentLine.timeProperty().get()
+                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10
+                                    && !block.isRead()) {
+                                System.out.println(block.getMessageIvy());
+                                try {
+                                    bus.sendMsg(block.getMessageIvy());
+                                    block.setIsRead(true);
+                                } catch (IvyException e) {
+                                    e.printStackTrace();
                                 }
+
+                            }
+                            else{
+//                                block.setIsRead(false);
                             }
                         }
                     }
                     for (Node node : secondaryLine.getChildren()) {
-                        if (node instanceof IBlock){
-                            IBlock block = (IBlock)node;
-                            if(block.timeProperty().get() - 5 < presentLine.timeProperty().get()
-                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10){
+                        if (node instanceof CompactBlock) {
+                            CompactBlock block = (CompactBlock) node;
+                            if (block.timeProperty().get() - 5 < presentLine.timeProperty().get()
+                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10) {
                                 //Trigger audio
                             }
                         }

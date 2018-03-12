@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <studentAircraft xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./studentAircraft.xsd">
     <message>
-    	<time>00:00:10</time>
+    	<time>11:05:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -13,7 +13,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:00:12</time>
+    	<time>11:05:30</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -25,7 +25,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:00:30</time>
+    	<time>11:06:30</time>
     	<command>
     		<type>AircraftLevel</type>
     		<flight>110</flight>
@@ -36,7 +36,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:01:00</time>
+    	<time>11:07:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
@@ -47,7 +47,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:02:00</time>
+    	<time>11:10:00</time>
     	<command>
     		<type>AircraftLevel</type>
     		<flight>110</flight>
@@ -60,7 +60,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:09:00</time>
+    	<time>11:12:04</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
@@ -73,7 +73,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:11:00</time>
+    	<time>11:14:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -85,7 +85,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:13:00</time>
+    	<time>11:14:20</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -95,7 +95,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:17:00</time>
+    	<time>11:14:50</time>
     	<command>
     		<type>AircraftClearToLand</type>
     		<flight>110</flight>
@@ -108,7 +108,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:19:00</time>
+    	<time>11:15:00</time>
     	<command>
     		<type>AircraftGoAround</type>
     		<flight>110</flight>
@@ -119,7 +119,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:20:00</time>
+    	<time>11:17:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -131,7 +131,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:22:00</time>
+    	<time>11:18:00</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
@@ -143,7 +143,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:24:00</time>
+    	<time>11:18:23</time>
     	<command>
     		<type>AircraftHeading</type>
     		<flight>110</flight>
@@ -157,7 +157,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:27:00</time>
+    	<time>11:19:00</time>
     	<command>
     		<type>AircraftContact</type>
     		<flight>110</flight>
@@ -169,7 +169,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:32:00</time>
+    	<time>11:19:20</time>
     	<command>
     		<type>AircraftNewContact</type>
     		<flight>110</flight>
@@ -179,7 +179,7 @@
     	</command>
     </message>
     <message>
-    	<time>00:35:00</time>
+    	<time>11:19:42</time>
     	<command>
     		<type>AircraftClearToLand</type>
     		<flight>110</flight>

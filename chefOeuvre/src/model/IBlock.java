@@ -7,6 +7,7 @@ package model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -19,5 +20,5 @@ public interface IBlock{
     public void setTime(int s);
     
     public IntegerProperty timeProperty();
-    
+        
 }
