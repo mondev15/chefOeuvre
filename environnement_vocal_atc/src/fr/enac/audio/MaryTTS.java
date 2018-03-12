@@ -84,7 +84,7 @@ public class MaryTTS implements fr.enac.audio.AudioPlayer {
     public List<String> getVoices(String lang) {
         Set<String> voices;
         List<String> voicesList = new ArrayList<>();
-        switch (lang) {
+        /*switch (lang) {
             case AudioPlayer.FRANCAIS:
                 voices = maryInterface.getAvailableVoices(new Locale("fr"));
                 voices.remove(DEFAULT_FRENCH);
@@ -97,7 +97,9 @@ public class MaryTTS implements fr.enac.audio.AudioPlayer {
                 voices = maryInterface.getAvailableVoices(new Locale("en"));
                 voices.remove(DEFAULT_ENGLISH);
                 break;
-        }
+        }*/
+        voices = maryInterface.getAvailableVoices(new Locale("en"));
+        voices.remove(DEFAULT_ENGLISH);
         voicesList.addAll(voices);
         return voicesList;
     }
@@ -174,10 +176,10 @@ public class MaryTTS implements fr.enac.audio.AudioPlayer {
      *
      */
     public String getDefaultVoice(String language) {
-        if (language.equals(AudioPlayer.ANGLAIS)) {
+//        if (language.equals(AudioPlayer.ANGLAIS)) {
             return DEFAULT_ENGLISH;
-        } else {
-            return DEFAULT_FRENCH;
-        }
+//        } else {
+//            return DEFAULT_FRENCH;
+//        }
     }
 }

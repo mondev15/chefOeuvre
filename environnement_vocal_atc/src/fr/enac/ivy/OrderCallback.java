@@ -53,11 +53,11 @@ public class OrderCallback extends AudioCallback implements IvyMessageListener {
         } else {
             String orderFile;
             String language = flightHashtable.get("Language");
-            if (language.equals(AudioPlayer.FRANCAIS)) {
+            /*if (language.equals(AudioPlayer.FRANCAIS)) {
                 orderFile = "data/ssml/" + strings[0] + "_fr.xml";
-            } else {
+            } else {*/
                 orderFile = "data/ssml/" + strings[0] + ".xml";
-            }
+            //}
 
             for (int i = 1; i < nb_parameters; i++) { // Order parameters starts after name of the order
                 String s = strings[i];
