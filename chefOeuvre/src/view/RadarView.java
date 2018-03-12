@@ -127,8 +127,8 @@ public class RadarView extends Parent {
     public void addCentralPlane() {
         Point2D.Double pos = getNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y), centralPlane.getHeading(), 0.0);
         String str = "\n" + centralPlane.getCallSign()+", "+centralPlane.getFlight();
-        str += "\n" + centralPlane.getHeading();
-        str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
+        //str += "\n" + centralPlane.getHeading();
+        //str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
         centralPlaneLabel.setText(str);
         centralPlaneLabel.setTextFill(Color.WHITE);
         centralPlaneLabel.relocate(pos.x - 20, pos.y + 30);
@@ -339,8 +339,8 @@ public class RadarView extends Parent {
         Point2D.Double pos = getNdPosition(new Point2D.Double(MIDDLE_X, MIDDLE_Y), centralPlane.getHeading(), 0.0);
         String str="";
         str = "\n" + centralPlane.getCallSign()+", "+centralPlane.getFlight();
-        str += "\n" + centralPlane.getHeading();
-        str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
+        //str += "\n" + centralPlane.getHeading();
+        //str += "\n" + centralPlane.getSpeed() + ", " + centralPlane.getAfl();
         centralPlaneLabel.setText(str);
 
         

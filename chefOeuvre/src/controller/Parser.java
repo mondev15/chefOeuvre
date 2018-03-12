@@ -201,8 +201,9 @@ public class Parser {
 							Integer.parseInt(timeString[2]));
 					
 					//Recovery of duration
-					int duration = Integer.parseInt(elementMessage.getElementsByTagName("duration")
-							.item(0).getTextContent());
+                                        String durationString = elementMessage.getElementsByTagName("duration").item(0).getTextContent();
+                                        int duration = Integer.parseInt(durationString);
+					//int duration = Integer.parseInt(elementMessage.getElementsByTagName("duration").item(0).getTextContent());
 					
 					//Recovery of command
 					String typeOrder = elementMessage.getElementsByTagName("type")

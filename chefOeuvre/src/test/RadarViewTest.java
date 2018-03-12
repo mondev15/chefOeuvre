@@ -26,7 +26,7 @@ public class RadarViewTest extends Application {
            
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         int w = (int)primaryScreenBounds.getWidth();
-        int h = (int)primaryScreenBounds.getHeight();
+        int h = (int)primaryScreenBounds.getHeight() - 20;
     
     public static void main(String[] args) {
         Application.launch(RadarViewTest.class, args);
@@ -42,6 +42,7 @@ public class RadarViewTest extends Application {
         
         Parser parser = new Parser();
         parser.parsing();
+        parser.parsingMessageATC();
         
         CompactBlock blockTest3 = new CompactBlock(6000, 100);
         CompactBlock blockTest4 = new CompactBlock(50, 100);
@@ -49,15 +50,20 @@ public class RadarViewTest extends Application {
         ivyManager.getTimeline().getSecondaryLine().addBlock(blockTest4);
         
         List<InfoBlock> blocks = parser.getBlocks();
+        List<CompactBlock> atcBlocks = parser.getAtcBlocks();
         
         for (InfoBlock block : blocks) {
             ivyManager.getTimeline().getMainLine().addBlock(block);
         }
         
+        for (CompactBlock block : atcBlocks) {
+            ivyManager.getTimeline().getSecondaryLine().addBlock(block);
+        }
+        
 //        ivyManager.getTimeline().getMainLine().addBlock(blockTest1);
 //        ivyManager.getTimeline().getMainLine().addBlock(blockTest2);
 
-        VBox vb = new VBox(10);
+        VBox vb = new VBox();
         InformationView infoView = new InformationView();
         
         HBox hb = new HBox(20);

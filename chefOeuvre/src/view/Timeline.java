@@ -129,7 +129,8 @@ public class Timeline extends Pane {
                         if (node instanceof CompactBlock) {
                             CompactBlock block = (CompactBlock) node;
                             if (block.timeProperty().get() - 5 < presentLine.timeProperty().get()
-                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10) {
+                                    && presentLine.timeProperty().get() < block.timeProperty().get() + 10
+                                    && !block.isRead()) {
                             	System.out.println(block.getMessageIvy());
                                 try {
                                     bus.sendMsg(block.getMessageIvy());

@@ -4,133 +4,137 @@
     	<time>11:18:00</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftContact</type>
-    		<flight>92</flight>
-    		<parameters>
-    			<contact>Bordeaux control</contact>
-    			<frequency>127.675</frequency>
-    			<prefix> </prefix>
-    		</parameters>
+            <type>AircraftContact</type>
+            <flight>6871</flight>
+            <parameters>
+                <contact>Bordeaux control</contact>
+                <frequency>127.675</frequency>
+                <prefix> </prefix>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:18:15</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftContacting</type>
-    		<flight>92</flight>
-    		<parameters>
-    			<contact>Bordeaux</contact>
-    			<frequency>127.675</frequency>
-    			<prefix> </prefix>
-    		</parameters>
+            <type>AircraftContacting</type>
+            <flight>6871</flight>
+            <parameters>
+                <contact>Bordeaux</contact>
+                <frequency>127.675</frequency>
+                <prefix> </prefix>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:19:30</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftNewContact</type>
-    		<flight>1306</flight>
-    		<parameters>
-    			<order>Toulouse approach</order>
-    		</parameters>
+            <type>AircraftNewContact</type>
+            <flight>7032</flight>
+            <parameters>
+                <order>Toulouse approach</order>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:19:40</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftNewContactResponse</type>
-    		<flight>1306</flight>
-    		<parameters>
-    			<order>continue to FINOT</order>
-    		</parameters>
+            <type>AircraftNewContactResponse</type>
+            <flight>7032</flight>
+            <parameters>
+                <order>continue to FINOT</order>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:27:00</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftContact</type>
-    		<flight>1306</flight>
-    		<parameters>
-    			<contact>Lasbordes tower</contact>
-    			<frequency>122.700</frequency>
-    			<prefix> </prefix>
-    		</parameters>
+            <type>AircraftContact</type>
+            <flight>7032</flight>
+            <parameters>
+                <contact>Lasbordes tower</contact>
+                <frequency>122.700</frequency>
+                <prefix> </prefix>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:27:10</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftContacting</type>
-    		<flight>1306</flight>
-    		<parameters>
-    			<contact>Lasbordes</contact>
-    			<frequency>122.700</frequency>
-    			<prefix> </prefix>
-    		</parameters>
+            <type>AircraftContacting</type>
+            <flight>7032</flight>
+            <parameters>
+                <contact>Lasbordes</contact>
+                <frequency>122.700</frequency>
+                <prefix> </prefix>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:34:00</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftNewContact</type>
-    		<flight>212</flight>
-    		<parameters>
-    			<order>Blagnac Tower</order>
-    		</parameters>
+            <type>AircraftNewContact</type>
+            <flight>6564</flight>
+            <parameters>
+                    <order>Blagnac Tower</order>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:34:10</time>
     	<duration>5</duration>
     	<command>
-    		<type>AircraftNewContactResponse</type>
-    		<flight>212</flight>
-    		<parameters>
-    			<order>turn right heading 300</order>
-    			<order>descend 3000 feets</order>
-    			<order>QNH 1014</order>
-    			<order>speed 180 knots</order>
-    			<order>call back for interception, 14 left</order>
-    		</parameters>
+            <type>AircraftNewContactResponse</type>
+            <flight>6564</flight>
+            <parameters>
+                <order>turn right heading 300</order>
+                <order>descend 3000 feets</order>
+                <order>QNH 1014</order>
+                <order>speed 180 knots</order>
+                <order>call back for interception, 14 left</order>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:34:25</time>
+        <duration>5</duration>
     	<command>
-    		<type>AircraftLevel</type>
-    		<flight>212</flight>
-    		<parameters>
-    			<fl>3000</fl>
-    			<option>QNH 1014</option>
-    			<option>speed 180 knots</option>
-    			<option>heading 300 for interception 14 left</option>
-    		</parameters>
+            <type>AircraftLevel</type>
+            <flight>6564</flight>
+            <parameters>
+                <fl>3000</fl>
+                <option>QNH 1014</option>
+                <option>speed 180 knots</option>
+                <option>heading 300 for interception 14 left</option>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:35:00</time>
+        <duration>5</duration>
     	<command>
-    		<type>AircraftEstablishment</type>
-    		<flight>212</flight>
-    		<parameters>
-    			<contact>14 left</contact>
-    		</parameters>
+            <type>AircraftEstablishment</type>
+            <flight>6564</flight>
+            <parameters>
+                    <contact>14 left</contact>
+            </parameters>
     	</command>
     </message>
     <message>
     	<time>11:35:10</time>
+        <duration>5</duration>
     	<command>
-    		<type>AircraftClearToLand</type>
-    		<flight>212</flight>
-    		<parameters>
-    			<order>14 left</order>
-    		</parameters>
+            <type>AircraftClearToLand</type>
+            <flight>6564</flight>
+            <parameters>
+                    <order>14 left</order>
+                    <information> </information>
+            </parameters>
     	</command>
     </message>
 </ATC>
