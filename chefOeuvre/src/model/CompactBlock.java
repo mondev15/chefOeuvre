@@ -38,6 +38,7 @@ public class CompactBlock extends Group implements IBlock{
     private Color SHADOW_COLOR = Color.rgb(48, 50, 51);
     private DropShadow shadow;
     private boolean isread = false;
+    private String messageIvy;
 
     public CompactBlock(){
         this(1000, 10);
@@ -48,6 +49,8 @@ public class CompactBlock extends Group implements IBlock{
     }
     
     public CompactBlock(int t, int d){
+    	messageIvy = "";
+    	
         time = new SimpleIntegerProperty(t);
         duration = new SimpleIntegerProperty(d);
         main = new Rectangle(INITIAL_LENGTH, HEIGHT);
@@ -108,4 +111,12 @@ public class CompactBlock extends Group implements IBlock{
     public boolean isRead(){
         return isread;
     }
+
+	public String getMessageIvy() {
+		return messageIvy;
+	}
+
+	public void setMessageIvy(String messageIvy) {
+		this.messageIvy = messageIvy;
+	}
 }

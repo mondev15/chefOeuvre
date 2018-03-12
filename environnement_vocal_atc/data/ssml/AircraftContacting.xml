@@ -6,9 +6,11 @@
                    http://www.w3.org/TR/speech-synthesis/synthesis.xsd"
        xml:lang="en-US">
     <prosody rate="+30%">
-        <value expr="flightCallSign"/>
-        <break/>
-	Good morning
-	<value expr="Order"/>
+	<value expr="flightCallSign"/>
+	<break/>
+	<value expr="Prefix"/>
+	contacting
+	<value expr="Contact"/>
+	goodbye
     </prosody>
 </speak>

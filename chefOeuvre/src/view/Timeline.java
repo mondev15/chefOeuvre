@@ -130,7 +130,13 @@ public class Timeline extends Pane {
                             CompactBlock block = (CompactBlock) node;
                             if (block.timeProperty().get() - 5 < presentLine.timeProperty().get()
                                     && presentLine.timeProperty().get() < block.timeProperty().get() + 10) {
-                                //Trigger audio
+                            	System.out.println(block.getMessageIvy());
+                                try {
+                                    bus.sendMsg(block.getMessageIvy());
+                                    block.setIsRead(true);
+                                } catch (IvyException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
