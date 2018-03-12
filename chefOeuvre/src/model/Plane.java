@@ -19,11 +19,13 @@ public class Plane {
     private Point2D.Double twinklePosition; // twinklePosition dans la vue twinkle
     private Point2D.Double ndPosition; // twinklePosition dans la vue navigation display
     private double heading; //cap
+    private double distance; // distance par rapport à l'avion central
     private int afl; // niveau
     private double vx;
     private double vy;
     private int speed;
     private int tendency;
+    private int rate; //taux de montée en pieds/minutes
     //---route
     private Route route;
     //---
@@ -43,6 +45,7 @@ public class Plane {
         callSign = "default_CallSign";
         route = new Route("default_Dep", "default_Arr", "default_List");
         heading = 0.0;
+        rate =0;
         afl = 0;
         //angle = 0;
     }
@@ -166,6 +169,14 @@ public class Plane {
         this.afl = afl;
     }
 
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+    
     public Point2D.Double getTwinklePosition() {
         return twinklePosition;
     }
@@ -204,28 +215,21 @@ public class Plane {
     public void setTendency(int tendency) {
         this.tendency = tendency;
     }
-    //--- ATTENTION LES COORDONNEES SONT EN CAUTRA (Coordonnées AUtomatisées du TRafic Aerien)
-    //--- calcule la nouvelle twinklePosition du point dans la vue navigation display
-    /*
-    public void calculateNewPosition() {
-        //---le temps ne change pas, c'est le même dans les deux vues (repères)
-        //---la twinklePosition change en fonction de la vitesse et du cap
-        double x = Math.abs( twinklePosition.x - speed * Math.cos(heading));
-        double y = Math.abs(twinklePosition.y + speed * Math.sin(heading));
-        ndPosition = new Point2D.Double((double)((int)(x*100))/100,(double)((int)(y*100))/100);
+
+    public double getDistance() {
+        return distance;
     }
-     */       
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+          
     public int getMAX_DISTANCE() {
         return MAX_DISTANCE;
     }
 
     @Override
     public String toString() {
-        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", angle=" + angle +"°, route=" + route +'}';
-    }
-
-    public boolean isInRange() {
-         return this.angle>=0 && angle<=180;
-    }
-    
+        return "\nPlane{" + "flight=" + flight + ", callSign=" + callSign + ", time=" + time + ", sector=" + sector + ", twinkle=" + twinklePosition + ", nd=" + ndPosition + ", heading=" + heading + ", distance=" + distance + ", afl=" + afl + ", vx=" + vx + ", vy=" + vy + ", speed=" + speed + ", tendency=" + tendency + ", rate=" + rate + ", route=" + route + ", angle=" + angle + "°"+'}';
+    }  
 }

@@ -12,6 +12,7 @@ import model.Plane;
 import model.Route;
 import view.RadarView;
 import java.awt.geom.Point2D;
+import javafx.scene.paint.Color;
 
 public class IvyManager {
 
@@ -33,35 +34,67 @@ public class IvyManager {
                 public void receive(IvyClient client, String[] args) {
                     Plane p = radar.getCentralPlane();
 
-                    if (p.getFlight().equals("default_Flight")) {
-                        p.setFlight(args[0]);
-                        Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
-                        p.setCallSign(copy.getCallSign());
-                        p.setTwinklePosition(copy.getTwinklePosition());;
-                        p.setRoute(copy.getRoute());
-                        p.setAfl(copy.getAfl());
-                        p.setHeading(copy.getHeading());
-                        p.setSpeed(copy.getSpeed());
-                        //on supprime l'avion de la map
-                        radar.getPlanes().remove(Integer.parseInt(args[0]));
-                        //---updating  radarview
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                radar.addCentralPlane();
+                    String b = Boolean.toString(radar.isCentralPlaneExists());
+                    switch (b) {
+                        case "false":
+                            if (p.getFlight().equals("default_Flight")) {
+                                p.setFlight(args[0]);
+                                Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
+                                p.setCallSign(copy.getCallSign());
+                                p.setTwinklePosition(copy.getTwinklePosition());;
+                                p.setRoute(copy.getRoute());
+                                p.setAfl(copy.getAfl());
+                                p.setRate(copy.getRate());
+                                p.setHeading(copy.getHeading());
+                                p.setSpeed(copy.getSpeed());
+                                //on supprime l'avion de la map
+                                radar.getPlanes().remove(Integer.parseInt(args[0]));
+                                //---updating  radarview
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        radar.addCentralPlane();
+                                    }
+                                });
+                            } else {
+                                p.setFlight(args[0]);
+                                p.setFlight(args[0]);
+                                Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
+                                p.setCallSign(copy.getCallSign());
+                                p.setTwinklePosition(copy.getTwinklePosition());;
+                                p.setRoute(copy.getRoute());
+                                p.setAfl(copy.getAfl());
+                                p.setRate(copy.getRate());
+                                p.setHeading(copy.getHeading());
+                                p.setSpeed(copy.getSpeed());
+                                radar.getPlanes().remove(Integer.parseInt(args[0]));
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        radar.addCentralPlane();
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        p.setFlight(args[0]);
-                        Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
-                        p = copy;
-                        radar.getPlanes().remove(Integer.parseInt(args[0]));
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                radar.addCentralPlane();
-                            }
-                        });
+                            //radar.setCentralPlaneExists(true);
+                            break;
+                        case "true":
+                            /*Plane copy = radar.getPlanes().get(Integer.parseInt(args[0]));
+                            radar.setCentralPlane(copy);
+                            radar.getPlanes().remove(Integer.parseInt(args[0]));
+                            //---updating  radarview
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    radar.removeAllPlanes();
+                                    radar.addCentralPlane();
+                                    for (Map.Entry<Integer, Plane> entry : radar.getPlanes().entrySet()) {
+                                        Plane plane = entry.getValue();
+                                        radar.addPlane(plane);
+                                    }
+                                }
+                            });
+                            */
+                            break;
                     }
                 }
             });
@@ -88,7 +121,7 @@ public class IvyManager {
                         p.setRoute(new Route(args[4], args[5], args[6])); //args[4] : dep, args[5]arr, args[6]: list
                         map.put(key, p);
                     }
-                    /* System.out.println("---------pln event-------------");
+                    /*System.out.println("---------pln event-------------");
                     System.out.println(radar.getCentralPlane());
                     System.out.println(radar.getPlanes().toString());*/
                 }
@@ -96,7 +129,7 @@ public class IvyManager {
             });
 
             //---TrackMovedEvent
-            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate.*Heading=(.*) GroundSpeed=(.*) Tendency=(.*) Time=(.*)", new IvyMessageListener() {
+            bus.bindMsg("TrackMovedEvent Flight=(.*) CallSign=(.*) Ssr.*Sector=(.*) Layers.*X=(.*) Y=(.*) Vx=(.*) Vy=(.*) Afl=(.*) Rate=(.*) Heading=(.*) GroundSpeed=(.*) Tendency=(.*) Time=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
 
@@ -113,10 +146,11 @@ public class IvyManager {
                     double vx = Double.parseDouble(args[5]);
                     double vy = Double.parseDouble(args[6]);
                     int afl = Integer.parseInt(args[7]);
-                    double heading = Double.parseDouble(args[8]);
-                    int speed = Integer.parseInt(args[9]);
-                    int tendency = Integer.parseInt(args[10]);
-                    String time = args[11];
+                    int rate = Integer.parseInt(args[8]);
+                    double heading = Double.parseDouble(args[9]);
+                    int speed = Integer.parseInt(args[10]);
+                    int tendency = Integer.parseInt(args[11]);
+                    String time = args[12];
 
                     //--- avion sur lequel la vue est centrée
                     if (args[0].equals(radar.getCentralPlane().getFlight())) {
@@ -128,6 +162,7 @@ public class IvyManager {
                         p.setVx(vx);
                         p.setVy(vy);
                         p.setAfl(afl);
+                        p.setRate(rate);
                         p.setHeading(heading);
                         p.setSpeed(speed);
                         p.setTendency(tendency);
@@ -144,6 +179,7 @@ public class IvyManager {
                             Plane p = new Plane(flight, callSign, (new Point2D.Double(x, y)), vx, vy);
                             p.setSector(sector);
                             p.setAfl(afl);
+                            p.setRate(rate);
                             p.setHeading(heading);
                             p.setSpeed(speed);
                             p.setTendency(tendency);
@@ -165,6 +201,7 @@ public class IvyManager {
                             p.setVx(vx);
                             p.setVy(vy);
                             p.setAfl(afl);
+                            p.setRate(rate);
                             p.setHeading(heading);
                             p.setSpeed(speed);
                             p.setTendency(tendency);
@@ -178,7 +215,7 @@ public class IvyManager {
                             });
                         }
                     }
-                    /* System.out.println("---------trackmoved-------------");
+                    /*System.out.println("---------trackmoved-------------");
                     System.out.println(radar.getCentralPlane());
                     System.out.println(radar.getPlanes().toString());*/
                 }
@@ -188,35 +225,40 @@ public class IvyManager {
             bus.bindMsg("ReportEvent.*Result=(.*) Info=(.*) Order=(.*)", new IvyMessageListener() {
                 @Override
                 public void receive(IvyClient client, String[] args) {
-                    if (args[0].equals("OK")) {
-                        System.out.println(args[2]);
-                        String splitted[] = args[2].split("\\|");
-                        System.out.println(splitted[0]);
-                        System.out.println(splitted[1]);
-                        System.out.println(splitted[2]);
-                        double value;
-                        Plane p = radar.getCentralPlane();
-                        //---
-                        if (args[2].contains("AircraftHeading")) {
-                            value = Double.parseDouble(splitted[2]);
-                            p.setHeading(value);
-                        } 
-                        //---
-                        else if (args[2].contains("AircraftSpeed")) {
-                            value = Double.parseDouble(splitted[3]);
-                            p.setSpeed((int) value);
-                        } 
-                        //---
-                        else if (args[2].contains("AircraftLevel")) {
-                                                   value = Double.parseDouble(splitted[2]);
-                            p.setAfl((int) value);
-                        }
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                radar.addCentralPlane();
+                    System.out.println(args[2]);
+                    String splitted[] = args[2].split("\\|");
+                    System.out.println(splitted[0]);
+                    System.out.println(splitted[1]);
+                    System.out.println(splitted[2]);
+                    double value;
+                    Plane p = radar.getCentralPlane();
+                    switch (args[0]) {
+                        case "OK":
+                            //System.err.println("ok");
+                            if (args[2].contains("AircraftHeading")) {
+                                radar.getTopAxis().getNewValueLabel().setTextFill(Color.GREEN);
+                            } else if (args[2].contains("AircraftSpeed")) {
+                                radar.getLeftAxis().getNewValueLabel().setTextFill(Color.GREEN);
+                            } else if (args[2].contains("AircraftLevel")) {
+                                radar.getRightAxis().getNewValueLabel().setTextFill(Color.GREEN);
                             }
-                        });
+
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    radar.addCentralPlane();
+                                }
+                            });
+                            break;
+                        case "ERROR":
+                            System.err.println("error");
+                            if (args[2].contains("AircraftHeading")) {
+                                radar.getTopAxis().getNewValueLabel().setTextFill(Color.RED);
+                            } else if (args[2].contains("AircraftSpeed")) {
+                                radar.getLeftAxis().getNewValueLabel().setTextFill(Color.RED);
+                            } else if (args[2].contains("AircraftLevel")) {
+                                radar.getRightAxis().getNewValueLabel().setTextFill(Color.RED);
+                            }
                     }
                 }
             });

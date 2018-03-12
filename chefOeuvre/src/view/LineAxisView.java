@@ -13,6 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import model.Plane;
 
@@ -30,10 +32,13 @@ public class LineAxisView extends Pane {
     private static int newValue;
     private int scale;
     private String name;
+    private Label newValueLabel;
 
     public LineAxisView(String text, double lower, double upper, double stp, int width, int s) {
         //---
         name = text;
+        newValueLabel = new Label();
+        newValueLabel.getTransforms().add(new Rotate(90, 0, 0));
         scale = s;
         min = lower;
         max = upper;
@@ -47,7 +52,7 @@ public class LineAxisView extends Pane {
         labelValue.setText("value");
         labelValue.setTextFill(Color.WHITE);
         labelValue.getTransforms().add(new Rotate(90, 0, 0));
-        labelValue.relocate(220, 35);
+        labelValue.relocate(220, 53);
 
         setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
         //setPrefSize(width, height);
@@ -63,7 +68,12 @@ public class LineAxisView extends Pane {
         //--events
         axis.setOnMousePressed(mouseHandler);
         axis.setOnMouseReleased(mouseHandler);
-        getChildren().setAll(labelValue, axis, label, polygon);
+        axis.setTickLabelFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+        axis.setTickLabelRotation(90);
+        axis.setTickLabelFill(Color.WHITE);
+        //l = new Line();
+        //l.setStroke(Color.GREEN);
+        getChildren().setAll(labelValue, axis, label,newValueLabel,polygon);
 
     }
 
@@ -73,6 +83,12 @@ public class LineAxisView extends Pane {
             if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
                 currentValue = (int) ((double) axis.getValueForDisplay(mouseEvent.getX()));
                 mousePosition = new Point((int) mouseEvent.getX(), (int) mouseEvent.getY());
+                newValueLabel.setText( "\n -> "+currentValue);
+                //l = new Line((int) mouseEvent.getX(), (int) mouseEvent.getY(),(int) mouseEvent.getX(), (int) mouseEvent.getY()+20);
+                //l.setStroke(Color.GREEN);
+                newValueLabel.relocate(222,68);
+                //newValueLabel.setTextFill(Color.GREEN);
+                ///getChildren().set(4,l);
                 newValue = currentValue;
                 if (name.contains("Speed")) {
                     RadarView.sendNewSpeedToIvy(newValue);
@@ -82,40 +98,9 @@ public class LineAxisView extends Pane {
                 };
 
             }
-            /*else if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED 
-                    || mouseEvent.getEventType() == MouseEvent.MOUSE_MOVED) {
-
-                double newMin = axis.getLowerBound(); 
-                double newMax = axis.getUpperBound();
-                double Delta = 10; 
-
-                if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-                    if (mousePosition.x < mouseEvent.getX()) {
-                        newMin = axis.getLowerBound() - Delta;
-                        newMax = axis.getUpperBound() - Delta;
-                    } else if (mousePosition.x > mouseEvent.getX()) {
-                        newMin = axis.getLowerBound() + Delta;
-                        newMax = axis.getUpperBound() + Delta;
-                    }
-                    axis.setLowerBound(newMin);
-                    axis.setUpperBound(newMax);
-                }
-                 mousePosition = new Point((int)mouseEvent.getX(),(int)mouseEvent.getY());
-                 currentValue = (double) axis.getValueForDisplay(mouseEvent.getX());
-            }
-            else if(mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED){
-                 currentValue = (int)((double) axis.getValueForDisplay(mouseEvent.getX()));
-                 axis.setLowerBound(currentValue-scale);
-                 labelValue.setText(""+ (int)currentValue);
-                 axis.setUpperBound(currentValue+scale);
-            }*/
         }
     };
 
-    //méthode permettant d'envoyer un message sur le bus IVY
-    //---AircraftLevel Flight=76 Fl=330
-    //---AircraftSpeed Flight=56 Type=GS Value=250
-    //GS veur dire groundSpeed
     public void sendToIvy(Ivy busIvy, Plane p) {
 
         try {
@@ -130,10 +115,16 @@ public class LineAxisView extends Pane {
     public Polygon createPolygon() {
         Polygon p = new Polygon();
 
-        p.getPoints().addAll(new Double[]{
+        /*p.getPoints().addAll(new Double[]{
             212.0, 22.0,
             222.0, 32.0,
             202.0, 32.0});
+        p.setFill(Color.YELLOW);
+*/
+        p.getPoints().addAll(new Double[]{
+            212.0, 42.0,
+            222.0, 52.0,
+            202.0, 52.0});
         p.setFill(Color.YELLOW);
 
         return p;
@@ -181,6 +172,10 @@ public class LineAxisView extends Pane {
 
     public String getName() {
         return name;
+    }
+
+    public Label getNewValueLabel() {
+        return newValueLabel;
     }
 
 }
