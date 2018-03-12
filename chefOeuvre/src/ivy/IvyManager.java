@@ -216,6 +216,7 @@ public class IvyManager {
                     System.out.print("\t" + splitted[2]);
                 }
             });*/
+            
         } catch (IvyException ex) {
             Logger.getLogger(IvyManager.class.getName()).log(Level.SEVERE, null, ex);
         }

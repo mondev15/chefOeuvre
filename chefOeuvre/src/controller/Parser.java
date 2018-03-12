@@ -44,7 +44,7 @@ public class Parser {
 		
 		try {
 			builder = factory.newDocumentBuilder();
-			docXml = builder.parse(new File("../ChefOeuvre/src/data/studentAircraft.xml"));
+			docXml = builder.parse(new File("src/data/studentAircraft.xml"));
 			Element racine = docXml.getDocumentElement();
 			
 			//Recovery messages
@@ -216,7 +216,7 @@ public class Parser {
 
                         messageIvy = messageIvy.concat(" Fl="+level+" Option='");
                         for(int i = 1; i < parameters.size(); i++) {
-                            messageIvy = messageIvy.concat(parameters.get(i)+" ");
+                            messageIvy = messageIvy.concat(parameters.get(i)+", ");
                         }
                         messageIvy = messageIvy.concat("'");
 			newBlock.setMessageIvy(messageIvy);

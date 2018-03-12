@@ -53,8 +53,9 @@
     		<flight>110</flight>
     		<parameters>
     			<fl>3000</fl>
-    			<option>QNH 1014. speed 180 knots.</option>
-                        <option>Calling back for interception.</option>
+    			<option>QNH 1014</option>
+    			<option>speed 180 knots</option>
+    			<option>Calling back for interception.</option>
     		</parameters>
     	</command>
     </message>

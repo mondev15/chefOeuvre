@@ -22,16 +22,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import model.IBlock;
+import model.InfoBlock;
 import model.MainLine;
 import model.PresentLine;
 import model.SecondaryLine;
 import org.controlsfx.control.RangeSlider;
+
+import fr.dgac.ivy.Ivy;
+import fr.dgac.ivy.IvyException;
 
 /**
  *
  * @author Charlelie
  */
 public class Timeline extends Pane {
+	
+	Ivy bus;
 
     private int LINE_HEIGHT = 150;
     private int SECONDARY_LINE_HEIGHT = 50;
@@ -51,6 +57,13 @@ public class Timeline extends Pane {
     private StringProperty state = new SimpleStringProperty();
 
     public Timeline() {
+    	bus = new Ivy("Timeline", "Timeline CONNECTED", null);
+    	try {
+			bus.start("127.255.255.255:2010");
+		} catch (IvyException e) {
+			e.printStackTrace();
+		}
+    	
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         int w = (int) primaryScreenBounds.getWidth();
         lines = new VBox();
@@ -96,7 +109,15 @@ public class Timeline extends Pane {
                             IBlock block = (IBlock)node;
                             if(block.timeProperty().get() - 5 < presentLine.timeProperty().get()
                                     && presentLine.timeProperty().get() < block.timeProperty().get() + 10){
-                                //Trigger audio
+                                if (block instanceof InfoBlock) {
+                                	InfoBlock infoBlock = (InfoBlock)block;
+                                	System.out.println(infoBlock.getMessageIvy());
+                                	try {
+										bus.sendMsg(infoBlock.getMessageIvy());
+									} catch (IvyException e) {
+										e.printStackTrace();
+									}
+                                }
                             }
                         }
                     }
