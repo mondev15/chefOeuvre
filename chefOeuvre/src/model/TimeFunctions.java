@@ -10,7 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Defines static functions to convert time representations
+ * 
  * @author Charlelie
  */
 public class TimeFunctions {

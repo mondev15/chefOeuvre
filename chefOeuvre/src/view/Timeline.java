@@ -33,7 +33,9 @@ import fr.dgac.ivy.IvyException;
 import model.CompactBlock;
 
 /**
- *
+ * Creates and displays the two rows, the RangeSlider and the present line;
+ * Manages the time, bound with both rows' times 
+ * 
  * @author Charlelie
  */
 public class Timeline extends Pane {

@@ -19,6 +19,13 @@ import model.CompactBlock;
 import model.InfoBlock;
 
 /**
+* Two .xml files are created to describe the vocal messages to read during
+* the exerecice :
+* One for the messages directly for the pilots (studentAircraft.xml), and
+* One for the other messages (studentAircraft.xml)
+* 
+* This class parses both those messages to create blocs on the according rows
+* of the timeline.
 *
 * @author Lova
 */

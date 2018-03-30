@@ -4,6 +4,12 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+/**
+ * Model of a plane
+ * 
+ * @author Evergiste
+ */
+
 public class Plane {
 
     //--- affichage de l'avion

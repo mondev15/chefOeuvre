@@ -16,6 +16,12 @@ import javafx.scene.paint.Color;
 import model.TimeFunctions;
 import view.Timeline;
 
+/**
+ * Creates the RadarView (ND), the Timeline and the IVY bus connecting them.
+ * 
+ * @author Evergiste
+ */
+
 public class IvyManager {
 
     private static Ivy bus;

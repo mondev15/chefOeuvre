@@ -9,7 +9,11 @@ import javafx.stage.Stage;
 import javafx.scene.transform.Rotate;
 import view.LineAxisView;
 
-
+/**
+ * Test class, not used in final run
+ * 
+ * @author Evergiste
+ */
 public class LineAxisViewTest extends Application {
 
     public static void main(String[] args) {

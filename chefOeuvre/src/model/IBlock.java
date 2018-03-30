@@ -10,7 +10,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- *
+ * Defines the very basic of time property
+ * 
  * @author Charlelie
  */
 public interface IBlock{

@@ -16,7 +16,8 @@ import view.SingleLine;
 import view.Timeline;
 
 /**
- *
+ * Time ticks for the timeline, same time property
+ * 
  * @author Charlelie
  */
 public class Tick extends VBox{

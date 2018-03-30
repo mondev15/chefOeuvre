@@ -18,6 +18,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import model.Plane;
 
+/**
+ * Defines the vertical lines (Speed and FL)
+ * 
+ * @author Evergiste
+ */
 public class LineAxisView extends Pane {
 
     private NumberAxis axis;

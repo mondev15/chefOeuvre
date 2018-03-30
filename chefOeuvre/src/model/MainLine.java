@@ -24,7 +24,9 @@ import view.SingleLine;
 import view.Timeline;
 
 /**
- *
+ * Bottom row of the timeline, recieving InfoBlock
+ * Updates the position of its blocks and the ticks
+ * 
  * @author Charlelie
  */
 public class MainLine extends SingleLine {

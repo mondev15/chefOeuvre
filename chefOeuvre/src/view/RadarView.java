@@ -20,6 +20,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import model.Plane;
 
+/**
+ * Creates the ND-like view, with a central ND view, two lists : Speed and
+ * FL (more PFD-like) and heading.
+ * 
+ * @author Evergiste
+ */
+
+// Could be improved :
+// Add a vertical speed info
+// Fix the display of nearby planes
+
 public class RadarView extends Parent {
 
     private static final int X_START = 50;

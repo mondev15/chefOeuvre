@@ -29,7 +29,8 @@ import javafx.scene.layout.VBox;
 import view.SingleLine;
 
 /**
- *
+ * Defines the blocks of the bottom row of the timeline (with info)
+ * Width isn't bound with duration
  * @author Charlelie
  */
 public class InfoBlock extends Group implements IBlock{

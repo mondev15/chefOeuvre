@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * It is a custom vector
+ * 
+ * @author Evergiste
+ */
+
 public class Vector {
 
     public final double x;

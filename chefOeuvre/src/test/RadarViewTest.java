@@ -19,6 +19,13 @@ import model.InfoBlock;
 import model.CompactBlock;
 import view.InformationView;
 
+
+/**
+ * Launches the main application, creates the IvyManager
+ * adds the blocks in the timeline
+ * 
+ * @author Evergiste
+ */
 public class RadarViewTest extends Application {
 
     //private  static final int W = 800;

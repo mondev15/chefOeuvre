@@ -25,9 +25,14 @@ import javafx.scene.paint.Color;
 import view.SingleLine;
 
 /**
- *
+ * Drag&Drop interaction, "skin" of InfoBlocks, to add feedforward
+ * 
  * @author Charlelie
  */
+
+// Could be improved by getting all its properties from the block, instead of
+// defining some with local constants
+
 public class InfoBlockSkin extends VBox{
 
     private int time;
@@ -37,7 +42,7 @@ public class InfoBlockSkin extends VBox{
     private List<Label> listInfosLabels;
     
     private final double OPACITY = 0.6;
-    private final int SIZE = 180;
+    private final int SIZE = 180; // To get from InfoBlock
     
     public InfoBlockSkin(InfoBlock b) {
         this.prefWidth(SIZE);

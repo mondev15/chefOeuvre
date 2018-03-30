@@ -22,7 +22,9 @@ import javafx.scene.shape.Rectangle;
 import view.SingleLine;
 
 /**
- *
+ * Defines the blocks of the top row of the timeline (without info)
+ * Width is bound with the time duration of the vocal message
+ * 
  * @author Charlelie
  */
 public class CompactBlock extends Group implements IBlock{

@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * Model of the route
+ * 
+ * @author Evergiste
+ */
+
 public class Route {
 
     private String dep;

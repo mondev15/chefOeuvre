@@ -17,7 +17,8 @@ import javafx.scene.paint.Color;
 import model.IBlock;
 
 /**
- *
+ * Defines the basics of the timeline's rows (Time and States management)
+ * 
  * @author Charlelie
  */
 public abstract class SingleLine extends Pane {

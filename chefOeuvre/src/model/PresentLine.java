@@ -17,6 +17,8 @@ import view.SingleLine;
 import view.Timeline;
 
 /**
+ * The gold bar in the timeline managing the present time
+ * Has the same time property as blocks
  *
  * @author Charlelie
  */

@@ -20,16 +20,21 @@ import javafx.scene.shape.Rectangle;
 import view.SingleLine;
 
 /**
- *
+ * Drag&Drop interaction, "skin" of CompactBlocks, to add feedforward
+ * 
  * @author Charlelie
  */
+
+// Could be improved by getting all its properties from the block, instead of
+// defining some with local constants
+
 public class CompactBlockSkin extends Rectangle {
 
     private int time;
     private double sceneX, translateX;
     private SimpleStringProperty state = new SimpleStringProperty();
-    private final int HEIGHT = 40;
-    private final int INITIAL_LENGTH = 10;
+    private final int HEIGHT = 40;                  // To get from CBlock
+    private final int INITIAL_LENGTH = 10;          // To get from CBlock
     private final double OPACITY = 0.6;
 
     public CompactBlockSkin(CompactBlock cb) {

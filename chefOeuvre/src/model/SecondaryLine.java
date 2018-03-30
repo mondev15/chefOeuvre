@@ -21,7 +21,9 @@ import view.SingleLine;
 import view.Timeline;
 
 /**
- *
+ * Top row of the timeline, recieving CompactBlocks
+ * Updates the position of its own blocks
+ * 
  * @author Charlelie
  */
 public class SecondaryLine extends SingleLine {

@@ -7,6 +7,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Meant to display the information of the pilot's plane
+ * 
+ * @author Evergiste
+ */
+
 public class InformationView extends Pane {
 
     private Label altitude;

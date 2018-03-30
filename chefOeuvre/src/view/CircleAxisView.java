@@ -16,6 +16,13 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Defines the CircleAxis, on which the heading is diplayed
+ * 
+ * @author Evergiste
+ */
+
+
 public class CircleAxisView extends Pane {
 
     private Arc arc;
